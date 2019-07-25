@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Implemented by Charles.
 
 # the CoNLL2009 format is : # you can see here (http://ufal.mff.cuni.cz/conll2009-st/task-description.html)
@@ -17,6 +18,7 @@
 # eval dataset:                 |-> CoNLL2009-ST-eval-Eng-SRL/CoNLL2009-ST-evaluation-English-SRLonly.txt
 
 import os
+import sys
 import pickle
 import collections
 import numpy as np
@@ -32,6 +34,9 @@ _DUMMY_ = '<DUMMY>'
 _BOA_ = '<BOA>'
 _EOA_ = '<EOA>'
 
+
+def log(*args, **kwargs):
+    print(*args,file=sys.stderr, **kwargs)
 
 class Vertex:
     def __init__(self, id, head):
@@ -143,10 +148,10 @@ def make_word_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use
     idx_to_word = {idx: word for idx, word in enumerate(word_vocab)}
 
     if not quiet:
-        print('\tword vocab size:{}'.format(len(word_vocab)))
+        log('\tword vocab size:{}'.format(len(word_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'word.vocab')
 
@@ -202,10 +207,10 @@ def make_pos_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use_
     idx_to_pos = {idx: pos for idx, pos in enumerate(pos_vocab)}
 
     if not quiet:
-        print('\tpos tag vocab size:{}'.format(len(pos_vocab)))
+        log('\tpos tag vocab size:{}'.format(len(pos_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'pos.vocab')
 
@@ -264,10 +269,10 @@ def make_pos_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use_
 
 
 #     if not quiet:
-#         print('\tpos tag pair vocab size:{}'.format(len(pos_vocab)))
+#         log('\tpos tag pair vocab size:{}'.format(len(pos_vocab)))
 
 #     if not quiet:
-#         print('\tdump vocab at:{}'.format(output_path))
+#         log('\tdump vocab at:{}'.format(output_path))
 
 #     vocab_path = os.path.join(output_path,'postagpair.vocab')
 
@@ -324,10 +329,10 @@ def make_lemma_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, us
     idx_to_lemma = {idx: lemma for idx, lemma in enumerate(lemma_vocab)}
 
     if not quiet:
-        print('\tlemma vocab size:{}'.format(len(lemma_vocab)))
+        log('\tlemma vocab size:{}'.format(len(lemma_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'lemma.vocab')
 
@@ -383,10 +388,10 @@ def make_deprel_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, u
     idx_to_deprel = {idx: deprel for idx, deprel in enumerate(deprel_vocab)}
 
     if not quiet:
-        print('\tdeprel vocab size:{}'.format(len(deprel_vocab)))
+        log('\tdeprel vocab size:{}'.format(len(deprel_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'deprel.vocab')
 
@@ -504,10 +509,10 @@ def make_argument_vocab(train_file, dev_file, test_file,  output_path, freq_lowe
     idx_to_argument = {idx: argument for idx, argument in enumerate(argument_vocab)}
 
     if not quiet:
-        print('\targument vocab size:{}'.format(len(argument_vocab)))
+        log('\targument vocab size:{}'.format(len(argument_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'argument.vocab')
 
@@ -609,10 +614,10 @@ def make_pred_vocab(train_file, dev_file, test_file, output_path, freq_lower_bou
     idx_to_pred = {idx: label for idx, label in enumerate(pred_vocab)}
 
     if not quiet:
-        print('\tpred vocab size:{}'.format(len(pred_vocab)))
+        log('\tpred vocab size:{}'.format(len(pred_vocab)))
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'pred.vocab')
 
@@ -688,12 +693,12 @@ def shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_file
     idx_to_pretrained = {idx: word for idx, word in enumerate(pretrained_vocab)}
 
     if not quiet:
-        print('\tshrink pretrained vocab size:{}'.format(len(pretrained_vocab)))
-        print('\tdataset sum:{} pretrained cover:{} '.format(len(word_set), len(pretrained_vocab)))
-        print("coverage:", float(len(pretrained_vocab)) / len(word_set) * 100)
+        log('\tshrink pretrained vocab size:{}'.format(len(pretrained_vocab)))
+        log('\tdataset sum:{} pretrained cover:{} '.format(len(word_set), len(pretrained_vocab)))
+        log("coverage:", float(len(pretrained_vocab)) / len(word_set) * 100)
 
     if not quiet:
-        print('\tdump vocab at:{}'.format(output_path))
+        log('\tdump vocab at:{}'.format(output_path))
 
     vocab_path = os.path.join(output_path, 'pretrain.vocab')
 
@@ -779,12 +784,12 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
                 if origin_data[i][j][12] == 'Y' and pred_predict_data[i][j][1] == '_':
                     origin_data[i][j][12] = '_'
         if not quiet:
-            print('\t predicate recognition total:{} correct:{} label correct:{}'.format(pred_total, recog_correct,
+            log('\t predicate recognition total:{} correct:{} label correct:{}'.format(pred_total, recog_correct,
                                                                                          recog_label_correct))
 
     # show the output path
     if not quiet:
-        print('\tdump dataset input at:{}'.format(output_path))
+        log('\tdump dataset input at:{}'.format(output_path))
 
     output_data = []
     uas_count = 0
@@ -913,8 +918,8 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
             sentence_idx += 1
 
     if not quiet:
-        print('\tUAS:{:.2f} LAS:{:.2f}'.format(uas_count / total * 100, las_count / total * 100))
-        # print('\t Argument pruning:{} Sum pruning:{}'.format(arg_prune, sum_prune))
+        log('\tUAS:{:.2f} LAS:{:.2f}'.format(uas_count / total * 100, las_count / total * 100))
+        # log('\t Argument pruning:{} Sum pruning:{}'.format(arg_prune, sum_prune))
 
     if pickle_dump_path is not None:
         dump_data = {'predicate_sum': predicate_sum, 'target_sum': target_sum, 'out_of_target_sum': 0,
@@ -987,7 +992,7 @@ def stat_max_order(dataset_file):
                     max_order = cur_order
                 predicate_idx += 1
 
-    print('max order:{}'.format(max_order))
+    log('max order:{}'.format(max_order))
 
 
 def load_dataset_input(file_path):
@@ -1100,8 +1105,8 @@ def replace_syn_dataset(dataset_file, syn_data_path, output_path):
             if origin_data[i][j][8] == origin_data[i][j][9] and origin_data[i][j][10] == origin_data[i][j][11]:
                 new_las_count += 1
 
-    print('\t Origin UAS:{:.2f} LAS:{:.2f}'.format(origin_uas_count / total * 100, origin_las_count / total * 100))
-    print('\t New UAS:{:.2f} LAS:{:.2f}'.format(new_uas_count / total * 100, new_las_count / total * 100))
+    log('\t Origin UAS:{:.2f} LAS:{:.2f}'.format(origin_uas_count / total * 100, origin_las_count / total * 100))
+    log('\t New UAS:{:.2f} LAS:{:.2f}'.format(new_uas_count / total * 100, new_las_count / total * 100))
 
     with open(output_path, 'w') as f:
         for sentence in origin_data:
