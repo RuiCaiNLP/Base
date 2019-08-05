@@ -703,7 +703,7 @@ def shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_file
 
     if not quiet:
         log('\tshrink pretrained vocab size:{}'.format(len(pretrained_vocab)))
-        log('\tdataset sum:{} pretrained cover:{} coverage:{:.3}%'.format(len(word_set),len(pretrained_vocab),len(pretrained_vocab)/len(word_set)*100))
+        log('\tdataset sum:{} pretrained cover:{} '.format(len(word_set),len(pretrained_vocab)))
 
     if not quiet:
         log('\tdump vocab at:{}'.format(output_path))
