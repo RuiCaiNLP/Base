@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from highway import HighwayMLP
 from attention import Attention
 from attention import BiAFAttention
+from syntactic_gcn import SyntacticGCN
 
 from utils import USE_CUDA
 from utils import get_torch_variable_from_np, get_data
@@ -121,6 +122,16 @@ class End2EndModel(nn.Module):
             self.elmo_mlp = nn.Sequential(nn.Linear(1024, self.elmo_emb_size), nn.ReLU())
             self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
             self.elmo_gamma = nn.Parameter(torch.ones(1))
+
+        if self.use_gcn:
+            # self.W_in = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.W_out = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.W_self = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.gcn_bias = nn.Parameter(torch.randn(2*self.bilstm_hidden_size))
+            self.syntactic_gcn = SyntacticGCN(self.bilstm_hidden_size * 2, self.bilstm_hidden_size,
+                                              self.deprel_vocab_size, batch_first=True)
+
+            self.gcn_mlp = nn.Sequential(nn.Linear(self.bilstm_hidden_size * 3, self.bilstm_hidden_size * 2), nn.ReLU())
 
         if USE_CUDA:
             self.bilstm_hidden_state0 = (
@@ -279,6 +290,104 @@ class End2EndModel(nn.Module):
             # bilstm_output = self.attn_linear_final(bilstm_output)
         else:
             bilstm_output = bilstm_output.contiguous()
+
+        if self.use_gcn:
+            # in_rep = torch.matmul(bilstm_output, self.W_in)
+            # out_rep = torch.matmul(bilstm_output, self.W_out)
+            # self_rep = torch.matmul(bilstm_output, self.W_self)
+
+            # child_indicies = batch_input['children_indicies']
+
+            # head_batch = batch_input['head']
+
+            # context = []
+            # for idx in range(head_batch.shape[0]):
+            #     states = []
+            #     for jdx in range(head_batch.shape[1]):
+            #         head_ind = head_batch[idx, jdx]-1
+            #         childs = child_indicies[idx][jdx]
+            #         state = self_rep[idx, jdx]
+            #         if head_ind != -1:
+            #               state = state + in_rep[idx, head_ind]
+            #         for child in childs:
+            #             state = state + out_rep[idx, child]
+            #         state = F.relu(state + self.gcn_bias)
+            #         states.append(state.unsqueeze(0))
+            #     context.append(torch.cat(states, dim=0))
+
+            # context = torch.cat(context, dim=0)
+
+            # bilstm_output = context
+
+            seq_len = bilstm_output.shape[1]
+
+            adj_arc_in = np.zeros((self.batch_size * seq_len, 2), dtype='int32')
+            adj_lab_in = np.zeros((self.batch_size * seq_len), dtype='int32')
+
+            adj_arc_out = np.zeros((self.batch_size * seq_len, 2), dtype='int32')
+            adj_lab_out = np.zeros((self.batch_size * seq_len), dtype='int32')
+
+            mask_in = np.zeros((self.batch_size * seq_len), dtype='float32')
+            mask_out = np.zeros((self.batch_size * seq_len), dtype='float32')
+
+            mask_loop = np.ones((self.batch_size * seq_len, 1), dtype='float32')
+
+            for idx in range(len(origin_batch)):
+                for jdx in range(len(origin_batch[idx])):
+
+                    offset = jdx + idx * seq_len
+
+                    head_ind = int(origin_batch[idx][jdx][10]) - 1
+
+                    if head_ind == -1:
+                        continue
+
+                    dependent_ind = int(origin_batch[idx][jdx][4]) - 1
+
+                    adj_arc_in[offset] = np.array([idx, dependent_ind])
+
+                    adj_lab_in[offset] = np.array([origin_deprel_batch[idx, jdx]])
+
+                    mask_in[offset] = 1
+
+                    adj_arc_out[offset] = np.array([idx, head_ind])
+
+                    adj_lab_out[offset] = np.array([origin_deprel_batch[idx, jdx]])
+
+                    mask_out[offset] = 1
+
+            if USE_CUDA:
+                adj_arc_in = torch.LongTensor(np.transpose(adj_arc_in)).cuda()
+                adj_arc_out = torch.LongTensor(np.transpose(adj_arc_out)).cuda()
+
+                adj_lab_in = Variable(torch.LongTensor(adj_lab_in).cuda())
+                adj_lab_out = Variable(torch.LongTensor(adj_lab_out).cuda())
+
+                mask_in = Variable(torch.FloatTensor(mask_in.reshape((self.batch_size * seq_len, 1))).cuda())
+                mask_out = Variable(torch.FloatTensor(mask_out.reshape((self.batch_size * seq_len, 1))).cuda())
+                mask_loop = Variable(torch.FloatTensor(mask_loop).cuda())
+            else:
+                adj_arc_in = torch.LongTensor(np.transpose(adj_arc_in))
+                adj_arc_out = torch.LongTensor(np.transpose(adj_arc_out))
+
+                adj_lab_in = Variable(torch.LongTensor(adj_lab_in))
+                adj_lab_out = Variable(torch.LongTensor(adj_lab_out))
+
+                mask_in = Variable(torch.FloatTensor(mask_in.reshape((self.batch_size * seq_len, 1))))
+                mask_out = Variable(torch.FloatTensor(mask_out.reshape((self.batch_size * seq_len, 1))))
+                mask_loop = Variable(torch.FloatTensor(mask_loop))
+
+            gcn_context = self.syntactic_gcn(bilstm_output,
+                                             adj_arc_in, adj_arc_out,
+                                             adj_lab_in, adj_lab_out,
+                                             mask_in, mask_out,
+                                             mask_loop)
+
+            gcn_context = self.softmax(gcn_context, axis=2)
+
+            bilstm_output = torch.cat([bilstm_output, gcn_context], dim=2)
+
+            bilstm_output = self.gcn_mlp(bilstm_output)
 
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
 
