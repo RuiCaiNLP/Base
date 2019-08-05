@@ -123,15 +123,7 @@ class End2EndModel(nn.Module):
             self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
             self.elmo_gamma = nn.Parameter(torch.ones(1))
 
-        if self.use_gcn:
-            # self.W_in = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
-            # self.W_out = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
-            # self.W_self = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
-            # self.gcn_bias = nn.Parameter(torch.randn(2*self.bilstm_hidden_size))
-            self.syntactic_gcn = SyntacticGCN(self.bilstm_hidden_size * 2, self.bilstm_hidden_size,
-                                              self.deprel_vocab_size, batch_first=True)
 
-            self.gcn_mlp = nn.Sequential(nn.Linear(self.bilstm_hidden_size * 3, self.bilstm_hidden_size * 2), nn.ReLU())
 
         if USE_CUDA:
             self.bilstm_hidden_state0 = (
@@ -168,7 +160,15 @@ class End2EndModel(nn.Module):
 
             # self.attn_linear_final = nn.Sequential(nn.Linear(self.bilstm_hidden_size*4,self.bilstm_hidden_size*2), nn.ReLU())
 
+        if self.use_gcn:
+            # self.W_in = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.W_out = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.W_self = nn.Parameter(torch.randn(2*self.bilstm_hidden_size, 2*self.bilstm_hidden_size))
+            # self.gcn_bias = nn.Parameter(torch.randn(2*self.bilstm_hidden_size))
+            self.syntactic_gcn = SyntacticGCN(self.bilstm_hidden_size * 2, self.bilstm_hidden_size,
+                                              self.deprel_vocab_size, batch_first=True)
 
+            self.gcn_mlp = nn.Sequential(nn.Linear(self.bilstm_hidden_size * 3, self.bilstm_hidden_size * 2), nn.ReLU())
 
 
         self.use_highway = model_params['use_highway']
