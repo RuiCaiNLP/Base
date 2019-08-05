@@ -361,7 +361,7 @@ if __name__ == '__main__':
                 loss = criterion(out, target_batch_variable)
 
                 if batch_i%50 == 0:
-                    print(batch_i, loss)
+                    log(batch_i, loss)
 
                 optimizer.zero_grad()
                 loss.backward()
