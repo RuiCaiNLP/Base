@@ -384,7 +384,7 @@ class End2EndModel(nn.Module):
                                              mask_loop)
 
             #gcn_context = self.softmax(gcn_context, axis=2)
-            gcn_context = F.softmax(gcn_context, axis=2)
+            gcn_context = F.softmax(gcn_context, dim=2)
 
             bilstm_output = torch.cat([bilstm_output, gcn_context], dim=2)
 
