@@ -231,7 +231,7 @@ class End2EndModel(nn.Module):
             flag_emb = self.flag_embedding(flag_batch)
         else:
             flag_emb = flag_batch.view(flag_batch.shape[0], flag_batch.shape[1], 1).float()
-
+        seq_len = flag_batch.shape[1]
         word_emb = self.word_embedding(word_batch)
         lemma_emb = self.lemma_embedding(lemma_batch)
         pos_emb = self.pos_embedding(pos_batch)
@@ -412,7 +412,7 @@ class End2EndModel(nn.Module):
 
             output = self.output_layer(hidden_input)
         else:
-            hidden_input = hidden_input.view(self.batch_size, batch_input['seq_len'], -1)
+            hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
             #output = self.output_layer(hidden_input)
 
         if self.use_biaffine:
@@ -420,8 +420,8 @@ class End2EndModel(nn.Module):
             predicates_1D = batch_input['predicates_idx']
             pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
             pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
-            output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, batch_input['seq_len'], 1, self.batch_size,
+            output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
                                   num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
-            output = output.view(self.batch_size*batch_input['seq_len'], -1)
+            output = output.view(self.batch_size*seq_len, -1)
         return output
 
