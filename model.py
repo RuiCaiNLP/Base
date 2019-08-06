@@ -185,12 +185,12 @@ class End2EndModel(nn.Module):
             self.output_layer = nn.Linear(self.bilstm_hidden_size * 2, self.target_vocab_size)
 
         if self.use_biaffine:
-            mlp_size = 300
+            self.mlp_size = 300
             self.rel_W = nn.Parameter(
-                torch.from_numpy(np.zeros((mlp_size + 1, self.target_vocab_size * (mlp_size + 1))).astype("float32")).to(
+                torch.from_numpy(np.zeros((self.mlp_size + 1, self.target_vocab_size * (self.mlp_size + 1))).astype("float32")).to(
                     device))
-            self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLU())
-            self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLU())
+            self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+            self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
 
         self.mlp_dropout = nn.Dropout(p=self.dropout_mlp)
         self.pred_dropout = nn.Dropout(p=self.dropout_mlp)
