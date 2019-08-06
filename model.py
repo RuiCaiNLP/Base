@@ -193,6 +193,7 @@ class End2EndModel(nn.Module):
             self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLU())
 
         self.mlp_dropout = nn.Dropout(p=self.dropout_mlp)
+        self.pred_dropout = nn.Dropout(p=self.dropout_mlp)
         self.word_dropout = nn.Dropout(p=self.dropout_word)
 
     def softmax(self, input, axis=1):
