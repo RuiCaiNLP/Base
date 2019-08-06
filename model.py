@@ -189,8 +189,8 @@ class End2EndModel(nn.Module):
             self.rel_W = nn.Parameter(
                 torch.from_numpy(np.zeros((mlp_size + 1, self.target_vocab_size * (mlp_size + 1))).astype("float32")).to(
                     device))
-            self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLu())
-            self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLu())
+            self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLU())
+            self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLU())
 
         self.mlp_dropout = nn.Dropout(p=self.dropout_mlp)
         self.word_dropout = nn.Dropout(p=self.dropout_word)
