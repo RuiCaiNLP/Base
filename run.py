@@ -253,6 +253,9 @@ if __name__ == '__main__':
     learning_rate = args.lr
     batch_size = args.batch_size
     dropout = args.dropout
+    dropout_word = args.dropout_word
+    dropout_mlp = args.dropout_mlp
+    use_biaffine = args.use_biaffine
     word_embedding_size = args.word_emb_size
     pos_embedding_size = args.pos_emb_size
     pretrained_embedding_size = args.pretrain_emb_size
@@ -295,6 +298,9 @@ if __name__ == '__main__':
     if FLAG == 'TRAIN':
         model_params = {
             "dropout": dropout,
+            "dropout_word": dropout_word,
+            "dropout_mlp": dropout_mlp,
+            "use_biaffine": use_biaffine,
             "batch_size": batch_size,
             "word_vocab_size": len(word2idx),
             "lemma_vocab_size": len(lemma2idx),
