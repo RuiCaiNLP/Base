@@ -35,6 +35,13 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             flag_batch = [[int(item[5]) for item in sentence] for sentence in data_batch]
             pad_flag_batch = np.array(pad_batch(flag_batch, batch_size, 0),dtype=int)
 
+            predicates_idx_batch = []
+            for sentence in data_batch:
+                for id, item in enumerate(sentence):
+                    if int(item[5]) == 1:
+                        predicates_idx_batch.append(id)
+                        break
+
             text_batch = [[item[6] for item in sentence] for sentence in data_batch]
             if len(text_batch) < batch_size:
                 text_batch += [[_PAD_]] * (batch_size - len(text_batch))
@@ -120,6 +127,7 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             batch = {
                 "sentence_id":sentence_id_batch,
                 "predicate_id":predicate_id_batch,
+                "predicates_idx":predicates_idx_batch,
                 "word_id":id_batch,
                 "index":index_batch,
                 "flag":pad_flag_batch,

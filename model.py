@@ -10,9 +10,9 @@ from syntactic_gcn import SyntacticGCN
 
 from utils import USE_CUDA
 from utils import get_torch_variable_from_np, get_data
+from utils import bilinear
 
-
-
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # <!-- pytorch and allennlp upgrade
 # from allennlp.modules.elmo import Elmo
@@ -51,6 +51,8 @@ class End2EndModel(nn.Module):
     def __init__(self, model_params):
         super(End2EndModel, self).__init__()
         self.dropout = model_params['dropout']
+        self.dropout_word = model_params['dropout_word']
+        self.dropout_mlp = model_params['dropout_mlp']
         self.batch_size = model_params['batch_size']
 
         self.word_vocab_size = model_params['word_vocab_size']
@@ -81,8 +83,9 @@ class End2EndModel(nn.Module):
         self.use_sa_lstm = model_params['use_sa_lstm']
         self.use_rcnn = model_params['use_rcnn']
         self.use_tree_lstm = model_params['use_tree_lstm']
-
+        self.use_biaffine = model_params['use_biaffine']
         self.deprel2idx = model_params['deprel2idx']
+
 
         if self.use_flag_embedding:
             self.flag_embedding = nn.Embedding(2, self.flag_emb_size)
@@ -180,6 +183,17 @@ class End2EndModel(nn.Module):
             self.output_layer = nn.Linear(self.bilstm_hidden_size * 2, self.target_vocab_size)
         else:
             self.output_layer = nn.Linear(self.bilstm_hidden_size * 2, self.target_vocab_size)
+
+        if self.use_biaffine:
+            mlp_size = 300
+            self.rel_W = nn.Parameter(
+                torch.from_numpy(np.zeros((mlp_size + 1, self.target_vocab_size * (mlp_size + 1))).astype("float32")).to(
+                    device))
+            self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLu())
+            self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, mlp_size), nn.ReLu())
+
+        self.mlp_dropout = nn.Dropout(p=self.dropout_mlp)
+        self.word_dropout = nn.Dropout(p=self.dropout_word)
 
     def softmax(self, input, axis=1):
         """
@@ -398,6 +412,16 @@ class End2EndModel(nn.Module):
 
             output = self.output_layer(hidden_input)
         else:
-            output = self.output_layer(hidden_input)
+            hidden_input = hidden_input.view(self.batch_size, batch_input['seq_len'], -1)
+            #output = self.output_layer(hidden_input)
+
+        if self.use_biaffine:
+            arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
+            predicates_1D = batch_input['predicates_idx']
+            pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+            pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
+            output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, batch_input['seq_len'], 1, self.batch_size,
+                                  num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
+            output = output.view(self.batch_size*batch_input['seq_len'], -1)
         return output
 

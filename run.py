@@ -68,6 +68,10 @@ def make_parser():
                         help='Train epochs')
     parser.add_argument('--dropout', type=float, default=0.1,
                         help='Dropout when training')
+    parser.add_argument('--dropout_word', type=float, default=0.3,
+                        help='Dropout when training')
+    parser.add_argument('--dropout_mlp', type=float, default=0.3,
+                        help='Dropout when training')
     parser.add_argument('--lr', type=float, default=0.001,
                         help='Learning rate')
     parser.add_argument('--batch_size', type=int, default=64,
@@ -95,6 +99,9 @@ def make_parser():
                         help='[USE] highway connection')
     parser.add_argument('--highway_num_layers', type=int, default=10,
                         help='Highway layer number')
+
+    parser.add_argument('--use_biaffine', action='store_true',
+                        help='[USE] highway connection')
 
     parser.add_argument('--use_self_attn', action='store_true',
                         help='[USE] self attention')
