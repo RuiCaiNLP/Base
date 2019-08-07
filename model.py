@@ -249,6 +249,8 @@ class End2EndModel(nn.Module):
         else:
             input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, pos_emb], 2)  #
 
+        input_emb = self.word_dropout(input_emb)
+
 
 
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state0)
