@@ -35,6 +35,9 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             flag_batch = [[int(item[5]) for item in sentence] for sentence in data_batch]
             pad_flag_batch = np.array(pad_batch(flag_batch, batch_size, 0),dtype=int)
 
+            sentence_flags_batch = [[int(item[16]) for item in sentence] for sentence in data_batch]
+            pad_sentence_flags_batch = np.array(pad_batch(sentence_flags_batch, batch_size, 0),dtype=int)
+
             predicates_idx_batch = []
             for sentence in data_batch:
                 for id, item in enumerate(sentence):
@@ -55,14 +58,24 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             pos_batch = [[pos2idx.get(item[8],pos2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_pos_batch = np.array(pad_batch(pos_batch, batch_size, pos2idx[_PAD_]))
 
+            gold_pos_batch = [[pos2idx.get(item[13], pos2idx[_UNK_]) for item in sentence] for sentence in data_batch]
+            pad_gold_pos_batch = np.array(pad_batch(gold_pos_batch, batch_size, pos2idx[_PAD_]))
+
             head_batch = [[int(item[9]) for item in sentence] for sentence in data_batch]
             pad_head_batch = np.array(pad_batch(head_batch, batch_size, -1))
+
+            gold_head_batch = [[int(item[14]) for item in sentence] for sentence in data_batch]
+            pad_gold_head_batch = np.array(pad_batch(gold_head_batch, batch_size, -1))
 
             rhead_batch = [[int(item[10]) for item in sentence] for sentence in data_batch]
             pad_rhead_batch = np.array(pad_batch(rhead_batch, batch_size, -1))
 
             deprel_batch = [[deprel2idx.get(item[11],deprel2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_deprel_batch = np.array(pad_batch(deprel_batch, batch_size, deprel2idx[_PAD_]))
+
+            gold_deprel_batch = [[deprel2idx.get(item[15], deprel2idx[_UNK_]) for item in sentence] for sentence in
+                            data_batch]
+            pad_gold_deprel_batch = np.array(pad_batch(gold_deprel_batch, batch_size, deprel2idx[_PAD_]))
 
             argument_batch = [[argument2idx.get(item[12],argument2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_argument_batch = np.array(pad_batch(argument_batch, batch_size, argument2idx[_PAD_]))
