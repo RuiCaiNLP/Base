@@ -850,7 +850,9 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
                         IS_PRED = 0
                         if i == j:
                             IS_PRED = 1
-                        
+                        This_belong_Preds = 0
+                        if sentence[j][12] == 'Y':
+                            This_belong_Preds = 1
                         word = sentence[j][1].lower() # FORM
 
                         # filter the data by word_filter
@@ -868,14 +870,17 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
                             lemma = _NUM_
 
                         pos = sentence[j][5] # PPOS
+                        gold_pos = sentence[j][4]
 
                         if use_golden_syn:
                             sentence[j][9] = sentence[j][8]
                             sentence[j][11] = sentence[j][10]
                             
                         head = sentence[j][9] # PHEAD
+                        gold_head = sentence[j][8]
 
                         deprel = sentence[j][11] # PDEPREL
+                        gold_dep_rel = sentence[j][10]
 
                         tag = sentence[j][14+predicate_idx] # APRED
 
@@ -902,11 +907,12 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
                         if unify_pred:
                             output_block.append([str(sentence_idx), str(predicate_idx), str(len(sentence)+1), str(int(ID)+1), str(int(ID)+1), str(IS_PRED), word, lemma, pos, str(int(head)+1), str(int(head)+1), deprel, tag])
                         else:
-                            output_block.append([str(sentence_idx), str(predicate_idx), str(len(sentence)), ID, ID, str(IS_PRED), word, lemma, pos, head, head, deprel, tag])
+                            output_block.append([str(sentence_idx), str(predicate_idx), str(len(sentence)), ID, ID, str(IS_PRED), word, lemma, pos, head, head, deprel, tag, gold_pos, str(gold_head), gold_dep_rel, str(This_belong_Preds)])
                         
                     if len(output_block)>0:
                         output_data.append(output_block)
                         for item in output_block:
+                            #print(item)
                             f.write('\t'.join(item))
                             f.write('\n')
                         f.write('\n')
