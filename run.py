@@ -51,6 +51,7 @@ def print_PRF(probs, gold):
     P = correct/NonullPredict + 0.0001
     R = correct/NonullTruth
     F = 2*P*R/(P+R)
+    log(correct, NonullPredict, NonullTruth)
     log(P, R, F)
 
 
@@ -403,6 +404,7 @@ if __name__ == '__main__':
                 loss = criterion(out, target_batch_variable)
 
                 loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
+                log("POS:")
                 print_PRF(out_pos, gold_pos_batch_variable.view(-1))
 
                 loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
