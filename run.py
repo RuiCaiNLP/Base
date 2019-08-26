@@ -32,6 +32,26 @@ def seed_everything(seed, cuda=False):
     if cuda:
         torch.cuda.manual_seed_all(seed)
 
+def print_PRF(probs, gold):
+    predicts = np.argmax(probs.cpu().data.numpy(), axis=1)
+    gold = gold.cpu().data.numpy()
+    correct = 0.0
+    NonullTruth = 0.0
+    NonullPredict = 0.1
+    for p, g in zip(predicts, gold):
+        if g == 0:
+            continue
+        if g > 1:
+            NonullTruth += 1
+        if p > 1:
+            NonullPredict += 1
+        if p == g and g > 1:
+            correct += 1
+
+    P = correct/NonullPredict + 0.0001
+    R = correct/NonullTruth
+    F = 2*P*R/(P+R)
+    log(P, R, F)
 
 
 def make_parser():
@@ -364,15 +384,34 @@ if __name__ == '__main__':
 
                 flat_argument = train_input_data['flat_argument']
 
+                gold_pos = train_input_data['gold_pos']
+
+                gold_PI = train_input_data['predicates_flag']
+
+                gold_deprel = train_input_data['sep_dep_rel']
+
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
+                gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
+                gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
+                gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
 
                 bs = train_input_data['batch_size']
                 sl = train_input_data['seq_len']
 
-                out = srl_model(train_input_data, elmo)
+                out, out_pos, out_PI, out_deprel = srl_model(train_input_data, elmo)
 
                 loss = criterion(out, target_batch_variable)
 
+                loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
+                print_PRF(out_pos, gold_pos_batch_variable.view(-1))
+
+                loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
+                print_PRF(out_PI, gold_PI_batch_variable.view(-1))
+
+                loss_deprel = criterion(out_deprel, gold_deprel_batch_variable.view(-1))
+                print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
+
+                loss = loss + loss_pos + loss_PI + loss_deprel
                 if batch_i%50 == 0:
                     log(batch_i, loss)
 

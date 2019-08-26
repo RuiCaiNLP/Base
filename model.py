@@ -141,10 +141,29 @@ class End2EndModel(nn.Module):
             Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True))
 
+
+        if USE_CUDA:
+            self.SL_hidden_state0 = (
+            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda(),
+            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda())
+        else:
+            self.SL_hidden_state0 = (
+            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True),
+            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True))
+
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
+
+        self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size,
+                                        hidden_size=self.bilstm_hidden_size, num_layers=2,
+                                        dropout=self.dropout, bidirectional=True,
+                                        bias=True, batch_first=True)
 
         # self.bilstm_mlp = nn.Sequential(nn.Linear(self.bilstm_hidden_size*2, self.bilstm_hidden_size), nn.ReLU())
         self.use_self_attn = model_params['use_self_attn']
@@ -195,6 +214,13 @@ class End2EndModel(nn.Module):
         self.mlp_dropout = nn.Dropout(p=self.dropout_mlp)
         self.pred_dropout = nn.Dropout(p=self.dropout_mlp)
         self.word_dropout = nn.Dropout(p=self.dropout_word)
+
+        self.pos_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.pos_vocab_size), nn.ReLU())
+        self.PI_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 3), nn.ReLU())
+        self.deprel_W = nn.Parameter(
+            torch.from_numpy(
+                np.zeros((2 * self.bilstm_hidden_size+1, self.deprel_vocab_size * (2 * self.bilstm_hidden_size + 1))).astype("float32")).to(
+                device))
 
     def softmax(self, input, axis=1):
         """
@@ -251,9 +277,13 @@ class End2EndModel(nn.Module):
 
         input_emb = self.word_dropout(input_emb)
 
-
+        SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb], 2))
 
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state0)
+
+        SL_output, (_, SL_final_state) = self.sentence_learner(SL_input_emb, self.SL_hidden_state0)
+        POS_output = self.pos_classifier(SL_output).view(self.batch_size*seq_len, -1)
+        PI_output = self.PI_classifier(SL_output).view(self.batch_size*seq_len, -1)
 
         # bilstm_final_state = bilstm_final_state.view(self.bilstm_num_layers, 2, self.batch_size, self.bilstm_hidden_size)
 
@@ -426,5 +456,15 @@ class End2EndModel(nn.Module):
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
                                   num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size*seq_len, -1)
-        return output
+
+            ## deprel
+            hidden_input = SL_output
+            arg_hidden =SL_output
+            predicates_1D = batch_input['predicates_idx']
+            pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+            pred_hidden = pred_recur
+            deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, 2*self.bilstm_hidden_size, seq_len, 1, self.batch_size,
+                              num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
+            deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
+        return output, POS_output, PI_output, deprel_output
 
