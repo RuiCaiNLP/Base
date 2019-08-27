@@ -172,7 +172,7 @@ class End2EndModel(nn.Module):
             self.SL_hidden_state0_high = (
             Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 21, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda())
         else:
             self.SL_hidden_state0_high = (
