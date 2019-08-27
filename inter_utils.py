@@ -84,9 +84,9 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
         for i, sentence in enumerate(data_batch):
             current_predicate_id = predicates_idx_batch[i]
             for j, item in enumerate(sentence):
-                if pad_gold_head_batch[i][j] == current_predicate_id:
+                if pad_gold_head_batch[i][j]-1 == current_predicate_id:
                     continue
-                if j == pad_gold_head_batch[i][current_predicate_id]:
+                if j == pad_gold_head_batch[i][current_predicate_id]-1  :
                     continue
                 sep_pad_gold_deprel_batch[i][j] = deprel2idx[_UNK_]
 

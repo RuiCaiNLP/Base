@@ -379,7 +379,7 @@ if __name__ == '__main__':
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx,
-                                                                             deprel2idx, argument2idx, shuffle=True)):
+                                                                             deprel2idx, argument2idx, shuffle=False)):
 
                 target_argument = train_input_data['argument']
 
@@ -404,18 +404,16 @@ if __name__ == '__main__':
                 loss = criterion(out, target_batch_variable)
 
                 loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
-                log("POS:")
-                print_PRF(out_pos, gold_pos_batch_variable.view(-1))
-
                 loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
-                print_PRF(out_PI, gold_PI_batch_variable.view(-1))
-
                 loss_deprel = criterion(out_deprel, gold_deprel_batch_variable.view(-1))
-                print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
 
                 loss = loss + loss_pos + loss_PI + loss_deprel
                 if batch_i%50 == 0:
                     log(batch_i, loss)
+                    log("POS:")
+                    print_PRF(out_pos, gold_pos_batch_variable.view(-1))
+                    print_PRF(out_PI, gold_PI_batch_variable.view(-1))
+                    print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
 
                 optimizer.zero_grad()
                 loss.backward()
