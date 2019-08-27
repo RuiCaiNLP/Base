@@ -156,7 +156,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         
         out, out_pos, out_PI, out_deprel = model(input_data, elmo)
 
-        a, b, c = get_PRF(out_pos, gold_pos_batch_variable)
+        a, b, c = get_PRF(out_pos, gold_pos_batch_variable.view(-1))
         correct_pos += a
         NonullPredict_pos += b
         NonullTruth_pos += c
