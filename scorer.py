@@ -11,6 +11,24 @@ import sys
 def log(*args, **kwargs):
     print(file=sys.stderr, *args, **kwargs)
 
+def get_PRF(probs, gold):
+    predicts = np.argmax(probs.cpu().data.numpy(), axis=1)
+    gold = gold.cpu().data.numpy()
+    correct = 0.0
+    NonullTruth = 0.0
+    NonullPredict = 0.1
+    for p, g in zip(predicts, gold):
+        if g == 0:
+            continue
+        if g > 1:
+            NonullTruth += 1
+        if p > 1:
+            NonullPredict += 1
+        if p == g and g > 1:
+            correct += 1
+
+    return correct, NonullPredict, NonullTruth
+
 
 def sem_f1_score(target, predict, argument2idx, unify_pred = False, predicate_correct=0, predicate_sum=0):
     predict_args = 0
@@ -105,6 +123,11 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     cur_sentence = None
     cur_sentence_data = None
 
+    correct_pos, NonullPredict_pos, NonullTruth_pos = 0.1, 0.1, 0.
+    correct_PI, NonullPredict_PI, NonullTruth_PI = 0., 0., 0.
+    correct_deprel, NonullPredict_deprel, NonullTruth_deprel = 0., 0., 0.
+
+
     for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx,
                                                              lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx)):
         
@@ -112,7 +135,16 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         
         flat_argument = input_data['flat_argument']
 
+        gold_pos = input_data['gold_pos']
+
+        gold_PI = input_data['predicates_flag']
+
+        gold_deprel = input_data['sep_dep_rel']
+
         target_batch_variable = get_torch_variable_from_np(flat_argument)
+        gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
+        gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
+        gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
 
         sentence_id = input_data['sentence_id']
         predicate_id = input_data['predicate_id']
@@ -123,6 +155,12 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         psl = input_data['pad_seq_len']
         
         out, out_pos, out_PI, out_deprel = model(input_data, elmo)
+
+        a, b, c = get_PRF(out_pos, gold_pos_batch_variable)
+        correct_pos += a
+        NonullPredict_pos += b
+        NonullTruth_pos += c
+
 
         _, pred = torch.max(out, 1)
 
@@ -156,6 +194,10 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         output_data.append(cur_sentence_data)
     
     score = sem_f1_score(golden, predict, argument2idx, unify_pred, predicate_correct, predicate_sum)
+    P = correct_pos / NonullPredict_pos
+    R = correct_pos / NonullTruth_pos
+    F = 2 * P * R / (P + R)
+    log("POS: ", P, R, F)
 
     model.train()
 
