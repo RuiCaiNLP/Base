@@ -161,6 +161,16 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         NonullPredict_pos += b
         NonullTruth_pos += c
 
+        a, b, c = get_PRF(out_PI, gold_PI_batch_variable.view(-1))
+        correct_PI += a
+        NonullPredict_PI += b
+        NonullTruth_PI += c
+
+        a, b, c = get_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
+        correct_deprel += a
+        NonullPredict_deprel += b
+        NonullTruth_deprel += c
+
 
         _, pred = torch.max(out, 1)
 
@@ -198,6 +208,16 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     R = correct_pos / NonullTruth_pos
     F = 2 * P * R / (P + R)
     log("POS: ", P, R, F)
+
+    P = correct_PI / NonullPredict_PI
+    R = correct_PI / NonullTruth_PI
+    F = 2 * P * R / (P + R)
+    log("PI: ", P, R, F)
+
+    P = correct_deprel / NonullPredict_deprel
+    R = correct_deprel / NonullTruth_deprel
+    F = 2 * P * R / (P + R)
+    log("deprel: ", P, R, F)
 
     model.train()
 

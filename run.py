@@ -410,10 +410,10 @@ if __name__ == '__main__':
                 loss = loss + loss_pos + loss_PI + loss_deprel
                 if batch_i%50 == 0:
                     log(batch_i, loss)
-                    log("POS:")
-                    print_PRF(out_pos, gold_pos_batch_variable.view(-1))
-                    print_PRF(out_PI, gold_PI_batch_variable.view(-1))
-                    print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
+                    #log("POS:")
+                    #print_PRF(out_pos, gold_pos_batch_variable.view(-1))
+                    #print_PRF(out_PI, gold_PI_batch_variable.view(-1))
+                    #print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
 
                 optimizer.zero_grad()
                 loss.backward()
