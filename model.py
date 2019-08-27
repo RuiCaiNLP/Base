@@ -130,38 +130,75 @@ class End2EndModel(nn.Module):
 
         if USE_CUDA:
             self.bilstm_hidden_state0 = (
-            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda())
         else:
             self.bilstm_hidden_state0 = (
-            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True),
-            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True))
+
+        if USE_CUDA:
+            self.bilstm_hidden_state0_high = (
+            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda(),
+            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda())
+        else:
+            self.bilstm_hidden_state0_high = (
+            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True),
+            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True))
 
 
         if USE_CUDA:
             self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 21, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda())
         else:
             self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True),
-            Variable(torch.randn(2 * 2, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True))
 
+        if USE_CUDA:
+            self.SL_hidden_state0_high = (
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda(),
+            Variable(torch.randn(2 * 21, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda())
+        else:
+            self.SL_hidden_state0_high = (
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True),
+            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True))
+
+
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
-                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
+                                    hidden_size=self.bilstm_hidden_size, num_layers=1,
+                                    dropout=self.dropout, bidirectional=True,
+                                    bias=True, batch_first=True)
+
+        self.bilstm_layer_high = nn.LSTM(input_size=3*self.bilstm_hidden_size,
+                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers-1,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
 
         self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size,
-                                        hidden_size=self.bilstm_hidden_size, num_layers=2,
+                                        hidden_size=self.bilstm_hidden_size, num_layers=1,
+                                        dropout=self.dropout, bidirectional=True,
+                                        bias=True, batch_first=True)
+
+        self.sentence_learner_high = nn.LSTM(input_size=2*self.bilstm_hidden_size,
+                                        hidden_size=self.bilstm_hidden_size, num_layers=1,
                                         dropout=self.dropout, bidirectional=True,
                                         bias=True, batch_first=True)
 
@@ -222,6 +259,10 @@ class End2EndModel(nn.Module):
                 np.zeros((2 * self.bilstm_hidden_size+1, self.deprel_vocab_size * (2 * self.bilstm_hidden_size + 1))).astype("float32")).to(
                 device))
 
+        self.elmo_mlp = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.bilstm_hidden_size), nn.ReLU())
+        self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
+        self.elmo_gamma = nn.Parameter(torch.ones(1))
+
     def softmax(self, input, axis=1):
         """
         Softmax applied to axis=n
@@ -277,13 +318,33 @@ class End2EndModel(nn.Module):
 
         input_emb = self.word_dropout(input_emb)
 
+        ##sentence learner#####################################
         SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb], 2))
+        h0, (_, SL_final_state) = self.sentence_learner(SL_input_emb, self.SL_hidden_state0)
+        h1, (_, SL_final_state) = self.sentence_learner_high(h0, self.SL_hidden_state0_high)
+        SL_output = h1
+        POS_output = self.pos_classifier(SL_output).view(self.batch_size * seq_len, -1)
+        PI_output = self.PI_classifier(SL_output).view(self.batch_size * seq_len, -1)
+        ## deprel
+        hidden_input = SL_output
+        arg_hidden = SL_output
+        predicates_1D = batch_input['predicates_idx']
+        pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+        pred_hidden = pred_recur
+        deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, 2 * self.bilstm_hidden_size, seq_len, 1,
+                                 self.batch_size,
+                                 num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
+        deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
 
-        bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state0)
+        #######semantic role labelerxxxxxxxxxx
+        w = F.softmax(self.elmo_w, dim=0)
+        SRL_composer = self.elmo_gamma * (w[0] * h0 + w[1] * h1)
+        SRL_composer = self.elmo_mlp(SRL_composer)
+        bilstm_output_0, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state0)
+        high_input = torch.cat((bilstm_output_0, SRL_composer), 2)
+        bilstm_output, (_, bilstm_final_state) = self.bilstm_layer_high(high_input, self.bilstm_hidden_state0_high)
 
-        SL_output, (_, SL_final_state) = self.sentence_learner(SL_input_emb, self.SL_hidden_state0)
-        POS_output = self.pos_classifier(SL_output).view(self.batch_size*seq_len, -1)
-        PI_output = self.PI_classifier(SL_output).view(self.batch_size*seq_len, -1)
+
 
         # bilstm_final_state = bilstm_final_state.view(self.bilstm_num_layers, 2, self.batch_size, self.bilstm_hidden_size)
 
@@ -457,14 +518,6 @@ class End2EndModel(nn.Module):
                                   num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size*seq_len, -1)
 
-            ## deprel
-            hidden_input = SL_output
-            arg_hidden =SL_output
-            predicates_1D = batch_input['predicates_idx']
-            pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-            pred_hidden = pred_recur
-            deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, 2*self.bilstm_hidden_size, seq_len, 1, self.batch_size,
-                              num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
-            deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
+
         return output, POS_output, PI_output, deprel_output
 
