@@ -260,7 +260,11 @@ class End2EndModel(nn.Module):
             torch.from_numpy(
                 np.zeros((self.mlp_size + 1, self.deprel_vocab_size * (self.mlp_size + 1))).astype("float32")).to(
                 device))
-        self.Link_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 300), nn.ReLU(), nn.Linear(300, 4))
+
+        self.link_W = nn.Parameter(
+            torch.from_numpy(
+                np.zeros((self.mlp_size + 1, 4 * (self.mlp_size + 1))).astype("float32")).to(
+                device))
 
         self.elmo_mlp = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.bilstm_hidden_size), nn.ReLU())
         self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
@@ -336,6 +340,9 @@ class End2EndModel(nn.Module):
         deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, self.mlp_size, seq_len, 1,
                                  self.batch_size,
                                  num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
+        Link_output = bilinear(arg_hidden, self.link_W, pred_hidden, self.mlp_size, seq_len, 1,
+                                 self.batch_size,
+                                 num_outputs=4, bias_x=True, bias_y=True)
         deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
 
         POS_probs = F.softmax(POS_output, dim=1).view(self.batch_size, seq_len, -1)
