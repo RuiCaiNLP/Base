@@ -16,7 +16,7 @@ def get_PRF(probs, gold):
     gold = gold.cpu().data.numpy()
     correct = 0.0
     NonullTruth = 0.0
-    NonullPredict = 0.1
+    NonullPredict = 0.0
     for p, g in zip(predicts, gold):
         if g == 0:
             continue
@@ -231,6 +231,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     P = correct_link / NonullPredict_link
     R = correct_link / NonullTruth_link
     F = 2 * P * R / (P + R)
+    log(correct_link, NonullPredict_link, NonullTruth_link)
     log("link: ", P, R, F)
 
     model.train()
