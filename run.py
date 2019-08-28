@@ -391,23 +391,27 @@ if __name__ == '__main__':
 
                 gold_deprel = train_input_data['sep_dep_rel']
 
+                gold_link = train_input_data['sep_dep_link']
+
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
                 gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
                 gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
                 gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
+                gold_link_batch_variable = get_torch_variable_from_np(gold_link)
 
                 bs = train_input_data['batch_size']
                 sl = train_input_data['seq_len']
 
-                out, out_pos, out_PI, out_deprel = srl_model(train_input_data, elmo)
+                out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
 
                 loss = criterion(out, target_batch_variable)
 
                 loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
                 loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
                 loss_deprel = criterion(out_deprel, gold_deprel_batch_variable.view(-1))
+                loss_link = criterion(out_link, gold_link_batch_variable.view(-1))
 
-                loss = loss + loss_pos + loss_PI + loss_deprel
+                loss = loss + loss_pos + loss_PI + loss_deprel + loss_link
                 if batch_i%50 == 0:
                     log(batch_i, loss)
                     #log("POS:")

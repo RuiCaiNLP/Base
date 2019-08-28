@@ -114,7 +114,7 @@ class End2EndModel(nn.Module):
             input_emb_size += 1
 
         if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size + self.lemma_emb_size + self.pos_emb_size + self.deprel_emb_size  #
+            input_emb_size += self.pretrain_emb_size + self.word_emb_size + self.lemma_emb_size + self.pos_emb_size + self.deprel_emb_size + 4  #
         else:
             input_emb_size += self.pretrain_emb_size + self.word_emb_size + self.lemma_emb_size + self.pos_emb_size
 
@@ -260,6 +260,7 @@ class End2EndModel(nn.Module):
             torch.from_numpy(
                 np.zeros((self.mlp_size + 1, self.deprel_vocab_size * (self.mlp_size + 1))).astype("float32")).to(
                 device))
+        self.Link_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 300), nn.ReLU(), nn.Linear(300, 4))
 
         self.elmo_mlp = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.bilstm_hidden_size), nn.ReLU())
         self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
@@ -325,6 +326,7 @@ class End2EndModel(nn.Module):
         SL_output = h1
         POS_output = self.pos_classifier(SL_output).view(self.batch_size * seq_len, -1)
         PI_output = self.PI_classifier(SL_output).view(self.batch_size * seq_len, -1)
+        Link_output = self.Link_classifier(SL_output).view(self.batch_size * seq_len, 4)
         ## deprel
         hidden_input = SL_output
         arg_hidden = self.mlp_dropout(self.mlp_arg_deprel(SL_output))
@@ -340,12 +342,12 @@ class End2EndModel(nn.Module):
         deprel_probs = F.softmax(deprel_output, dim=1).view(self.batch_size, seq_len, -1)
         POS_compose = F.tanh(self.POS2hidden(POS_probs))
         deprel_compose = F.tanh(self.deprel2hidden(deprel_probs))
-
+        link_compose = F.softmax(Link_output, dim=1).view(self.batch_size, seq_len, -1)
 
         #######semantic role labelerxxxxxxxxxx
 
         if self.use_deprel:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose, deprel_compose], 2)  #
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose, deprel_compose, link_compose], 2)  #
         else:
             input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose], 2)  #
 
@@ -533,5 +535,5 @@ class End2EndModel(nn.Module):
             output = output.view(self.batch_size*seq_len, -1)
 
 
-        return output, POS_output, PI_output, deprel_output
+        return output, POS_output, PI_output, deprel_output, Link_output
 

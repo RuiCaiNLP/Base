@@ -126,6 +126,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     correct_pos, NonullPredict_pos, NonullTruth_pos = 0.1, 0.1, 0.
     correct_PI, NonullPredict_PI, NonullTruth_PI = 0., 0., 0.
     correct_deprel, NonullPredict_deprel, NonullTruth_deprel = 0., 0., 0.
+    correct_link, NonullPredict_link, NonullTruth_link = 0., 0., 0.
 
 
     for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx,
@@ -141,10 +142,13 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
 
         gold_deprel = input_data['sep_dep_rel']
 
+        gold_link = input_data['sep_dep_link']
+
         target_batch_variable = get_torch_variable_from_np(flat_argument)
         gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
         gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
         gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
+        gold_link_batch_variable = get_torch_variable_from_np(gold_link)
 
         sentence_id = input_data['sentence_id']
         predicate_id = input_data['predicate_id']
@@ -154,7 +158,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         bs = input_data['batch_size']
         psl = input_data['pad_seq_len']
         
-        out, out_pos, out_PI, out_deprel = model(input_data, elmo)
+        out, out_pos, out_PI, out_deprel, out_link = model(input_data, elmo)
 
         a, b, c = get_PRF(out_pos, gold_pos_batch_variable.view(-1))
         correct_pos += a
@@ -170,6 +174,11 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         correct_deprel += a
         NonullPredict_deprel += b
         NonullTruth_deprel += c
+
+        a, b, c = get_PRF(out_link, gold_link_batch_variable.view(-1))
+        correct_link += a
+        NonullPredict_link += b
+        NonullTruth_link += c
 
 
         _, pred = torch.max(out, 1)
@@ -218,6 +227,11 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     R = correct_deprel / NonullTruth_deprel
     F = 2 * P * R / (P + R)
     log("deprel: ", P, R, F)
+
+    P = correct_link / NonullPredict_link
+    R = correct_link / NonullTruth_link
+    F = 2 * P * R / (P + R)
+    log("link: ", P, R, F)
 
     model.train()
 

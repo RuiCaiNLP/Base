@@ -80,15 +80,19 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
 
 
         sep_pad_gold_deprel_batch = pad_gold_deprel_batch
+        sep_pad_gold_link_batch = pad_gold_deprel_batch
         ### constructing specific gold deprel
         for i, sentence in enumerate(data_batch):
             current_predicate_id = predicates_idx_batch[i]
             for j, item in enumerate(sentence):
                 if pad_gold_head_batch[i][j]-1 == current_predicate_id:
+                    sep_pad_gold_link_batch[i][j] = 3
                     continue
-                if j == pad_gold_head_batch[i][current_predicate_id]-1  :
+                if j == pad_gold_head_batch[i][current_predicate_id]-1:
+                    sep_pad_gold_link_batch[i][j] = 2
                     continue
                 sep_pad_gold_deprel_batch[i][j] = deprel2idx[_UNK_]
+                sep_pad_gold_link_batch[i][j] = 1
 
 
         argument_batch = [[argument2idx.get(item[12],argument2idx[_UNK_]) for item in sentence] for sentence in data_batch]
@@ -181,7 +185,8 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             'gold_head':pad_gold_head_batch,
             'gold_deprel':pad_gold_deprel_batch,
             'predicates_flag':pad_sentence_flags_batch,
-            'sep_dep_rel': sep_pad_gold_deprel_batch
+            'sep_dep_rel': sep_pad_gold_deprel_batch,
+            'sep_dep_link': sep_pad_gold_link_batch,
         }
 
         yield batch
