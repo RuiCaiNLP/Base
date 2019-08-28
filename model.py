@@ -330,7 +330,6 @@ class End2EndModel(nn.Module):
         SL_output = h1
         POS_output = self.pos_classifier(SL_output).view(self.batch_size * seq_len, -1)
         PI_output = self.PI_classifier(SL_output).view(self.batch_size * seq_len, -1)
-        Link_output = self.Link_classifier(SL_output).view(self.batch_size * seq_len, 4)
         ## deprel
         hidden_input = SL_output
         arg_hidden = self.mlp_dropout(self.mlp_arg_deprel(SL_output))
