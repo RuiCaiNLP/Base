@@ -263,6 +263,9 @@ class End2EndModel(nn.Module):
         self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
         self.elmo_gamma = nn.Parameter(torch.ones(1))
 
+        self.POS2hidden = nn.Linear(self.pos_vocab_size, self.pos_emb_size)
+        self.deprel2hidden = nn.Linear(self.deprel_vocab_size, self.deprel_emb_size)
+
     def softmax(self, input, axis=1):
         """
         Softmax applied to axis=n
@@ -311,12 +314,7 @@ class End2EndModel(nn.Module):
         # predicate_emb = self.word_embedding(predicate_batch)
         # predicate_pretrain_emb = self.pretrained_embedding(predicate_pretrain_batch)
 
-        if self.use_deprel:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, pos_emb, deprel_emb], 2)  #
-        else:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, pos_emb], 2)  #
 
-        input_emb = self.word_dropout(input_emb)
 
         ##sentence learner#####################################
         SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb], 2))
@@ -336,7 +334,19 @@ class End2EndModel(nn.Module):
                                  num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
         deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
 
+        POS_probs = F.softmax(POS_output, dim=1).view(self.batch_size, seq_len, -1)
+        deprel_probs = F.softmax(deprel_output, dim=1).view(self.batch_size, seq_len, -1)
+        POS_compose = F.tanh(self.POS2hidden(POS_probs))
+        deprel_compose = F.tanh(self.deprel2hidden(deprel_probs))
         #######semantic role labelerxxxxxxxxxx
+
+        if self.use_deprel:
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose, deprel_compose], 2)  #
+        else:
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose], 2)  #
+
+        input_emb = self.word_dropout(input_emb)
+
         w = F.softmax(self.elmo_w, dim=0)
         SRL_composer = self.elmo_gamma * (w[0] * h0 + w[1] * h1)
         SRL_composer = self.elmo_mlp(SRL_composer)
