@@ -343,7 +343,7 @@ class End2EndModel(nn.Module):
                                  self.batch_size,
                                  num_outputs=4, bias_x=True, bias_y=True)
         deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
-
+        Link_output = Link_output.view(self.batch_size * seq_len, -1)
         POS_probs = F.softmax(POS_output, dim=1).view(self.batch_size, seq_len, -1)
         deprel_probs = F.softmax(deprel_output, dim=1).view(self.batch_size, seq_len, -1)
         POS_compose = F.tanh(self.POS2hidden(POS_probs))
