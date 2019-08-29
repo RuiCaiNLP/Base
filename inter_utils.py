@@ -9,7 +9,17 @@ def pad_batch(batch_data, batch_size, pad_int):
     max_length = max([len(item) for item in batch_data])
     return [item + [pad_int]*(max_length-len(item)) for item in batch_data]
 
-def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, shuffle=False):
+char_file = open('char.voc.conll2009', 'r')
+char_dict = {}
+idx = 0
+for char in char_file.readlines():
+    char_dict[char.strip()] = idx
+    idx += 1
+
+print(char_dict['c'])
+
+
+def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2word, shuffle=False):
 
     if shuffle:
         random.shuffle(input_data)
@@ -52,6 +62,11 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
 
         word_batch = [[word2idx.get(item[6],word2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_word_batch = np.array(pad_batch(word_batch, batch_size, word2idx[_PAD_]))
+
+        _, sen_max_len = pad_word_batch.shape
+        flat_word_batch = pad_word_batch.ravel()
+        char_batch = [[char_dict[c] if char_dict.has_key(c) else 0 for c in idx2word[word]] for word in flat_word_batch]
+        pad_char_batch = np.array(pad_batch(char_batch, batch_size*sen_max_len, 0)).reshape(batch_size, sen_max_len, -1)
 
         lemma_batch = [[lemma2idx.get(item[7],lemma2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_lemma_batch = np.array(pad_batch(lemma_batch, batch_size, lemma2idx[_PAD_]))
@@ -163,6 +178,7 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             "index":index_batch,
             "flag":pad_flag_batch,
             "word":pad_word_batch,
+            "char": pad_char_batch,
             "lemma":pad_lemma_batch,
             "pos":pad_pos_batch,
             "pretrain":pad_pretrain_word_batch,

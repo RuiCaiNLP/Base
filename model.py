@@ -11,6 +11,7 @@ from syntactic_gcn import SyntacticGCN
 from utils import USE_CUDA
 from utils import get_torch_variable_from_np, get_data
 from utils import bilinear
+from layer import CharCNN
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -50,6 +51,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class End2EndModel(nn.Module):
     def __init__(self, model_params):
         super(End2EndModel, self).__init__()
+        self.charCNN = CharCNN(num_of_conv=3, in_channels=1, out_channels=50, kernel_size=[2, 3, 4],
+                                     in_features=50, out_features=100)
         self.dropout = model_params['dropout']
         self.dropout_word = model_params['dropout_word']
         self.dropout_mlp = model_params['dropout_mlp']
@@ -87,6 +90,7 @@ class End2EndModel(nn.Module):
         self.deprel2idx = model_params['deprel2idx']
 
 
+
         if self.use_flag_embedding:
             self.flag_embedding = nn.Embedding(2, self.flag_emb_size)
             self.flag_embedding.weight.data.uniform_(-1.0, 1.0)
@@ -99,6 +103,8 @@ class End2EndModel(nn.Module):
 
         self.pos_embedding = nn.Embedding(self.pos_vocab_size, self.pos_emb_size)
         self.pos_embedding.weight.data.uniform_(-1.0, 1.0)
+
+        self.char_embeddings = nn.Embedding(106, 50)
 
         if self.use_deprel:
             self.deprel_embedding = nn.Embedding(self.deprel_vocab_size, self.deprel_emb_size)
@@ -304,6 +310,8 @@ class End2EndModel(nn.Module):
         pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         origin_batch = batch_input['origin']
         origin_deprel_batch = batch_input['deprel']
+        chars_batch = get_torch_variable_from_np(batch_input['char'])
+
 
         if self.use_flag_embedding:
             flag_emb = self.flag_embedding(flag_batch)
@@ -313,6 +321,8 @@ class End2EndModel(nn.Module):
         word_emb = self.word_embedding(word_batch)
         lemma_emb = self.lemma_embedding(lemma_batch)
         pos_emb = self.pos_embedding(pos_batch)
+        char_embeddings = self.char_embeddings(chars_batch)
+        character_embeddings = self.charCNN(char_embeddings)
         pretrain_emb = self.pretrained_embedding(pretrain_batch)
 
         if self.use_deprel:
