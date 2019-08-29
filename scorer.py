@@ -113,7 +113,7 @@ def eval_train_batch(epoch,batch_i,loss,golden_batch,predict_batch,argument2idx)
     log('epoch {} batch {} loss:{:4f} accurate:{:.2f} predict:{} golden:{} correct:{}'.format(epoch, batch_i, loss, num_correct/batch_total*100, predict_args, golden_args, correct_args))
 
 
-def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, unify_pred = False, predicate_correct=0, predicate_sum=0):
+def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word, unify_pred = False, predicate_correct=0, predicate_sum=0):
 
     model.eval()
     golden = []
@@ -130,7 +130,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
 
 
     for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx,
-                                                             lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx)):
+                                                             lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2word)):
         
         target_argument = input_data['argument']
         

@@ -438,7 +438,8 @@ if __name__ == '__main__':
 
                     log('dev:')
                     score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, lemma2idx,
-                                                  pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, False,
+                                                  pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
+                                                  False,
                                                   dev_predicate_correct, dev_predicate_sum)
                     if dev_best_score is None or score[2] > dev_best_score[2]:
                         dev_best_score = score
