@@ -120,9 +120,9 @@ class End2EndModel(nn.Module):
             input_emb_size += 1
 
         if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size + self.lemma_emb_size + self.pos_emb_size + self.deprel_emb_size + 4  #
+            input_emb_size += self.pretrain_emb_size + self.word_emb_size + 100 + self.pos_emb_size + self.deprel_emb_size + 4  #
         else:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size + self.lemma_emb_size + self.pos_emb_size
+            input_emb_size += self.pretrain_emb_size + self.word_emb_size + 100 + self.pos_emb_size
 
         self.use_elmo = model_params['use_elmo']
         self.elmo_emb_size = model_params['elmo_embedding_size']
@@ -198,7 +198,7 @@ class End2EndModel(nn.Module):
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
 
-        self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size,
+        self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size + 100,
                                         hidden_size=self.bilstm_hidden_size, num_layers=1,
                                         dropout=self.dropout, bidirectional=True,
                                         bias=True, batch_first=True)
@@ -338,7 +338,7 @@ class End2EndModel(nn.Module):
 
 
         ##sentence learner#####################################
-        SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb], 2))
+        SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb, character_embeddings], 2))
         h0, (_, SL_final_state) = self.sentence_learner(SL_input_emb, self.SL_hidden_state0)
         h1, (_, SL_final_state) = self.sentence_learner_high(h0, self.SL_hidden_state0_high)
         SL_output = h1
@@ -375,9 +375,9 @@ class End2EndModel(nn.Module):
         #######semantic role labelerxxxxxxxxxx
 
         if self.use_deprel:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose, deprel_compose, link_compose], 2)  #
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, character_embeddings, POS_compose, deprel_compose, link_compose], 2)  #
         else:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, lemma_emb, POS_compose], 2)  #
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb,  character_embeddings, POS_compose], 2)  #
 
         input_emb = self.word_dropout(input_emb)
 
