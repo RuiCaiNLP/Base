@@ -262,6 +262,10 @@ class End2EndModel(nn.Module):
         self.PI_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 300), nn.ReLU(),  nn.Linear(300, 3))
         self.mlp_arg_deprel = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
         self.mlp_pred_deprel = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+
+        self.mlp_arg_link = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+        self.mlp_pred_link = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+
         self.deprel_W = nn.Parameter(
             torch.from_numpy(
                 np.zeros((self.mlp_size + 1, self.deprel_vocab_size * (self.mlp_size + 1))).astype("float32")).to(
@@ -349,16 +353,24 @@ class End2EndModel(nn.Module):
         deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, self.mlp_size, seq_len, 1,
                                  self.batch_size,
                                  num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
+
+        arg_hidden = self.mlp_dropout(self.mlp_arg_link(SL_output))
+        predicates_1D = batch_input['predicates_idx']
+        pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+        pred_hidden = self.pred_dropout(self.mlp_pred_link(pred_recur))
         Link_output = bilinear(arg_hidden, self.link_W, pred_hidden, self.mlp_size, seq_len, 1,
                                  self.batch_size,
                                  num_outputs=4, bias_x=True, bias_y=True)
         deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
         Link_output = Link_output.view(self.batch_size * seq_len, -1)
+
         POS_probs = F.softmax(POS_output, dim=1).view(self.batch_size, seq_len, -1)
         deprel_probs = F.softmax(deprel_output, dim=1).view(self.batch_size, seq_len, -1)
+        link_probs = F.softmax(Link_output, dim=1).view(self.batch_size, seq_len, -1)
+
         POS_compose = F.tanh(self.POS2hidden(POS_probs))
         deprel_compose = F.tanh(self.deprel2hidden(deprel_probs))
-        link_compose = F.softmax(Link_output, dim=1).view(self.batch_size, seq_len, -1)
+        link_compose = link_probs
 
         #######semantic role labelerxxxxxxxxxx
 
