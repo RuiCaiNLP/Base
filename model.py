@@ -36,55 +36,6 @@ def mask_loss(self, Semi_loss, lengths):
     return Semi_loss
 
 
-def Semi_SRL_Loss(self, hidden_forward, hidden_backward, TagProbs_use, sentence, lengths, target_idx_in):
-    TagProbs_use_softmax = F.softmax(TagProbs_use, dim=2).detach()
-    sample_nums = lengths.sum()
-    unlabeled_loss_function = nn.KLDivLoss(reduce=False)
-
-    hidden_future = _roll(hidden_forward, -1)
-    tag_space = self.SRL_MLP_Future(self.hidden_future_unlabeled(hidden_future))
-    tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
-    dep_tag_space = tag_space
-    DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
-    DEP_Future_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
-
-    hidden_past = _roll(hidden_backward, 1)
-    tag_space = self.SRL_MLP_Past(self.hidden_past_unlabeled(hidden_past))
-    tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
-    dep_tag_space = tag_space
-    DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
-    DEP_Past_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
-
-    DEP_Future_loss = torch.sum(DEP_Future_loss, dim=2)
-    DEP_Past_loss = torch.sum(DEP_Past_loss, dim=2)
-
-    wordBeforePre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
-    for i in range(self.batch_size):
-        for j in range(len(sentence[0])):
-            if j >= target_idx_in[i]:
-                wordBeforePre_mask[i][j] = 0.0
-    wordBeforePre_mask = torch.from_numpy(wordBeforePre_mask).to(device)
-
-    wordAfterPre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
-    for i in range(self.batch_size):
-        for j in range(len(sentence[0])):
-            if j <= target_idx_in[i]:
-                wordAfterPre_mask[i][j] = 0.0
-    wordAfterPre_mask = torch.from_numpy(wordAfterPre_mask).to(device)
-
-    DEP_Semi_loss = wordBeforePre_mask * DEP_Past_loss + wordAfterPre_mask * DEP_Future_loss
-
-    loss_mask = np.ones(DEP_Semi_loss.size(), dtype='float32')
-    for i in range(self.batch_size):
-        for j in range(len(sentence[0])):
-            if j >= lengths[i]:
-                loss_mask[i][j] = 0.0
-    loss_mask = torch.from_numpy(loss_mask).to(device)
-
-    DEP_Semi_loss = DEP_Semi_loss * loss_mask
-
-    DEP_Semi_loss = torch.sum(DEP_Semi_loss)
-    return DEP_Semi_loss / sample_nums
 
 class End2EndModel(nn.Module):
     def __init__(self, model_params):
@@ -320,6 +271,87 @@ class End2EndModel(nn.Module):
 
         self.POS2hidden = nn.Linear(self.pos_vocab_size, self.pos_emb_size)
         self.deprel2hidden = nn.Linear(self.deprel_vocab_size, self.deprel_emb_size)
+
+        self.head_dropout_unlabeled_FF = nn.Dropout(p=0.1)
+        self.dep_dropout_unlabeled_FF = nn.Dropout(p=0.1)
+        self.head_dropout_unlabeled_BB = nn.Dropout(p=0.1)
+        self.dep_dropout_unlabeled_BB = nn.Dropout(p=0.1)
+        self.head_dropout_unlabeled_FB = nn.Dropout(p=0.1)
+        self.dep_dropout_unlabeled_FB = nn.Dropout(p=0.1)
+        self.head_dropout_unlabeled_BF = nn.Dropout(p=0.1)
+        self.dep_dropout_unlabeled_BF = nn.Dropout(p=0.1)
+
+        lstm_hidden_dim = self.bilstm_hidden_size
+        self.SRL_MLP_Forward = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
+                                             nn.Linear(lstm_hidden_dim, self.target_vocab_size))
+
+        self.SRL_MLP_Backward = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
+                                              nn.Linear(lstm_hidden_dim, self.target_vocab_size))
+
+        self.SRL_MLP_Future = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
+                                            nn.Linear(lstm_hidden_dim, self.target_vocab_size))
+
+        self.SRL_MLP_Past = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
+                                          nn.Linear(lstm_hidden_dim, self.target_vocab_size))
+
+    def Semi_SRL_Loss(self, hidden_forward, hidden_backward, TagProbs_use, sentence, lengths, target_idx_in):
+        TagProbs_use_softmax = F.softmax(TagProbs_use, dim=2).detach()
+        sample_nums = lengths.sum()
+        unlabeled_loss_function = nn.KLDivLoss(reduce=False)
+
+        hidden_future = _roll(hidden_forward, -1)
+        tag_space = self.SRL_MLP_Future(self.hidden_future_unlabeled(hidden_future))
+        tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
+        dep_tag_space = tag_space
+        DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
+        DEP_Future_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
+
+        hidden_past = _roll(hidden_backward, 1)
+        tag_space = self.SRL_MLP_Past(self.hidden_past_unlabeled(hidden_past))
+        tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
+        dep_tag_space = tag_space
+        DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
+        DEP_Past_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
+
+        DEP_Future_loss = torch.sum(DEP_Future_loss, dim=2)
+        DEP_Past_loss = torch.sum(DEP_Past_loss, dim=2)
+
+        wordBeforePre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
+        for i in range(self.batch_size):
+            for j in range(len(sentence[0])):
+                if j >= target_idx_in[i]:
+                    wordBeforePre_mask[i][j] = 0.0
+        wordBeforePre_mask = torch.from_numpy(wordBeforePre_mask).to(device)
+
+        wordAfterPre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
+        for i in range(self.batch_size):
+            for j in range(len(sentence[0])):
+                if j <= target_idx_in[i]:
+                    wordAfterPre_mask[i][j] = 0.0
+        wordAfterPre_mask = torch.from_numpy(wordAfterPre_mask).to(device)
+
+        DEP_Semi_loss = wordBeforePre_mask * DEP_Past_loss + wordAfterPre_mask * DEP_Future_loss
+
+        loss_mask = np.ones(DEP_Semi_loss.size(), dtype='float32')
+        for i in range(self.batch_size):
+            for j in range(len(sentence[0])):
+                if j >= lengths[i]:
+                    loss_mask[i][j] = 0.0
+        loss_mask = torch.from_numpy(loss_mask).to(device)
+
+        DEP_Semi_loss = DEP_Semi_loss * loss_mask
+
+        DEP_Semi_loss = torch.sum(DEP_Semi_loss)
+        return DEP_Semi_loss / sample_nums
+
+    def find_predicate_embeds(self, hidden_states, target_idx_in):
+        Label_composer = hidden_states
+        predicate_embeds = Label_composer[np.arange(0, Label_composer.size()[0]), target_idx_in]
+        # T * B * H
+        added_embeds = torch.zeros(Label_composer.size()[1], Label_composer.size()[0],
+                                   Label_composer.size()[2]).to(device)
+        concat_embeds = (added_embeds + predicate_embeds).transpose(0, 1)
+        return concat_embeds
 
     def softmax(self, input, axis=1):
         """
