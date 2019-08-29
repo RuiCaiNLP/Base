@@ -15,38 +15,76 @@ from layer import CharCNN
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# <!-- pytorch and allennlp upgrade
-# from allennlp.modules.elmo import Elmo
-# from allennlp.data.dataset import Dataset
-# from allennlp.data import Token, Vocabulary, Instance
-# from allennlp.data.fields import TextField
-# from allennlp.data.token_indexers.elmo_indexer import ELMoTokenCharactersIndexer
+
+def _roll(arr, direction, sparse=False):
+  if sparse:
+    return torch.cat((arr[:, direction:], arr[:, :direction]), dim=1)
+  return torch.cat((arr[:, direction:, :], arr[:, :direction, :]),  dim=1)
 
 
+def cat(l, dimension=-1):
+    valid_l = l
+    if dimension < 0:
+        dimension += len(valid_l[0].size())
+    return torch.cat(valid_l, dimension)
+
+def mask_loss(self, Semi_loss, lengths):
+    for i in range(Semi_loss.size()[0]):
+        for j in range(Semi_loss.size()[1]):
+            if j >= lengths[i]:
+                Semi_loss[i][j] = 0 * Semi_loss[i][j]
+    return Semi_loss
 
 
-# indexer = ELMoTokenCharactersIndexer()
-# def batch_to_ids(batch):
-#     """
-#     Given a batch (as list of tokenized sentences), return a batch
-#     of padded character ids.
-#     """
-#     instances = []
-#     for sentence in batch:
-#         tokens = [Token(token) for token in sentence]
-#         field = TextField(tokens, {'character_ids': indexer})
-#         instance = Instance({"elmo": field})
-#         instances.append(instance)
+def Semi_SRL_Loss(self, hidden_forward, hidden_backward, TagProbs_use, sentence, lengths, target_idx_in):
+    TagProbs_use_softmax = F.softmax(TagProbs_use, dim=2).detach()
+    sample_nums = lengths.sum()
+    unlabeled_loss_function = nn.KLDivLoss(reduce=False)
 
-#     dataset = Dataset(instances)
-#     vocab = Vocabulary()
-#     # dataset.index_instances(vocab)
-#     for instance in dataset.instances:
-#         instance.index_fields(vocab)
-#     return dataset.as_tensor_dict()['elmo']['character_ids']
+    hidden_future = _roll(hidden_forward, -1)
+    tag_space = self.SRL_MLP_Future(self.hidden_future_unlabeled(hidden_future))
+    tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
+    dep_tag_space = tag_space
+    DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
+    DEP_Future_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
 
+    hidden_past = _roll(hidden_backward, 1)
+    tag_space = self.SRL_MLP_Past(self.hidden_past_unlabeled(hidden_past))
+    tag_space = tag_space.view(self.batch_size, len(sentence[0]), -1)
+    dep_tag_space = tag_space
+    DEPprobs_student = F.log_softmax(dep_tag_space, dim=2)
+    DEP_Past_loss = unlabeled_loss_function(DEPprobs_student, TagProbs_use_softmax)
 
-# -->
+    DEP_Future_loss = torch.sum(DEP_Future_loss, dim=2)
+    DEP_Past_loss = torch.sum(DEP_Past_loss, dim=2)
+
+    wordBeforePre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
+    for i in range(self.batch_size):
+        for j in range(len(sentence[0])):
+            if j >= target_idx_in[i]:
+                wordBeforePre_mask[i][j] = 0.0
+    wordBeforePre_mask = torch.from_numpy(wordBeforePre_mask).to(device)
+
+    wordAfterPre_mask = np.ones((self.batch_size, len(sentence[0])), dtype='float32')
+    for i in range(self.batch_size):
+        for j in range(len(sentence[0])):
+            if j <= target_idx_in[i]:
+                wordAfterPre_mask[i][j] = 0.0
+    wordAfterPre_mask = torch.from_numpy(wordAfterPre_mask).to(device)
+
+    DEP_Semi_loss = wordBeforePre_mask * DEP_Past_loss + wordAfterPre_mask * DEP_Future_loss
+
+    loss_mask = np.ones(DEP_Semi_loss.size(), dtype='float32')
+    for i in range(self.batch_size):
+        for j in range(len(sentence[0])):
+            if j >= lengths[i]:
+                loss_mask[i][j] = 0.0
+    loss_mask = torch.from_numpy(loss_mask).to(device)
+
+    DEP_Semi_loss = DEP_Semi_loss * loss_mask
+
+    DEP_Semi_loss = torch.sum(DEP_Semi_loss)
+    return DEP_Semi_loss / sample_nums
 
 class End2EndModel(nn.Module):
     def __init__(self, model_params):
