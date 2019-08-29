@@ -163,28 +163,28 @@ class End2EndModel(nn.Module):
 
         if USE_CUDA:
             self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True).cuda())
         else:
             self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True))
 
         if USE_CUDA:
             self.SL_hidden_state0_high = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True).cuda())
         else:
             self.SL_hidden_state0_high = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * 1, self.batch_size, 300),
                      requires_grad=True))
 
 
@@ -193,18 +193,18 @@ class End2EndModel(nn.Module):
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
 
-        self.bilstm_layer_high = nn.LSTM(input_size=3*self.bilstm_hidden_size,
+        self.bilstm_layer_high = nn.LSTM(input_size=2*self.bilstm_hidden_size + 200,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers-1,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
 
         self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size + 100,
-                                        hidden_size=self.bilstm_hidden_size, num_layers=1,
+                                        hidden_size=300, num_layers=1,
                                         dropout=self.dropout, bidirectional=True,
                                         bias=True, batch_first=True)
 
-        self.sentence_learner_high = nn.LSTM(input_size=2*self.bilstm_hidden_size,
-                                        hidden_size=self.bilstm_hidden_size, num_layers=1,
+        self.sentence_learner_high = nn.LSTM(input_size=2*300,
+                                        hidden_size=300, num_layers=1,
                                         dropout=self.dropout, bidirectional=True,
                                         bias=True, batch_first=True)
 
@@ -258,13 +258,13 @@ class End2EndModel(nn.Module):
         self.pred_dropout = nn.Dropout(p=self.dropout_mlp)
         self.word_dropout = nn.Dropout(p=self.dropout_word)
 
-        self.pos_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 300), nn.ReLU(), nn.Linear(300, self.pos_vocab_size))
-        self.PI_classifier = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, 300), nn.ReLU(),  nn.Linear(300, 3))
-        self.mlp_arg_deprel = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
-        self.mlp_pred_deprel = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+        self.pos_classifier = nn.Sequential(nn.Linear(2 * 300, 300), nn.ReLU(), nn.Linear(300, self.pos_vocab_size))
+        self.PI_classifier = nn.Sequential(nn.Linear(2 * 300, 300), nn.ReLU(),  nn.Linear(300, 3))
+        self.mlp_arg_deprel = nn.Sequential(nn.Linear(2 * 300, 300), nn.ReLU())
+        self.mlp_pred_deprel = nn.Sequential(nn.Linear(2 * 300, 300), nn.ReLU())
 
-        self.mlp_arg_link = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
-        self.mlp_pred_link = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
+        self.mlp_arg_link = nn.Sequential(nn.Linear(2 * 300, self.mlp_size), nn.ReLU())
+        self.mlp_pred_link = nn.Sequential(nn.Linear(2 * 300, self.mlp_size), nn.ReLU())
 
         self.deprel_W = nn.Parameter(
             torch.from_numpy(
@@ -276,7 +276,7 @@ class End2EndModel(nn.Module):
                 np.zeros((self.mlp_size + 1, 4 * (self.mlp_size + 1))).astype("float32")).to(
                 device))
 
-        self.elmo_mlp = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.bilstm_hidden_size), nn.ReLU())
+        self.elmo_mlp = nn.Sequential(nn.Linear(2 * 300, 200), nn.ReLU())
         self.elmo_w = nn.Parameter(torch.Tensor([0.5, 0.5]))
         self.elmo_gamma = nn.Parameter(torch.ones(1))
 
