@@ -19,10 +19,20 @@ for char in char_file.readlines():
 print(char_dict['c'])
 
 
-def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2word, shuffle=False):
+def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
+              deprel2idx, argument2idx, idx2word, shuffle=False):
 
     if shuffle:
         random.shuffle(input_data)
+    fr_input_data = []
+    fr_input_preidx = []
+    fr_file = open("flat_train_fr_cleaned", 'r')
+    for line in fr_file.readlines():
+        part = line.strip().split()
+        if len(part) == 1:
+            fr_input_preidx.append(int(part[0]))
+        else:
+            fr_input_data.append(part)
 
     for batch_i in range(int(math.ceil(len(input_data)/batch_size))):
         
@@ -32,7 +42,8 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
             end_i = len(input_data)
 
         data_batch = input_data[start_i:end_i]
-
+        fr_data_batch = fr_input_data[start_i:end_i]
+        fr_preidx_batch = fr_input_preidx[start_i:end_i]
 
         sentence_id_batch = [sentence[0][0] for sentence in data_batch]
         predicate_id_batch = [sentence[0][1] for sentence in data_batch]
@@ -62,6 +73,15 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
 
         word_batch = [[word2idx.get(item[6],word2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_word_batch = np.array(pad_batch(word_batch, batch_size, word2idx[_PAD_]))
+
+
+
+        fr_word_batch = [[fr_word2idx.get(item, fr_word2idx[_UNK_]) for item in sentence] for sentence in fr_data_batch]
+        fr_pad_word_batch = np.array(pad_batch(fr_word_batch, batch_size, fr_word2idx[_PAD_]))
+
+        fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
+        for i in range(batch_size):
+            fr_pad_flag_batch[i][fr_preidx_batch] = 1
 
         _, sen_max_len = pad_word_batch.shape
         flat_word_batch = pad_word_batch.ravel()
@@ -116,6 +136,10 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
 
         pretrain_word_batch = [[pretrain2idx.get(item[6],pretrain2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_pretrain_word_batch = np.array(pad_batch(pretrain_word_batch, batch_size, pretrain2idx[_PAD_]))
+
+        fr_pretrain_word_batch = [[fr_pretrain2idx.get(item, fr_pretrain2idx[_UNK_]) for item in sentence] for sentence in
+                               fr_data_batch]
+        fr_pad_pretrain_word_batch = np.array(pad_batch(fr_pretrain_word_batch, batch_size, fr_pretrain2idx[_PAD_]))
 
         # flag indicies
         pad_flag_indices = [0 for _ in range(batch_size)]
@@ -173,15 +197,19 @@ def get_batch(input_data, batch_size, word2idx, lemma2idx, pos2idx, pretrain2idx
         batch = {
             "sentence_id":sentence_id_batch,
             "predicate_id":predicate_id_batch,
-            "predicates_idx":predicates_idx_batch,
+            "fr_predicates_idx":fr_input_preidx,
+            "fr_predicates_idx"
             "word_id":id_batch,
             "index":index_batch,
             "flag":pad_flag_batch,
+            "fr_flag": fr_pad_flag_batch,
             "word":pad_word_batch,
+            "fr_word": fr_pad_word_batch,
             "char": pad_char_batch,
             "lemma":pad_lemma_batch,
             "pos":pad_pos_batch,
             "pretrain":pad_pretrain_word_batch,
+            "fr_pretrain": fr_pad_pretrain_word_batch,
             "head":pad_head_batch,
             "rhead":pad_rhead_batch,
             "deprel":pad_deprel_batch,

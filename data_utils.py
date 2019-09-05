@@ -167,6 +167,66 @@ def make_word_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use
     with open(idx2word_path,'wb') as f:
         pickle.dump(idx_to_word,f)
 
+
+def fr_make_word_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use_lower_bound=False, unify_pred=False):
+    with open(file_name, 'r') as f:
+        data = f.readlines()
+
+    origin_data = []
+    sentence = []
+    for i in range(len(data)):
+        if len(data[i].strip()) > 0:
+            sentence.append(data[i].strip().split('\t'))
+        else:
+            origin_data.append(sentence)
+            sentence = []
+
+    if len(sentence) > 0:
+        origin_data.append(sentence)
+
+    word_data = []
+    for sentence in origin_data:
+        for line in sentence:
+            if not is_number(line[1].lower()):
+                word_data.append(line[1].lower())
+
+    word_data_counter = collections.Counter(word_data).most_common()
+
+    if unify_pred:
+        word_vocab = [_PAD_, _UNK_, _ROOT_, _NUM_, _DUMMY_]
+    else:
+        word_vocab = [_PAD_, _UNK_, _ROOT_, _NUM_]
+
+    if use_lower_bound:
+        word_vocab = word_vocab + [item[0] for item in word_data_counter if item[1] >= freq_lower_bound]
+    else:
+        word_vocab = word_vocab + [item[0] for item in word_data_counter]
+
+    word_to_idx = {word: idx for idx, word in enumerate(word_vocab)}
+
+    idx_to_word = {idx: word for idx, word in enumerate(word_vocab)}
+
+    if not quiet:
+        log('\tword vocab size:{}'.format(len(word_vocab)))
+
+    if not quiet:
+        log('\tdump vocab at:{}'.format(output_path))
+
+    vocab_path = os.path.join(output_path, 'fr_word.vocab')
+
+    word2idx_path = os.path.join(output_path, 'fr_word2idx.bin')
+
+    idx2word_path = os.path.join(output_path, 'fr_idx2word.bin')
+
+    with open(vocab_path, 'w') as f:
+        f.write('\n'.join(word_vocab))
+
+    with open(word2idx_path, 'wb') as f:
+        pickle.dump(word_to_idx, f)
+
+    with open(idx2word_path, 'wb') as f:
+        pickle.dump(idx_to_word, f)
+
 def make_pos_vocab(file_name, output_path, freq_lower_bound=0, quiet=False, use_lower_bound = False, unify_pred=False):
 
     with open(file_name,'r') as f:
@@ -728,6 +788,81 @@ def shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_file
     with open(pretrain_emb_path,'wb') as f:
         pickle.dump(pretrained_embedding,f)
 
+def fr_shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_file, pretrained_emb_size, output_path,
+                                    quiet=False):
+    word_set = set()
+    with open(train_file, 'r') as f:
+        data = f.readlines()
+        for line in data:
+            if len(line.strip()) > 0:
+                line = line.strip().split('\t')
+                word_set.add(line[1].lower())
+    with open(dev_file, 'r') as f:
+        data = f.readlines()
+        for line in data:
+            if len(line.strip()) > 0:
+                line = line.strip().split('\t')
+                word_set.add(line[1].lower())
+
+    with open(test_file, 'r') as f:
+        data = f.readlines()
+        for line in data:
+            if len(line.strip()) > 0:
+                line = line.strip().split('\t')
+                word_set.add(line[1].lower())
+
+    pretrained_vocab = [_PAD_, _UNK_, _ROOT_, _NUM_]
+    pretrained_embedding = [
+        [0.0] * pretrained_emb_size,
+        [0.0] * pretrained_emb_size,
+        [0.0] * pretrained_emb_size,
+        [0.0] * pretrained_emb_size
+    ]
+
+    with open(pretrained_file, 'r') as f:
+        for line in f.readlines():
+            row = line.split(' ')
+            word = row[0].lower()
+            if not is_number(word):
+                if word in word_set and word not in pretrained_vocab:
+                    pretrained_vocab.append(word)
+                    weight = [float(item) for item in row[1:]]
+                    assert (len(weight) == pretrained_emb_size)
+                    pretrained_embedding.append(weight)
+
+    pretrained_embedding = np.array(pretrained_embedding, dtype=float)
+
+    pretrained_to_idx = {word: idx for idx, word in enumerate(pretrained_vocab)}
+
+    idx_to_pretrained = {idx: word for idx, word in enumerate(pretrained_vocab)}
+
+    if not quiet:
+        log('\tshrink pretrained vocab size:{}'.format(len(pretrained_vocab)))
+        log('\tdataset sum:{} pretrained cover:{} '.format(len(word_set), len(pretrained_vocab)))
+
+    if not quiet:
+        log('\tdump vocab at:{}'.format(output_path))
+
+    vocab_path = os.path.join(output_path, 'fr_pretrain.vocab')
+
+    pretrain2idx_path = os.path.join(output_path, 'fr_pretrain2idx.bin')
+
+    idx2pretrain_path = os.path.join(output_path, 'fr_idx2pretrain.bin')
+
+    pretrain_emb_path = os.path.join(output_path, 'fr_pretrain.emb.bin')
+
+    with open(vocab_path, 'w') as f:
+        f.write('\n'.join(pretrained_vocab))
+
+    with open(pretrain2idx_path, 'wb') as f:
+        pickle.dump(pretrained_to_idx, f)
+
+    with open(idx2pretrain_path, 'wb') as f:
+        pickle.dump(idx_to_pretrained, f)
+
+    with open(pretrain_emb_path, 'wb') as f:
+        pickle.dump(pretrained_embedding, f)
+
 # # argument model input
 # # SENTID(0), PREDID(1), SENTLEN(2), TOKENID(3), RINDEX(4), FLAG(5), FORM(6), LEMMA(7), POS(8), HEAD(9), RHEAD(10), DEPREL(11), LABEL(12)
 # # argument model input will copy the sentence by count of predicate.
@@ -807,6 +942,7 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
 
     # arg_prune = 0
     # sum_prune = 0
+    #flat_file = open('flat_train', 'w')
     with open(output_path, 'w') as f:
         for sidx in tqdm(range(len(origin_data))):
             sentence = origin_data[sidx]
@@ -844,17 +980,20 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
 
                         if end_idx != len(sentence):
                             sentence[end_idx][14+predicate_idx] = _EOA_
-
+                    words_in_sen = []
                     for j in range(len(sentence)):
                         ID = sentence[j][0] # ID
                         IS_PRED = 0
-                        if i == j:
-                            IS_PRED = 1
+
                         This_belong_Preds = 0
                         if sentence[j][12] == 'Y':
                             This_belong_Preds = 1
                         word = sentence[j][1].lower() # FORM
-
+                        word_w = word
+                        if i == j:
+                            IS_PRED = 1
+                            word_w = "\""+word+"\""
+                        words_in_sen.append(word_w)
                         # filter the data by word_filter
                         # if word_filter is not None and word_filter.get(word) is not None:
                         #     sum_prune += 1
@@ -908,7 +1047,8 @@ def make_dataset_input(dataset_file, output_path, quiet=False, random_error_prob
                             output_block.append([str(sentence_idx), str(predicate_idx), str(len(sentence)+1), str(int(ID)+1), str(int(ID)+1), str(IS_PRED), word, lemma, pos, str(int(head)+1), str(int(head)+1), deprel, tag])
                         else:
                             output_block.append([str(sentence_idx), str(predicate_idx), str(len(sentence)), ID, ID, str(IS_PRED), word, lemma, pos, head, head, deprel, tag, gold_pos, str(gold_head), gold_dep_rel, str(This_belong_Preds)])
-                        
+                    #flat_file.write(' '.join(words_in_sen))
+                    #flat_file.write('\n')
                     if len(output_block)>0:
                         output_data.append(output_block)
                         for item in output_block:

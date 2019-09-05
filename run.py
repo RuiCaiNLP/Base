@@ -239,6 +239,9 @@ if __name__ == '__main__':
     word2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/word2idx.bin'))
     idx2word = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/idx2word.bin'))
 
+    fr_word2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/fr_word2idx.bin'))
+    fr_idx2word = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/fr_idx2word.bin'))
+
     lemma2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/lemma2idx.bin'))
     idx2lemma = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/idx2lemma.bin'))
 
@@ -251,10 +254,14 @@ if __name__ == '__main__':
     pretrain2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/pretrain2idx.bin'))
     idx2pretrain = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/idx2pretrain.bin'))
 
+    fr_pretrain2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/fr_pretrain2idx.bin'))
+    fr_idx2pretrain = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/fr_idx2pretrain.bin'))
+
     argument2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/argument2idx.bin'))
     idx2argument = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/idx2argument.bin'))
 
     pretrain_emb_weight = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/pretrain.emb.bin'))
+    fr_pretrain_emb_weight = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/fr_pretrain.emb.bin'))
 
     log('\t data loading finished! consuming {} s'.format(int(time.time() - start_t)))
 
@@ -324,10 +331,12 @@ if __name__ == '__main__':
             "use_biaffine": use_biaffine,
             "batch_size": batch_size,
             "word_vocab_size": len(word2idx),
+            "fr_word_vocab_size": len(fr_word2idx),
             "lemma_vocab_size": len(lemma2idx),
             "pos_vocab_size": len(pos2idx),
             "deprel_vocab_size": len(deprel2idx),
             "pretrain_vocab_size": len(pretrain2idx),
+            "fr_pretrain_vocab_size": len(fr_pretrain2idx),
             "word_emb_size": word_embedding_size,
             "lemma_emb_size": lemma_embedding_size,
             "pos_emb_size": pos_embedding_size,
@@ -377,9 +386,9 @@ if __name__ == '__main__':
         for epoch in range(max_epoch):
 
             epoch_start = time.time()
-            for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx,
-                                                                             lemma2idx, pos2idx, pretrain2idx,
-                                                                             deprel2idx, argument2idx, idx2word, shuffle=True)):
+            for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
+                                                                             lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
+                                                                             deprel2idx, argument2idx, idx2word, shuffle=False)):
 
                 target_argument = train_input_data['argument']
 

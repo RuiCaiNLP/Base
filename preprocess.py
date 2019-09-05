@@ -9,9 +9,9 @@ def make_dataset():
     base_path = os.path.join(os.path.dirname(__file__), 'data/CoNLL-2009-Datasets')
 
     # because the train and dev file is with full format, wo just copy them
-    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-train.txt')
+    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-development.txt')
     raw_dev_file = os.path.join(base_path,
-                                'CoNLL2009-ST-English-development.txt')
+                                'fr-test')
 
     """
     # because the eval file is lack of 9, 11, 14, 15 so we need to merge them
@@ -33,8 +33,8 @@ def make_dataset():
     raw_eval_ood_file_pred_apreds = os.path.join(base_path,
                                                  'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English-ood.14-.PRED_APREDs.txt')
     """
-    train_file = os.path.join(os.path.dirname(__file__), 'data/conll09_train.dataset')
-    dev_file = os.path.join(os.path.dirname(__file__), 'data/conll09_dev.dataset')
+    train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
+    dev_file = os.path.join(os.path.dirname(__file__), 'data/Fr_dev.dataset')
     #test_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test.dataset')
     #test_ood_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test_ood.dataset')
 
@@ -179,8 +179,8 @@ if __name__ == '__main__':
     # make train/dev/test dataset
     make_dataset()
 
-    train_file = os.path.join(os.path.dirname(__file__), 'data/conll09_train.dataset')
-    dev_file = os.path.join(os.path.dirname(__file__), 'data/conll09_dev.dataset')
+    train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
+    dev_file = os.path.join(os.path.dirname(__file__), 'data/Fr_dev.dataset')
     #test_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test.dataset')
     #test_ood_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test_ood.dataset')
 
@@ -228,6 +228,8 @@ if __name__ == '__main__':
     vocab_path = os.path.join(os.path.dirname(__file__), 'temp')
     print('word:')
     make_word_vocab(train_file, vocab_path, unify_pred=False)
+    print('fr word:')
+    fr_make_word_vocab(dev_file, vocab_path, unify_pred=False)
     print('pos:')
     make_pos_vocab(train_file, vocab_path, unify_pred=False)
     print('lemma:')
@@ -241,10 +243,16 @@ if __name__ == '__main__':
 
     # shrink pretrained embeding
     print('\n-- shrink pretrained embeding --')
-    pretrain_file = os.path.join(os.path.dirname(__file__), 'data/glove.6B.100d.txt')  # words.vector
-    pretrained_emb_size = 100
+    pretrain_file = os.path.join(os.path.dirname(__file__), 'data/en.vec.txt')  # words.vector
+    pretrained_emb_size = 300
     pretrain_path = os.path.join(os.path.dirname(__file__), 'temp')
-    shrink_pretrained_embedding(train_file, dev_file, dev_file, pretrain_file, pretrained_emb_size, pretrain_path)
+    shrink_pretrained_embedding(train_file, train_file, train_file, pretrain_file, pretrained_emb_size, pretrain_path)
+
+    print('\n-- shrink french pretrained embeding --')
+    pretrain_file_fr = os.path.join(os.path.dirname(__file__), 'data/fr.vec.txt')  # words.vector
+    pretrained_emb_size_fr = 300
+    pretrain_path_fr = os.path.join(os.path.dirname(__file__), 'temp')
+    fr_shrink_pretrained_embedding(dev_file, dev_file, dev_file, pretrain_file_fr, pretrained_emb_size_fr, pretrain_path_fr)
 
     #
     # make_pred_dataset_input(train_file, os.path.join(os.path.dirname(__file__),'temp/pred_train.input'))
