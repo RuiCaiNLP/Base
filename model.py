@@ -48,10 +48,12 @@ class End2EndModel(nn.Module):
         self.batch_size = model_params['batch_size']
 
         self.word_vocab_size = model_params['word_vocab_size']
+        self.fr_word_vocab_size = model_params['fr_word_vocab_size']
         self.lemma_vocab_size = model_params['lemma_vocab_size']
         self.pos_vocab_size = model_params['pos_vocab_size']
         self.deprel_vocab_size = model_params['deprel_vocab_size']
         self.pretrain_vocab_size = model_params['pretrain_vocab_size']
+        self.fr_pretrain_vocab_size = model_params['fr_pretrain_vocab_size']
 
         self.word_emb_size = model_params['word_emb_size']
         self.lemma_emb_size = model_params['lemma_emb_size']
@@ -62,6 +64,7 @@ class End2EndModel(nn.Module):
 
         self.pretrain_emb_size = model_params['pretrain_emb_size']
         self.pretrain_emb_weight = model_params['pretrain_emb_weight']
+        self.fr_pretrain_emb_weight = model_params['fr_pretrain_emb_weight']
 
         self.bilstm_num_layers = model_params['bilstm_num_layers']
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
@@ -87,6 +90,9 @@ class End2EndModel(nn.Module):
         self.word_embedding = nn.Embedding(self.word_vocab_size, self.word_emb_size)
         self.word_embedding.weight.data.uniform_(-1.0, 1.0)
 
+        self.fr_word_embedding = nn.Embedding(self.fr_word_vocab_size, self.word_emb_size)
+        self.fr_word_embedding.weight.data.uniform_(-1.0, 1.0)
+
         self.lemma_embedding = nn.Embedding(self.lemma_vocab_size, self.lemma_emb_size)
         self.lemma_embedding.weight.data.uniform_(-1.0, 1.0)
 
@@ -101,6 +107,8 @@ class End2EndModel(nn.Module):
 
         self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
         self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
+        self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
+        self.fr_pretrained_embedding.weight.data.copy_(torch.from_numpy(self.fr_pretrain_emb_weight))
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -109,9 +117,9 @@ class End2EndModel(nn.Module):
             input_emb_size += 1
 
         if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size + 100 + self.pos_emb_size + self.deprel_emb_size + 4  #
+            input_emb_size += self.pretrain_emb_size + self.word_emb_size
         else:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size + 100 + self.pos_emb_size
+            input_emb_size += self.pretrain_emb_size + self.word_emb_size
 
         self.use_elmo = model_params['use_elmo']
         self.elmo_emb_size = model_params['elmo_embedding_size']
@@ -124,78 +132,26 @@ class End2EndModel(nn.Module):
 
 
         if USE_CUDA:
-            self.bilstm_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            self.bilstm_hidden_state = (
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True).cuda())
         else:
-            self.bilstm_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
+            self.bilstm_hidden_state = (
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True),
-            Variable(torch.randn(2 * 1, self.batch_size, self.bilstm_hidden_size),
-                     requires_grad=True))
-
-        if USE_CUDA:
-            self.bilstm_hidden_state0_high = (
-            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
-                     requires_grad=True).cuda(),
-            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
-                     requires_grad=True).cuda())
-        else:
-            self.bilstm_hidden_state0_high = (
-            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
-                     requires_grad=True),
-            Variable(torch.randn(2 * (self.bilstm_num_layers-1), self.batch_size, self.bilstm_hidden_size),
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
                      requires_grad=True))
 
 
-        if USE_CUDA:
-            self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True).cuda())
-        else:
-            self.SL_hidden_state0 = (
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True),
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True))
-
-        if USE_CUDA:
-            self.SL_hidden_state0_high = (
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True).cuda(),
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True).cuda())
-        else:
-            self.SL_hidden_state0_high = (
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True),
-            Variable(torch.randn(2 * 1, self.batch_size, 300),
-                     requires_grad=True))
 
 
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
-                                    hidden_size=self.bilstm_hidden_size, num_layers=1,
+                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
 
-        self.bilstm_layer_high = nn.LSTM(input_size=2*self.bilstm_hidden_size + 200,
-                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers-1,
-                                    dropout=self.dropout, bidirectional=True,
-                                    bias=True, batch_first=True)
-
-        self.sentence_learner = nn.LSTM(input_size=self.pretrain_emb_size + self.word_emb_size + 100,
-                                        hidden_size=300, num_layers=1,
-                                        dropout=self.dropout, bidirectional=True,
-                                        bias=True, batch_first=True)
-
-        self.sentence_learner_high = nn.LSTM(input_size=2*300,
-                                        hidden_size=300, num_layers=1,
-                                        dropout=self.dropout, bidirectional=True,
-                                        bias=True, batch_first=True)
 
         # self.bilstm_mlp = nn.Sequential(nn.Linear(self.bilstm_hidden_size*2, self.bilstm_hidden_size), nn.ReLU())
         self.use_self_attn = model_params['use_self_attn']
@@ -272,27 +228,6 @@ class End2EndModel(nn.Module):
         self.POS2hidden = nn.Linear(self.pos_vocab_size, self.pos_emb_size)
         self.deprel2hidden = nn.Linear(self.deprel_vocab_size, self.deprel_emb_size)
 
-        self.head_dropout_unlabeled_FF = nn.Dropout(p=0.1)
-        self.dep_dropout_unlabeled_FF = nn.Dropout(p=0.1)
-        self.head_dropout_unlabeled_BB = nn.Dropout(p=0.1)
-        self.dep_dropout_unlabeled_BB = nn.Dropout(p=0.1)
-        self.head_dropout_unlabeled_FB = nn.Dropout(p=0.1)
-        self.dep_dropout_unlabeled_FB = nn.Dropout(p=0.1)
-        self.head_dropout_unlabeled_BF = nn.Dropout(p=0.1)
-        self.dep_dropout_unlabeled_BF = nn.Dropout(p=0.1)
-
-        lstm_hidden_dim = self.bilstm_hidden_size
-        self.SRL_MLP_Forward = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
-                                             nn.Linear(lstm_hidden_dim, self.target_vocab_size))
-
-        self.SRL_MLP_Backward = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
-                                              nn.Linear(lstm_hidden_dim, self.target_vocab_size))
-
-        self.SRL_MLP_Future = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
-                                            nn.Linear(lstm_hidden_dim, self.target_vocab_size))
-
-        self.SRL_MLP_Past = nn.Sequential(nn.Linear(lstm_hidden_dim, lstm_hidden_dim), nn.ReLU(),
-                                          nn.Linear(lstm_hidden_dim, self.target_vocab_size))
 
     def Semi_SRL_Loss(self, hidden_forward, hidden_backward, TagProbs_use, sentence, lengths, target_idx_in):
         TagProbs_use_softmax = F.softmax(TagProbs_use, dim=2).detach()
@@ -374,91 +309,49 @@ class End2EndModel(nn.Module):
         soft_max_nd = soft_max_2d.view(*trans_size)
         return soft_max_nd.transpose(axis, len(input_size) - 1)
 
-    def forward(self, batch_input, elmo):
+    def forward(self, batch_input, elmo, withParallel=True, lang='En'):
+
+        if lang=='En':
+            word_batch = get_torch_variable_from_np(batch_input['word'])
+            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
+        else:
+            fr_word_batch = get_torch_variable_from_np(batch_input['word'])
+            fr_pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
 
         flag_batch = get_torch_variable_from_np(batch_input['flag'])
-        word_batch = get_torch_variable_from_np(batch_input['word'])
-        lemma_batch = get_torch_variable_from_np(batch_input['lemma'])
-        pos_batch = get_torch_variable_from_np(batch_input['pos'])
-        deprel_batch = get_torch_variable_from_np(batch_input['deprel'])
-        pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
-        origin_batch = batch_input['origin']
-        origin_deprel_batch = batch_input['deprel']
-        chars_batch = get_torch_variable_from_np(batch_input['char'])
 
+        if withParallel:
+            fr_word_batch = get_torch_variable_from_np(batch_input['fr_word'])
+            fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
+            fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
 
         if self.use_flag_embedding:
             flag_emb = self.flag_embedding(flag_batch)
         else:
             flag_emb = flag_batch.view(flag_batch.shape[0], flag_batch.shape[1], 1).float()
-        seq_len = flag_batch.shape[1]
-        word_emb = self.word_embedding(word_batch)
-        lemma_emb = self.lemma_embedding(lemma_batch)
-        pos_emb = self.pos_embedding(pos_batch)
-        char_embeddings = self.char_embeddings(chars_batch)
-        character_embeddings = self.charCNN(char_embeddings)
-        pretrain_emb = self.pretrained_embedding(pretrain_batch)
 
-        if self.use_deprel:
-            deprel_emb = self.deprel_embedding(deprel_batch)
+        seq_len = flag_batch.shape[1]
+        if lang == "En":
+            word_emb = self.word_embedding(word_batch)
+            pretrain_emb = self.pretrained_embedding(pretrain_batch)
+        else:
+            word_emb = self.fr_word_embedding(fr_word_batch)
+            pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch)
+
+
 
         # predicate_emb = self.word_embedding(predicate_batch)
         # predicate_pretrain_emb = self.pretrained_embedding(predicate_pretrain_batch)
 
-
-
-        ##sentence learner#####################################
-        SL_input_emb = self.word_dropout(torch.cat([word_emb, pretrain_emb, character_embeddings], 2))
-        h0, (_, SL_final_state) = self.sentence_learner(SL_input_emb, self.SL_hidden_state0)
-        h1, (_, SL_final_state) = self.sentence_learner_high(h0, self.SL_hidden_state0_high)
-        SL_output = h1
-        POS_output = self.pos_classifier(SL_output).view(self.batch_size * seq_len, -1)
-        PI_output = self.PI_classifier(SL_output).view(self.batch_size * seq_len, -1)
-        ## deprel
-        hidden_input = SL_output
-        arg_hidden = self.mlp_dropout(self.mlp_arg_deprel(SL_output))
-        predicates_1D = batch_input['predicates_idx']
-        pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        pred_hidden = self.pred_dropout(self.mlp_pred_deprel(pred_recur))
-        deprel_output = bilinear(arg_hidden, self.deprel_W, pred_hidden, self.mlp_size, seq_len, 1,
-                                 self.batch_size,
-                                 num_outputs=self.deprel_vocab_size, bias_x=True, bias_y=True)
-
-        arg_hidden = self.mlp_dropout(self.mlp_arg_link(SL_output))
-        predicates_1D = batch_input['predicates_idx']
-        pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        pred_hidden = self.pred_dropout(self.mlp_pred_link(pred_recur))
-        Link_output = bilinear(arg_hidden, self.link_W, pred_hidden, self.mlp_size, seq_len, 1,
-                                 self.batch_size,
-                                 num_outputs=4, bias_x=True, bias_y=True)
-        deprel_output = deprel_output.view(self.batch_size * seq_len, -1)
-        Link_output = Link_output.view(self.batch_size * seq_len, -1)
-
-        POS_probs = F.softmax(POS_output, dim=1).view(self.batch_size, seq_len, -1)
-        deprel_probs = F.softmax(deprel_output, dim=1).view(self.batch_size, seq_len, -1)
-        link_probs = F.softmax(Link_output, dim=1).view(self.batch_size, seq_len, -1)
-
-        POS_compose = F.tanh(self.POS2hidden(POS_probs))
-        deprel_compose = F.tanh(self.deprel2hidden(deprel_probs))
-        link_compose = link_probs
-
         #######semantic role labelerxxxxxxxxxx
 
         if self.use_deprel:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb, character_embeddings, POS_compose, deprel_compose, link_compose], 2)  #
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb], 2)  #
         else:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb,  character_embeddings, POS_compose], 2)  #
+            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb], 2)  #
 
         input_emb = self.word_dropout(input_emb)
-
-        w = F.softmax(self.elmo_w, dim=0)
-        SRL_composer = self.elmo_gamma * (w[0] * h0 + w[1] * h1)
-        SRL_composer = self.elmo_mlp(SRL_composer)
-        bilstm_output_0, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state0)
-        high_input = torch.cat((bilstm_output_0, SRL_composer), 2)
-        bilstm_output, (_, bilstm_final_state) = self.bilstm_layer_high(high_input, self.bilstm_hidden_state0_high)
-
-
+        bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
 
         # bilstm_final_state = bilstm_final_state.view(self.bilstm_num_layers, 2, self.batch_size, self.bilstm_hidden_size)
 
@@ -633,5 +526,5 @@ class End2EndModel(nn.Module):
             output = output.view(self.batch_size*seq_len, -1)
 
 
-        return output, POS_output, PI_output, deprel_output, Link_output
+        return output
 

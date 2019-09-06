@@ -113,7 +113,7 @@ def eval_train_batch(epoch,batch_i,loss,golden_batch,predict_batch,argument2idx)
     log('epoch {} batch {} loss:{:4f} accurate:{:.2f} predict:{} golden:{} correct:{}'.format(epoch, batch_i, loss, num_correct/batch_total*100, predict_args, golden_args, correct_args))
 
 
-def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word, unify_pred = False, predicate_correct=0, predicate_sum=0):
+def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word, unify_pred = False, predicate_correct=0, predicate_sum=0):
 
     model.eval()
     golden = []
@@ -157,9 +157,11 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         seq_len = input_data['seq_len']
         bs = input_data['batch_size']
         psl = input_data['pad_seq_len']
-        
-        out, out_pos, out_PI, out_deprel, out_link = model(input_data, elmo)
 
+        out = model(input_data, elmo,  withParallel=False, lang='Fr')
+        #out, out_pos, out_PI, out_deprel, out_link = model(input_data, elmo)
+
+        """
         a, b, c = get_PRF(out_pos, gold_pos_batch_variable.view(-1))
         correct_pos += a
         NonullPredict_pos += b
@@ -179,6 +181,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         correct_link += a
         NonullPredict_link += b
         NonullTruth_link += c
+        """
 
 
         _, pred = torch.max(out, 1)
@@ -213,6 +216,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
         output_data.append(cur_sentence_data)
     
     score = sem_f1_score(golden, predict, argument2idx, unify_pred, predicate_correct, predicate_sum)
+    """
     P = correct_pos / NonullPredict_pos
     R = correct_pos / NonullTruth_pos
     F = 2 * P * R / (P + R)
@@ -233,6 +237,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, lemma2idx, pos2idx, pr
     F = 2 * P * R / (P + R)
     log(correct_link, NonullPredict_link, NonullTruth_link)
     log("link: ", P, R, F)
+    """
 
     model.train()
 

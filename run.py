@@ -342,6 +342,7 @@ if __name__ == '__main__':
             "pos_emb_size": pos_embedding_size,
             "pretrain_emb_size": pretrained_embedding_size,
             "pretrain_emb_weight": pretrain_emb_weight,
+            "fr_pretrain_emb_weight": fr_pretrain_emb_weight,
             "bilstm_num_layers": bilstm_num_layers,
             "bilstm_hidden_size": bilstm_hidden_size,
             "target_vocab_size": len(argument2idx),
@@ -411,16 +412,16 @@ if __name__ == '__main__':
                 bs = train_input_data['batch_size']
                 sl = train_input_data['seq_len']
 
-                out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
-
+                #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
+                out = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 loss = criterion(out, target_batch_variable)
 
-                loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
-                loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
-                loss_deprel = criterion(out_deprel, gold_deprel_batch_variable.view(-1))
-                loss_link = criterion(out_link, gold_link_batch_variable.view(-1))
+                #loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
+                #loss_PI = criterion(out_PI, gold_PI_batch_variable.view(-1))
+                #loss_deprel = criterion(out_deprel, gold_deprel_batch_variable.view(-1))
+                #loss_link = criterion(out_link, gold_link_batch_variable.view(-1))
 
-                loss = loss + loss_pos + loss_PI + loss_deprel + loss_link
+                #loss = loss + loss_pos + loss_PI + loss_deprel + loss_link
                 if batch_i%50 == 0:
                     log(batch_i, loss)
                     #log("POS:")
@@ -446,8 +447,8 @@ if __name__ == '__main__':
                     eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
 
                     log('dev:')
-                    score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, lemma2idx,
-                                                  pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
+                    score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, fr_word2idx, lemma2idx,
+                                                  pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
                                                   False,
                                                   dev_predicate_correct, dev_predicate_sum)
                     if dev_best_score is None or score[2] > dev_best_score[2]:
