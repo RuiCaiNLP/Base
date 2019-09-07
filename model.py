@@ -315,8 +315,8 @@ class End2EndModel(nn.Module):
             word_batch = get_torch_variable_from_np(batch_input['word'])
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         else:
-            fr_word_batch = get_torch_variable_from_np(batch_input['word'])
-            fr_pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
+            word_batch = get_torch_variable_from_np(batch_input['word'])
+            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
 
         flag_batch = get_torch_variable_from_np(batch_input['flag'])
 
@@ -335,8 +335,8 @@ class End2EndModel(nn.Module):
             word_emb = self.word_embedding(word_batch)
             pretrain_emb = self.pretrained_embedding(pretrain_batch)
         else:
-            word_emb = self.fr_word_embedding(fr_word_batch)
-            pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch)
+            word_emb = self.fr_word_embedding(word_batch)
+            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch)
 
 
 

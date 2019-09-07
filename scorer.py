@@ -129,8 +129,10 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
     correct_link, NonullPredict_link, NonullTruth_link = 0., 0., 0.
 
 
-    for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx,
-                                                             lemma2idx, pos2idx, pretrain2idx, deprel2idx, argument2idx, idx2word)):
+    for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx, fr_word2idx,
+                                                             lemma2idx, pos2idx, pretrain2idx,
+                                                             fr_pretrain2idx, deprel2idx, argument2idx, idx2word,
+                                                               withParrallel=False, lang="Fr")):
         
         target_argument = input_data['argument']
         
