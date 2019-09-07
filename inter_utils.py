@@ -34,6 +34,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
                 fr_input_preidx.append(int(part[0]))
             else:
                 fr_input_data.append(part)
+    else:
+        fr_input_preidx = None
 
     for batch_i in range(int(math.ceil(len(input_data)/batch_size))):
         
