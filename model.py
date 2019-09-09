@@ -117,9 +117,9 @@ class End2EndModel(nn.Module):
             input_emb_size += 1
 
         if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size
+            input_emb_size += self.pretrain_emb_size# + self.word_emb_size
         else:
-            input_emb_size += self.pretrain_emb_size + self.word_emb_size
+            input_emb_size += self.pretrain_emb_size #+ self.word_emb_size
 
         self.use_elmo = model_params['use_elmo']
         self.elmo_emb_size = model_params['elmo_embedding_size']
@@ -333,10 +333,10 @@ class End2EndModel(nn.Module):
         seq_len = flag_batch.shape[1]
         if lang == "En":
             word_emb = self.word_embedding(word_batch)
-            pretrain_emb = self.pretrained_embedding(pretrain_batch)
+            pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
         else:
             word_emb = self.fr_word_embedding(word_batch)
-            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch)
+            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
 
 
 
@@ -346,11 +346,11 @@ class End2EndModel(nn.Module):
         #######semantic role labelerxxxxxxxxxx
 
         if self.use_deprel:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb], 2)  #
+            input_emb = torch.cat([flag_emb, pretrain_emb], 2)  #
         else:
-            input_emb = torch.cat([flag_emb, word_emb, pretrain_emb], 2)  #
+            input_emb = torch.cat([flag_emb,  pretrain_emb], 2)  #
 
-        input_emb = self.word_dropout(input_emb).detach()
+        input_emb = self.word_dropout(input_emb)
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
 
         # bilstm_final_state = bilstm_final_state.view(self.bilstm_num_layers, 2, self.batch_size, self.bilstm_hidden_size)

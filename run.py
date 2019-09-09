@@ -451,7 +451,7 @@ if __name__ == '__main__':
                                                   pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
                                                   False,
                                                   dev_predicate_correct, dev_predicate_sum)
-                    if dev_best_score is None or score[2] > dev_best_score[2]:
+                    if dev_best_score is None or score[5] > dev_best_score[5]:
                         dev_best_score = score
                         output_predict(
                             os.path.join(result_path, 'dev_argument_{:.2f}.pred'.format(dev_best_score[2] * 100)),
