@@ -132,7 +132,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
     for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx, fr_word2idx,
                                                              lemma2idx, pos2idx, pretrain2idx,
                                                              fr_pretrain2idx, deprel2idx, argument2idx, idx2word,
-                                                               withParrallel=False, lang="Fr")):
+                                                               withParrallel=False, lang="En")):
         
         target_argument = input_data['argument']
         
@@ -160,7 +160,7 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
         bs = input_data['batch_size']
         psl = input_data['pad_seq_len']
 
-        out = model(input_data, elmo,  withParallel=False, lang='Fr')
+        out = model(input_data, elmo,  withParallel=False, lang='En')
         #out, out_pos, out_PI, out_deprel, out_link = model(input_data, elmo)
 
         """
