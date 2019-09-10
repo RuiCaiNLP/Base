@@ -147,10 +147,10 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
         gold_link = input_data['sep_dep_link']
 
         target_batch_variable = get_torch_variable_from_np(flat_argument)
-        gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
-        gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
-        gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
-        gold_link_batch_variable = get_torch_variable_from_np(gold_link)
+        #gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
+        #gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
+        #gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
+        #gold_link_batch_variable = get_torch_variable_from_np(gold_link)
 
         sentence_id = input_data['sentence_id']
         predicate_id = input_data['predicate_id']

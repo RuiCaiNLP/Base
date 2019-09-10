@@ -404,10 +404,10 @@ if __name__ == '__main__':
                 gold_link = train_input_data['sep_dep_link']
 
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
-                gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
-                gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
-                gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
-                gold_link_batch_variable = get_torch_variable_from_np(gold_link)
+                #gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
+                #gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
+                #gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
+                #gold_link_batch_variable = get_torch_variable_from_np(gold_link)
 
                 bs = train_input_data['batch_size']
                 sl = train_input_data['seq_len']
