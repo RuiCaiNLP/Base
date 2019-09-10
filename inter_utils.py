@@ -112,14 +112,21 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         gold_pos_batch = [[pos2idx.get(item[13], pos2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_gold_pos_batch = np.array(pad_batch(gold_pos_batch, batch_size, pos2idx[_PAD_]))
 
-        head_batch = [[int(item[9]) for item in sentence] for sentence in data_batch]
-        pad_head_batch = np.array(pad_batch(head_batch, batch_size, -1))
+        if lang=='En':
+            head_batch = [[int(item[9]) for item in sentence] for sentence in data_batch]
+            pad_head_batch = np.array(pad_batch(head_batch, batch_size, -1))
 
-        gold_head_batch = [[int(item[14]) for item in sentence] for sentence in data_batch]
-        pad_gold_head_batch = np.array(pad_batch(gold_head_batch, batch_size, -1))
+            gold_head_batch = [[int(item[14]) for item in sentence] for sentence in data_batch]
+            pad_gold_head_batch = np.array(pad_batch(gold_head_batch, batch_size, -1))
 
-        rhead_batch = [[int(item[10]) for item in sentence] for sentence in data_batch]
-        pad_rhead_batch = np.array(pad_batch(rhead_batch, batch_size, -1))
+            rhead_batch = [[int(item[10]) for item in sentence] for sentence in data_batch]
+            pad_rhead_batch = np.array(pad_batch(rhead_batch, batch_size, -1))
+        else:
+            pad_head_batch = None
+
+            pad_gold_head_batch = None
+
+            pad_rhead_batch = None
 
         deprel_batch = [[deprel2idx.get(item[11],deprel2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_deprel_batch = np.array(pad_batch(deprel_batch, batch_size, deprel2idx[_PAD_]))
@@ -129,9 +136,11 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         pad_gold_deprel_batch = np.array(pad_batch(gold_deprel_batch, batch_size, deprel2idx[_PAD_]))
 
 
-        sep_pad_gold_deprel_batch = pad_gold_deprel_batch
-        sep_pad_gold_link_batch = pad_gold_deprel_batch
+
+        sep_pad_gold_deprel_batch = None #pad_gold_deprel_batch
+        sep_pad_gold_link_batch = None #pad_gold_deprel_batch
         ### constructing specific gold deprel
+        """
         for i, sentence in enumerate(data_batch):
             current_predicate_id = predicates_idx_batch[i]
             for j, item in enumerate(sentence):
@@ -143,7 +152,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
                     continue
                 sep_pad_gold_deprel_batch[i][j] = deprel2idx[_UNK_]
                 sep_pad_gold_link_batch[i][j] = 1
-
+        """
 
         argument_batch = [[argument2idx.get(item[12],argument2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_argument_batch = np.array(pad_batch(argument_batch, batch_size, argument2idx[_PAD_]))
@@ -153,7 +162,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             pretrain_word_batch = [[pretrain2idx.get(item[6],pretrain2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_pretrain_word_batch = np.array(pad_batch(pretrain_word_batch, batch_size, pretrain2idx[_PAD_]))
         else:
-            pretrain_word_batch = [[fr_pretrain2idx.get(item[6], pretrain2idx[_UNK_]) for item in sentence] for sentence in
+            pretrain_word_batch = [[fr_pretrain2idx.get(item[6], fr_pretrain2idx[_UNK_]) for item in sentence] for sentence in
                                    data_batch]
             pad_pretrain_word_batch = np.array(pad_batch(pretrain_word_batch, batch_size, pretrain2idx[_PAD_]))
 
@@ -172,36 +181,12 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
                     pad_flag_indices[idx] = jdx
 
         # children indicies
-        pad_children_indicies = [[[] for _ in range(pad_rhead_batch.shape[1])] for _ in range(batch_size)]
-        for idx in range(batch_size):
-            for jdx in range(pad_rhead_batch.shape[1]):
-                if pad_rhead_batch[idx,jdx]!=-1 and pad_rhead_batch[idx,jdx]!=0:
-                    head_idx = pad_rhead_batch[idx,jdx]-1
-                    pad_children_indicies[idx][head_idx].append(jdx)
+        pad_children_indicies = None
 
         # sa relative indicies
-        pad_relative_indicies = [[[[] for _ in range(2)] for _ in range(pad_rhead_batch.shape[1])] for _ in range(batch_size)]
-        pad_relative_rels = [[[[] for _ in range(2)] for _ in range(pad_rhead_batch.shape[1])] for _ in range(batch_size)]
-        for idx in range(batch_size):
-            for jdx in range(pad_rhead_batch.shape[1]):
-                if pad_rhead_batch[idx,jdx]!=-1 and pad_rhead_batch[idx,jdx]!=0:
-                    head_idx = pad_rhead_batch[idx,jdx]-1
-                    if head_idx < jdx:
-                        pad_relative_indicies[idx][jdx][0].append(head_idx)
-                        pad_relative_rels[idx][jdx][0].append(pad_deprel_batch[idx,jdx])
-                    elif head_idx > jdx:
-                        pad_relative_indicies[idx][jdx][1].append(head_idx)
-                        pad_relative_rels[idx][jdx][1].append(pad_deprel_batch[idx,jdx])
-                    for child_idx in pad_children_indicies[idx][jdx]:
-                        if child_idx < jdx:
-                            pad_relative_indicies[idx][jdx][0].append(child_idx)
-                            pad_relative_rels[idx][jdx][0].append(pad_deprel_batch[idx,child_idx])
-                        elif head_idx > jdx:
-                            pad_relative_indicies[idx][jdx][1].append(child_idx)
-                            pad_relative_rels[idx][jdx][1].append(pad_deprel_batch[idx,child_idx])
+        pad_relative_indicies = None#[[[[] for _ in range(2)] for _ in range(pad_rhead_batch.shape[1])] for _ in range(batch_size)]
+        pad_relative_rels = None# [[[[] for _ in range(2)] for _ in range(pad_rhead_batch.shape[1])] for _ in range(batch_size)]
 
-        pad_relative_indicies = np.array(pad_relative_indicies)
-        pad_relative_rels = np.array(pad_relative_rels)
 
         # predicate_batch = []
         # predicate_pretrain_batch = []
