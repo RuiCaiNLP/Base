@@ -39,7 +39,6 @@
 9	de	_	de	ADP	ADP	_	_	_	11	_	case	_	_	_
 10	"	_	"	PUNCT	PUNCT	_	_	_	11	_	punct	_	_	_
 11	décentrement	_	décentrement	NOUN	NOUN	_	_	_	8	_	nmod	_	_	_
-12-13	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 12	de	_	de	ADP	ADP	_	_	_	14	_	case	_	_	_
 13	le	_	le	DET	DET	_	_	_	14	_	det	_	_	_
 14	Sujet	_	sujet	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_
@@ -56,13 +55,11 @@
 8	la	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_	_	_
 9	population	_	population	NOUN	NOUN	_	_	_	22	_	nsubj	_	_	_	A1	_	_
 10	civile	_	civil	ADJ	ADJ	_	_	_	9	_	amod	_	_	_	_	_	_
-11-12	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	de	_	de	ADP	ADP	_	_	_	13	_	case	_	_	_	_	_	_
 12	le	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_	_	_
 13	territoire	_	territoire	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_	_	_
 14	non	_	non	ADV	ADV	_	_	_	15	_	neg	_	_	_	_	_	_
 15	autonome	_	autonome	ADJ	ADJ	_	_	_	13	_	amod	_	_	_	_	_	_
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_	_
 18	Sahara	_	Sahara	PROPN	PROPN	_	_	_	13	_	nmod	_	_	_	_	_	_
@@ -73,7 +70,6 @@
 23	de	_	de	ADP	ADP	_	_	_	25	_	case	_	_	_	_	_	_
 24	diverses	_	divers	ADJ	ADJ	_	_	_	25	_	amod	_	_	_	_	_	_
 25	atteintes	_	atteinte	NOUN	NOUN	_	_	_	22	_	nmod	_	_	_	_	_	_
-26-27	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 26	à	_	à	ADP	ADP	_	_	_	28	_	case	_	_	_	_	_	_
 27	les	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_	_
 28	droits	_	droit	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_	_	_	_
@@ -133,7 +129,6 @@
 21	)	_	)	PUNCT	PUNCT	_	_	_	20	_	punct	_	_
 22	(	_	(	PUNCT	PUNCT	_	_	_	27	_	punct	_	_
 23	jusqu'	_	jusque	ADP	ADP	_	_	_	27	_	case	_	_
-24-25	au	_	_	_	_	_	_	_	_	_	_	_	_
 24	à	_	à	ADP	ADP	_	_	_	23	_	mwe	_	_
 25	le	_	le	DET	DET	_	_	_	27	_	det	_	_
 26	31	_	31	NUM	NUM	_	_	_	27	_	nummod	_	_
@@ -196,7 +191,6 @@
 1	Les	_	le	DET	DET	_	_	_	2	_	det	_	_	_
 2	spéculations	_	spéculation	NOUN	NOUN	_	_	_	10	_	nsubj	_	_	A1
 3	autour	_	autour	ADP	ADP	_	_	_	6	_	case	_	_	_
-4-5	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 4	de	_	de	ADP	ADP	_	_	_	3	_	mwe	_	_	_
 5	le	_	le	DET	DET	_	_	_	6	_	det	_	_	_
 6	match	_	match	NOUN	NOUN	_	_	_	2	_	nmod	_	_	_
@@ -297,7 +291,6 @@
 5	d'	_	de	ADP	ADP	_	_	_	7	_	case	_	_	_	_
 6	une	_	un	DET	DET	_	_	_	7	_	det	_	_	_	_
 7	pensée	_	pensée	NOUN	NOUN	_	_	_	4	_	nmod	_	_	A1	_
-8-9	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 8	de	_	de	ADP	ADP	_	_	_	10	_	case	_	_	_	_
 9	le	_	le	DET	DET	_	_	_	10	_	det	_	_	_	_
 10	Moyen-âge	_	moyen-âge	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	_
@@ -329,7 +322,6 @@
 20	l'	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_	_
 21	autorité	_	autorité	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_
 22	spirituelle	_	spirituel	ADJ	ADJ	_	_	_	21	_	amod	_	_	_	_	_
-23-24	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 23	de	_	de	ADP	ADP	_	_	_	25	_	case	_	_	_	_	_
 24	le	_	le	DET	DET	_	_	_	25	_	det	_	_	_	_	_
 25	pape	_	pape	NOUN	NOUN	_	_	_	21	_	nmod	_	_	_	_	_
@@ -342,7 +334,6 @@
 2	-ce	_	ce	PRON	PRON	_	_	_	4	_	nsubj	_	_	A1	_	_
 3	le	_	le	DET	DET	_	_	_	4	_	det	_	_	_	_	_
 4	fait	_	fait	NOUN	NOUN	_	_	_	0	_	root	_	_	A2	_	_
-5-6	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	de	_	de	ADP	ADP	_	_	_	7	_	case	_	_	_	_	_
 6	le	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_	_
 7	hasard	_	hasard	NOUN	NOUN	_	_	_	4	_	nmod	_	_	_	_	_
@@ -393,7 +384,6 @@
 26	pas	_	pas	ADV	ADV	_	_	_	25	_	neg	_	_	_	_	_
 27	le	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_
 28	monopole	_	monopole	NOUN	NOUN	_	_	_	25	_	dobj	_	_	_	_	A1
-29-30	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 29	de	_	de	ADP	ADP	_	_	_	31	_	case	_	_	_	_	_
 30	le	_	le	DET	DET	_	_	_	31	_	det	_	_	_	_	_
 31	traditionalisme	_	traditionalisme	NOUN	NOUN	_	_	_	28	_	nmod	_	_	_	_	_
@@ -449,7 +439,6 @@
 26	par	_	par	ADP	ADP	_	_	_	28	_	case	_	_	_	_	_
 27	le	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_
 28	conflit	_	conflit	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_	_	_
-29-30	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 29	de	_	de	ADP	ADP	_	_	_	31	_	case	_	_	_	_	_
 30	le	_	le	DET	DET	_	_	_	31	_	det	_	_	_	_	_
 31	Sahara	_	Sahara	PROPN	PROPN	_	_	_	28	_	nmod	_	_	_	_	_
@@ -502,7 +491,6 @@
 25	de	_	de	ADP	ADP	_	_	_	27	_	mark	_	_	_	_	_
 26	se	_	se	PRON	PRON	_	_	_	27	_	dobj	_	_	_	_	_
 27	rendre	_	rendre	VERB	VERB	_	_	_	22	_	acl	Y	return.02	_	_	_
-28-29	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	à	_	à	ADP	ADP	_	_	_	30	_	case	_	_	_	_	_
 29	le	_	le	DET	DET	_	_	_	30	_	det	_	_	_	_	_
 30	royaume	_	royaume	NOUN	NOUN	_	_	_	27	_	nmod	_	_	_	_	_
@@ -557,7 +545,6 @@
 27	impact	_	impact	NOUN	NOUN	_	_	_	13	_	conj	_	_	_	_	_	_
 28	régional	_	régional	ADJ	ADJ	_	_	_	27	_	amod	_	_	_	_	_	_
 29	"	_	"	PUNCT	PUNCT	_	_	_	13	_	punct	_	_	_	_	_	_
-30-31	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 30	de	_	de	ADP	ADP	_	_	_	32	_	case	_	_	_	_	_	_
 31	les	_	le	DET	DET	_	_	_	32	_	det	_	_	_	_	_	_
 32	fonds	_	fonds	NOUN	NOUN	_	_	_	27	_	nmod	_	_	_	_	_	_
@@ -571,7 +558,6 @@
 40	la	_	le	DET	DET	_	_	_	41	_	det	_	_	_	_	_	_
 41	base	_	base	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_	_	_	_
 42	notamment	_	notamment	ADV	ADV	_	_	_	41	_	advmod	_	_	_	_	_	_
-43-44	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 43	de	_	de	ADP	ADP	_	_	_	45	_	case	_	_	_	_	_	_
 44	les	_	le	DET	DET	_	_	_	45	_	det	_	_	_	_	_	_
 45	informations	_	information	NOUN	NOUN	_	_	_	41	_	nmod	_	_	_	_	_	_
@@ -940,7 +926,6 @@
 14	dans	_	dans	ADP	ADP	_	_	_	16	_	case	_	_	_
 15	le	_	le	DET	DET	_	_	_	16	_	det	_	_	_
 16	delta	_	delta	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_
-17-18	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	de	_	de	ADP	ADP	_	_	_	19	_	case	_	_	_
 18	le	_	le	DET	DET	_	_	_	19	_	det	_	_	_
 19	Nigéria	_	Nigéria	PROPN	PROPN	_	_	_	16	_	nmod	_	_	_
@@ -953,21 +938,17 @@
 26	d'	_	de	ADP	ADP	_	_	_	27	_	case	_	_	_
 27	inspiration	_	inspiration	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_
 28	religieuse	_	religieux	ADJ	ADJ	_	_	_	27	_	amod	_	_	_
-29-30	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 29	à	_	à	ADP	ADP	_	_	_	31	_	case	_	_	_
 30	le	_	le	DET	DET	_	_	_	31	_	det	_	_	_
 31	nord	_	nord	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_
-32-33	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 32	de	_	de	ADP	ADP	_	_	_	34	_	case	_	_	_
 33	le	_	le	DET	DET	_	_	_	34	_	det	_	_	_
 34	pays	_	pays	NOUN	NOUN	_	_	_	31	_	nmod	_	_	_
 35	.	_	.	PUNCT	PUNCT	_	_	_	5	_	punct	_	_	_
 
-1-2	Au	_	_	_	_	_	_	_	_	_	_	_	_	_
 1	à	_	à	ADP	ADP	_	_	_	6	_	case	_	_	_
 2	le	_	le	DET	DET	_	_	_	1	_	mwe	_	_	_
 3	regard	_	regard	NOUN	NOUN	_	_	_	1	_	mwe	_	_	_
-4-5	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 4	de	_	de	ADP	ADP	_	_	_	1	_	mwe	_	_	_
 5	le	_	le	DET	DET	_	_	_	6	_	det	_	_	_
 6	droit	_	droit	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_
@@ -975,7 +956,6 @@
 8	,	_	,	PUNCT	PUNCT	_	_	_	17	_	punct	_	_	_
 9	la	_	le	DET	DET	_	_	_	10	_	det	_	_	_
 10	question	_	question	NOUN	NOUN	_	_	_	17	_	nsubj	_	_	A1
-11-12	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	de	_	de	ADP	ADP	_	_	_	13	_	case	_	_	_
 12	le	_	le	DET	DET	_	_	_	13	_	det	_	_	_
 13	Sahara	_	Sahara	PROPN	PROPN	_	_	_	10	_	nmod	_	_	_
@@ -1019,7 +999,6 @@
 19	pour	_	pour	ADP	ADP	_	_	_	21	_	case	_	_	_	_	_
 20	la	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_	_
 21	plupart	_	plupart	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_
-22-23	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 22	à	_	à	ADP	ADP	_	_	_	24	_	case	_	_	_	_	_
 23	le	_	le	DET	DET	_	_	_	24	_	det	_	_	_	_	_
 24	gouvernement	_	gouvernement	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_
@@ -1027,7 +1006,6 @@
 26	à	_	à	ADP	ADP	_	_	_	28	_	case	_	_	_	_	_
 27	des	_	un	DET	DET	_	_	_	28	_	det	_	_	_	_	_
 28	entreprises	_	entreprise	NOUN	NOUN	_	_	_	24	_	conj	_	_	_	_	_
-29-30	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 29	de	_	de	ADP	ADP	_	_	_	31	_	case	_	_	_	_	_
 30	le	_	le	DET	DET	_	_	_	31	_	det	_	_	_	_	_
 31	royaume	_	royaume	NOUN	NOUN	_	_	_	28	_	nmod	_	_	_	_	_
@@ -1130,7 +1108,6 @@
 9	"	_	"	PUNCT	PUNCT	_	_	_	11	_	punct	_	_	_
 10	La	_	le	DET	DET	_	_	_	11	_	det	_	_	_
 11	Ligue	_	Ligue	PROPN	PROPN	_	_	_	7	_	nmod	_	_	_
-12-13	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 12	de	_	de	ADP	ADP	_	_	_	14	_	case	_	_	_
 13	les	_	le	DET	DET	_	_	_	14	_	det	_	_	_
 14	Justiciers	_	Justiciers	PROPN	PROPN	_	_	_	11	_	nmod	_	_	_
@@ -1190,7 +1167,6 @@
 31	.	_	.	PUNCT	PUNCT	_	_	_	15	_	punct	_	_	_	_
 
 1	Retenu	_	retenir	VERB	VERB	_	_	_	11	_	acl	Y	hold.01	_	_
-2-3	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 2	à	_	à	ADP	ADP	_	_	_	5	_	case	_	_	_	_
 3	le	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_
 4	«	_	«	PUNCT	PUNCT	_	_	_	5	_	punct	_	_	_	_
@@ -1239,7 +1215,6 @@
 4	la	_	le	DET	DET	_	_	_	6	_	det	_	_	_
 5	petite	_	petit	ADJ	ADJ	_	_	_	6	_	amod	_	_	_
 6	cour	_	cour	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_
-7-8	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	de	_	de	ADP	ADP	_	_	_	9	_	case	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_
 9	garage	_	garage	NOUN	NOUN	_	_	_	6	_	nmod	_	_	_
@@ -1303,7 +1278,6 @@
 48	contre	_	contre	ADP	ADP	_	_	_	50	_	case	_	_	_	_	_	_	_	_	_
 49	le	_	le	DET	DET	_	_	_	50	_	det	_	_	_	_	_	_	_	_	_
 50	droit	_	droit	NOUN	NOUN	_	_	_	47	_	nmod	_	_	_	_	_	_	_	_	_
-51-52	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 51	de	_	de	ADP	ADP	_	_	_	53	_	case	_	_	_	_	_	_	_	_	_
 52	le	_	le	DET	DET	_	_	_	53	_	det	_	_	_	_	_	_	_	_	_
 53	peuple	_	peuple	NOUN	NOUN	_	_	_	50	_	nmod	_	_	_	_	_	_	_	_	_
@@ -1336,12 +1310,10 @@
 80	le	_	le	DET	DET	_	_	_	81	_	det	_	_	_	_	_	_	_	_	_
 81	Maroc	_	Maroc	PROPN	PROPN	_	_	_	77	_	nmod	_	_	_	_	_	_	_	_	_
 82	,	_	,	PUNCT	PUNCT	_	_	_	77	_	punct	_	_	_	_	_	_	_	_	_
-83-84	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 83	de	_	de	ADP	ADP	_	_	_	85	_	case	_	_	_	_	_	_	_	_	_
 84	les	_	le	DET	DET	_	_	_	85	_	det	_	_	_	_	_	_	_	_	_
 85	richesses	_	richesse	NOUN	NOUN	_	_	_	77	_	nmod	_	_	_	_	_	_	_	_	_
 86	naturelles	_	naturel	ADJ	ADJ	_	_	_	85	_	amod	_	_	_	_	_	_	_	_	_
-87-88	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 87	de	_	de	ADP	ADP	_	_	_	89	_	case	_	_	_	_	_	_	_	_	_
 88	le	_	le	DET	DET	_	_	_	89	_	det	_	_	_	_	_	_	_	_	_
 89	Sahara	_	Sahara	PROPN	PROPN	_	_	_	85	_	nmod	_	_	_	_	_	_	_	_	_
@@ -1397,7 +1369,6 @@
 10	deux	_	deux	NUM	NUM	_	_	_	11	_	nummod	_	_	_	_	_
 11	activistes	_	activiste	NOUN	NOUN	_	_	_	1	_	appos	_	_	_	_	_
 12	pacifistes	_	pacifiste	ADJ	ADJ	_	_	_	11	_	amod	_	_	_	_	_
-13-14	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_
 14	les	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	territoires	_	territoire	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_	_	_
@@ -1422,7 +1393,6 @@
 34	la	_	le	DET	DET	_	_	_	35	_	det	_	_	_	_	_
 35	capitale	_	capitale	NOUN	NOUN	_	_	_	32	_	appos	_	_	_	_	_
 36	spirituelle	_	spirituel	ADJ	ADJ	_	_	_	35	_	amod	_	_	_	_	_
-37-38	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 37	de	_	de	ADP	ADP	_	_	_	39	_	case	_	_	_	_	_
 38	le	_	le	DET	DET	_	_	_	39	_	det	_	_	_	_	_
 39	Sahara	_	Sahara	PROPN	PROPN	_	_	_	35	_	nmod	_	_	_	_	_
@@ -1438,7 +1408,6 @@
 49	s'	_	se	PRON	PRON	_	_	_	51	_	dobj	_	_	_	_	_
 50	étaient	_	être	AUX	AUX	_	_	_	51	_	aux	_	_	_	_	_
 51	évadés	_	évader	VERB	VERB	_	_	_	47	_	acl:relcl	_	_	_	_	_
-52-53	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 52	de	_	de	ADP	ADP	_	_	_	54	_	case	_	_	_	_	_
 53	les	_	le	DET	DET	_	_	_	54	_	det	_	_	_	_	_
 54	camps	_	camp	NOUN	NOUN	_	_	_	51	_	nmod	_	_	_	_	_
@@ -1521,7 +1490,6 @@
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_	_
 29	montant	_	montant	NOUN	NOUN	_	_	_	41	_	nsubjpass	_	_	_	A1	_
 30	versé	_	verser	VERB	VERB	_	_	_	29	_	acl	Y	pay.01	_	_	_
-31-32	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 31	à	_	à	ADP	ADP	_	_	_	33	_	case	_	_	_	_	_
 32	le	_	le	DET	DET	_	_	_	33	_	det	_	_	_	_	_
 33	titre	_	titre	NOUN	NOUN	_	_	_	30	_	nmod	_	_	_	_	_
@@ -1679,7 +1647,6 @@
 7	,	_	,	PUNCT	PUNCT	_	_	_	3	_	punct	_	_	_
 8	des	_	un	DET	DET	_	_	_	9	_	det	_	_	_
 9	représentants	_	représentant	NOUN	NOUN	_	_	_	3	_	nsubj	_	_	A0
-10-11	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 10	de	_	de	ADP	ADP	_	_	_	12	_	case	_	_	_
 11	le	_	le	DET	DET	_	_	_	12	_	det	_	_	_
 12	corps	_	corps	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_
@@ -1691,7 +1658,6 @@
 18	notamment	_	notamment	ADV	ADV	_	_	_	20	_	advmod	_	_	_
 19	d'	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_
 20	Afrique	_	Afrique	PROPN	PROPN	_	_	_	12	_	nmod	_	_	_
-21-22	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 21	de	_	de	ADP	ADP	_	_	_	23	_	case	_	_	_
 22	le	_	le	DET	DET	_	_	_	23	_	det	_	_	_
 23	sud	_	sud	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_
@@ -1699,7 +1665,6 @@
 25	de	_	de	ADP	ADP	_	_	_	26	_	case	_	_	_
 26	Cuba	_	Cuba	PROPN	PROPN	_	_	_	20	_	conj	_	_	_
 27	,	_	,	PUNCT	PUNCT	_	_	_	20	_	punct	_	_	_
-28-29	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	de	_	de	ADP	ADP	_	_	_	30	_	case	_	_	_
 29	le	_	le	DET	DET	_	_	_	30	_	det	_	_	_
 30	Venezuela	_	Venezuela	PROPN	PROPN	_	_	_	20	_	conj	_	_	_
@@ -1707,7 +1672,6 @@
 32	d'	_	de	ADP	ADP	_	_	_	33	_	case	_	_	_
 33	Angola	_	Angola	PROPN	PROPN	_	_	_	20	_	conj	_	_	_
 34	et	_	et	CONJ	CONJ	_	_	_	20	_	cc	_	_	_
-35-36	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 35	de	_	de	ADP	ADP	_	_	_	37	_	case	_	_	_
 36	le	_	le	DET	DET	_	_	_	37	_	det	_	_	_
 37	Congo	_	Congo	PROPN	PROPN	_	_	_	20	_	conj	_	_	_
@@ -1752,7 +1716,6 @@
 13	plus	_	plus	ADV	ADV	_	_	_	14	_	advmod	_	_	_	_	_	_	_	_
 14	grande	_	grand	ADJ	ADJ	_	_	_	15	_	amod	_	_	_	_	_	_	_	_
 15	banque	_	banque	NOUN	NOUN	_	_	_	11	_	dobj	_	_	_	A1	_	_	_	_
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_	_	_	_
 18	pays	_	pays	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_	_	_	_
@@ -1761,7 +1724,6 @@
 21	contrôle	_	contrôler	VERB	VERB	_	_	_	8	_	conj	Y	control.01	_	_	_	_	_	_
 22	l'	_	l'	PART	PART	_	_	_	23	_	expl	_	_	_	_	_	_	_	_
 23	un	_	un	PRON	PRON	_	_	_	21	_	dobj	_	_	_	_	A1	_	_	_
-24-25	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 24	de	_	de	ADP	ADP	_	_	_	27	_	case	_	_	_	_	_	_	_	_
 25	les	_	le	DET	DET	_	_	_	27	_	det	_	_	_	_	_	_	_	_
 26	trois	_	trois	NUM	NUM	_	_	_	27	_	nummod	_	_	_	_	_	_	_	_
@@ -1774,7 +1736,6 @@
 33	dans	_	dans	ADP	ADP	_	_	_	35	_	case	_	_	_	_	_	_	_	_
 34	le	_	le	DET	DET	_	_	_	35	_	det	_	_	_	_	_	_	_	_
 35	business	_	business	NOUN	NOUN	_	_	_	32	_	nmod	_	_	_	_	_	_	_	_
-36-37	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 36	de	_	de	ADP	ADP	_	_	_	38	_	case	_	_	_	_	_	_	_	_
 37	le	_	le	DET	DET	_	_	_	38	_	det	_	_	_	_	_	_	_	_
 38	sucre	_	sucre	NOUN	NOUN	_	_	_	35	_	nmod	_	_	_	_	_	_	_	_
@@ -1792,7 +1753,6 @@
 50	il	_	il	PRON	PRON	_	_	_	52	_	nsubj	_	_	_	_	_	_	_	A0
 51	est	_	être	AUX	AUX	_	_	_	52	_	aux	_	_	_	_	_	_	_	_
 52	associé	_	associer	VERB	VERB	_	_	_	8	_	conj	Y	associate.01	_	_	_	_	_	_
-53-54	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 53	à	_	à	ADP	ADP	_	_	_	55	_	case	_	_	_	_	_	_	_	_
 54	le	_	le	DET	DET	_	_	_	55	_	det	_	_	_	_	_	_	_	_
 55	groupe	_	groupe	NOUN	NOUN	_	_	_	52	_	nmod	_	_	_	_	_	_	_	_
@@ -1826,7 +1786,6 @@
 16	que	_	que	SCONJ	SCONJ	_	_	_	14	_	mwe	_	_	_	_	_	_
 17	premier	_	premier	ADJ	ADJ	_	_	_	18	_	amod	_	_	_	_	_	_
 18	opérateur	_	opérateur	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_	_	_	_
-19-20	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	de	_	de	ADP	ADP	_	_	_	21	_	case	_	_	_	_	_	_
 20	le	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_	_	_
 21	pays	_	pays	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_	_
@@ -1843,13 +1802,11 @@
 32	entre	_	entre	ADP	ADP	_	_	_	34	_	case	_	_	_	_	_	_
 33	les	_	le	DET	DET	_	_	_	34	_	det	_	_	_	_	_	_
 34	mains	_	main	NOUN	NOUN	_	_	_	24	_	nmod	_	_	_	_	_	_
-35-36	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 35	de	_	de	ADP	ADP	_	_	_	37	_	case	_	_	_	_	_	_
 36	les	_	le	DET	DET	_	_	_	37	_	det	_	_	_	_	_	_
 37	réseaux	_	réseau	NOUN	NOUN	_	_	_	34	_	nmod	_	_	_	_	_	_
 38	affairistes	_	affairiste	ADJ	ADJ	_	_	_	37	_	amod	_	_	_	_	_	_
 39	et	_	et	CONJ	CONJ	_	_	_	37	_	cc	_	_	_	_	_	_
-40-41	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 40	de	_	de	ADP	ADP	_	_	_	42	_	case	_	_	_	_	_	_
 41	les	_	le	DET	DET	_	_	_	42	_	det	_	_	_	_	_	_
 42	milieux	_	milieu	NOUN	NOUN	_	_	_	37	_	conj	_	_	_	_	_	_
@@ -1861,7 +1818,6 @@
 48	grossir	_	grossir	VERB	VERB	_	_	_	12	_	conj	_	_	_	_	_	_
 49	les	_	le	DET	DET	_	_	_	50	_	det	_	_	_	_	_	_
 50	rangs	_	rang	NOUN	NOUN	_	_	_	48	_	dobj	_	_	_	_	_	_
-51-52	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 51	de	_	de	ADP	ADP	_	_	_	53	_	case	_	_	_	_	_	_
 52	les	_	le	DET	DET	_	_	_	53	_	det	_	_	_	_	_	_
 53	mécontents	_	mécontent	NOUN	NOUN	_	_	_	50	_	nmod	_	_	_	_	_	_
@@ -1944,7 +1900,6 @@
 18	tirer	_	tirer	VERB	VERB	_	_	_	16	_	acl	Y	pull.01	_	_	_	_
 19	les	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_	_	_
 20	leçons	_	leçon	NOUN	NOUN	_	_	_	18	_	dobj	_	_	_	_	A1	_
-21-22	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 21	de	_	de	ADP	ADP	_	_	_	23	_	case	_	_	_	_	_	_
 22	le	_	le	DET	DET	_	_	_	23	_	det	_	_	_	_	_	_
 23	passé	_	passé	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_	_	_	_
@@ -1954,7 +1909,6 @@
 27	les	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_	_
 28	perspectives	_	perspective	NOUN	NOUN	_	_	_	26	_	dobj	_	_	_	_	_	A1
 29	énergétiques	_	énergétique	ADJ	ADJ	_	_	_	28	_	amod	_	_	_	_	_	_
-30-31	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 30	de	_	de	ADP	ADP	_	_	_	32	_	case	_	_	_	_	_	_
 31	le	_	le	DET	DET	_	_	_	32	_	det	_	_	_	_	_	_
 32	Maghreb	_	Maghreb	PROPN	PROPN	_	_	_	28	_	nmod	_	_	_	_	_	_
@@ -1972,12 +1926,10 @@
 9	166	_	166	NUM	NUM	_	_	_	8	_	nummod	_	_	_
 10	et	_	et	CONJ	CONJ	_	_	_	9	_	cc	_	_	_
 11	167	_	167	NUM	NUM	_	_	_	9	_	conj	_	_	_
-12-13	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 12	de	_	de	ADP	ADP	_	_	_	14	_	case	_	_	_
 13	le	_	le	DET	DET	_	_	_	14	_	det	_	_	_
 14	Code	_	code	NOUN	NOUN	_	_	_	8	_	nmod	_	_	_
 15	Général	_	général	ADJ	ADJ	_	_	_	14	_	amod	_	_	_
-16-17	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_
 17	les	_	le	DET	DET	_	_	_	18	_	det	_	_	_
 18	Impôts	_	impôt	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_
@@ -2018,7 +1970,6 @@
 12	son	_	son	DET	DET	_	_	_	13	_	nmod:poss	_	_	_	_	_
 13	énérgie	_	énergie	NOUN	NOUN	_	_	_	9	_	conj	_	_	_	_	_
 14	exclusivement	_	exclusivement	ADV	ADV	_	_	_	1	_	advmod	_	_	AM-TMP	_	_
-15-16	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 15	à	_	à	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_
 16	les	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_
 17	grands	_	grand	ADJ	ADJ	_	_	_	18	_	amod	_	_	_	_	_
@@ -2029,7 +1980,6 @@
 22	procurer	_	procurer	VERB	VERB	_	_	_	20	_	acl	Y	provide.01	_	_	_
 23	du	_	du	DET	DET	_	_	_	24	_	det	_	_	_	_	_
 24	travail	_	travail	NOUN	NOUN	_	_	_	22	_	dobj	_	_	_	_	A1
-25-26	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 25	à	_	à	ADP	ADP	_	_	_	28	_	case	_	_	_	_	_
 26	les	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_
 27	jeunes	_	jeune	ADJ	ADJ	_	_	_	28	_	amod	_	_	_	_	_
@@ -2041,7 +1991,6 @@
 3	examiné	_	examiner	VERB	VERB	_	_	_	17	_	advcl	Y	examine.01	_
 4	l'	_	le	DET	DET	_	_	_	5	_	det	_	_	_
 5	état	_	état	NOUN	NOUN	_	_	_	3	_	dobj	_	_	A1
-6-7	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_	_
 7	les	_	le	DET	DET	_	_	_	8	_	det	_	_	_
 8	relations	_	relation	NOUN	NOUN	_	_	_	5	_	nmod	_	_	_
@@ -2127,11 +2076,9 @@
 11	français	_	français	ADJ	ADJ	_	_	_	10	_	amod	_	_	_	_	_	_	_
 12	»	_	»	PUNCT	PUNCT	_	_	_	8	_	punct	_	_	_	_	_	_	_
 13	,	_	,	PUNCT	PUNCT	_	_	_	31	_	punct	_	_	_	_	_	_	_
-14-15	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	à	_	à	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_	_	_
 15	le	_	le	DET	DET	_	_	_	14	_	mwe	_	_	_	_	_	_	_
 16	vu	_	voir	VERB	VERB	_	_	_	14	_	mwe	Y	see.01	_	_	_	_	_
-17-18	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	de	_	de	ADP	ADP	_	_	_	14	_	mwe	_	_	_	_	_	_	_
 18	les	_	le	DET	DET	_	_	_	19	_	det	_	_	_	_	_	_	_
 19	aides	_	aide	NOUN	NOUN	_	_	_	31	_	nmod	_	_	_	_	_	_	_
@@ -2139,7 +2086,6 @@
 21	de	_	de	ADP	ADP	_	_	_	23	_	case	_	_	_	_	_	_	_
 22	cette	_	ce	DET	DET	_	_	_	23	_	det	_	_	_	_	_	_	_
 23	puissance	_	puissance	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_	_	_	_	_
-24-25	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 24	à	_	à	ADP	ADP	_	_	_	26	_	case	_	_	_	_	_	_	_
 25	le	_	le	DET	DET	_	_	_	26	_	det	_	_	_	_	_	_	_
 26	colonialisme	_	colonialisme	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_	_	_	_	_
@@ -2153,7 +2099,6 @@
 34	de	_	de	ADP	ADP	_	_	_	36	_	case	_	_	_	_	_	_	_
 35	la	_	le	DET	DET	_	_	_	36	_	det	_	_	_	_	_	_	_
 36	France	_	France	PROPN	PROPN	_	_	_	33	_	nmod	_	_	_	_	_	_	_
-37-38	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 37	à	_	à	ADP	ADP	_	_	_	39	_	case	_	_	_	_	_	_	_
 38	le	_	le	DET	DET	_	_	_	39	_	det	_	_	_	_	_	_	_
 39	Conseil	_	Conseil	PROPN	PROPN	_	_	_	33	_	nmod	_	_	_	_	_	_	_
@@ -2170,7 +2115,6 @@
 50	à	_	à	ADP	ADP	_	_	_	52	_	case	_	_	_	_	_	_	_
 51	l'	_	le	DET	DET	_	_	_	52	_	det	_	_	_	_	_	_	_
 52	élargissement	_	élargissement	NOUN	NOUN	_	_	_	49	_	nmod	_	_	_	_	_	_	_
-53-54	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 53	de	_	de	ADP	ADP	_	_	_	55	_	case	_	_	_	_	_	_	_
 54	les	_	le	DET	DET	_	_	_	55	_	det	_	_	_	_	_	_	_
 55	missions	_	mission	NOUN	NOUN	_	_	_	52	_	nmod	_	_	_	_	_	_	_
@@ -2184,7 +2128,6 @@
 63	et	_	et	CONJ	CONJ	_	_	_	62	_	cc	_	_	_	_	_	_	_
 64	le	_	le	DET	DET	_	_	_	65	_	det	_	_	_	_	_	_	_
 65	contrôle	_	contrôle	NOUN	NOUN	_	_	_	62	_	conj	_	_	_	_	_	_	_
-66-67	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 66	de	_	de	ADP	ADP	_	_	_	68	_	case	_	_	_	_	_	_	_
 67	les	_	le	DET	DET	_	_	_	68	_	det	_	_	_	_	_	_	_
 68	droits	_	droit	NOUN	NOUN	_	_	_	62	_	nmod	_	_	_	_	_	_	_
@@ -2223,12 +2166,10 @@
 24	ce	_	ce	DET	DET	_	_	_	25	_	det	_	_	_	_	_	_	_	_
 25	savoir	_	savoir	NOUN	NOUN	_	_	_	22	_	nmod	_	_	_	_	_	_	_	_
 26	immédiat	_	immédiat	ADJ	ADJ	_	_	_	25	_	amod	_	_	_	_	_	_	_	_
-27-28	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 27	de	_	de	ADP	ADP	_	_	_	29	_	case	_	_	_	_	_	_	_	_
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_	_	_	_	_
 29	beau	_	beau	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_	_	_	_	_	_
 30	et	_	et	CONJ	CONJ	_	_	_	29	_	cc	_	_	_	_	_	_	_	_
-31-32	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 31	de	_	de	ADP	ADP	_	_	_	33	_	case	_	_	_	_	_	_	_	_
 32	le	_	le	DET	DET	_	_	_	33	_	det	_	_	_	_	_	_	_	_
 33	bien	_	bien	NOUN	NOUN	_	_	_	29	_	conj	_	_	_	_	_	_	_	_
@@ -2260,7 +2201,6 @@
 17	indépendantistes	_	indépendantiste	NOUN	NOUN	_	_	_	25	_	nsubj	_	_	_	A1	A1	_	_
 18	étaient	_	être	VERB	VERB	_	_	_	25	_	cop	Y	be.01	_	_	_	_	_
 19	tout	_	tout	NOUN	NOUN	_	_	_	25	_	advmod	_	_	_	_	_	_	_
-20-21	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 20	à	_	à	ADP	ADP	_	_	_	19	_	mwe	_	_	_	_	_	_	_
 21	le	_	le	DET	DET	_	_	_	19	_	mwe	_	_	_	_	_	_	_
 22	mieux	_	mieux	NOUN	NOUN	_	_	_	19	_	mwe	_	_	_	_	_	_	_
@@ -2310,7 +2250,6 @@
 16	et	_	et	CONJ	CONJ	_	_	_	12	_	cc	_	_	_
 17	l'	_	le	DET	DET	_	_	_	18	_	det	_	_	_
 18	arrivée	_	arrivée	NOUN	NOUN	_	_	_	12	_	conj	_	_	_
-19-20	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	à	_	à	ADP	ADP	_	_	_	21	_	case	_	_	_
 20	le	_	le	DET	DET	_	_	_	21	_	det	_	_	_
 21	pouvoir	_	pouvoir	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_
@@ -2322,7 +2261,6 @@
 27	choses	_	chose	NOUN	NOUN	_	_	_	29	_	nsubj	_	_	A1
 28	auraient	_	avoir	AUX	AUX	_	_	_	29	_	aux	_	_	_
 29	évolué	_	évoluer	VERB	VERB	_	_	_	0	_	root	Y	evolve.01	_
-30-31	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 30	à	_	à	ADP	ADP	_	_	_	32	_	case	_	_	_
 31	le	_	le	DET	DET	_	_	_	32	_	det	_	_	_
 32	Maroc	_	Maroc	PROPN	PROPN	_	_	_	29	_	nmod	_	_	_
@@ -2345,12 +2283,10 @@
 15	et	_	et	CONJ	CONJ	_	_	_	14	_	cc	_	_	_
 16	1979	_	1979	NUM	NUM	_	_	_	14	_	conj	_	_	_
 17	suite	_	suite	NOUN	NOUN	_	_	_	20	_	case	_	_	_
-18-19	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	à	_	à	ADP	ADP	_	_	_	17	_	mwe	_	_	_
 19	le	_	le	DET	DET	_	_	_	20	_	det	_	_	_
 20	retrait	_	retrait	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_
 21	espagnol	_	espagnol	ADJ	ADJ	_	_	_	20	_	amod	_	_	_
-22-23	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 22	de	_	de	ADP	ADP	_	_	_	24	_	case	_	_	_
 23	le	_	le	DET	DET	_	_	_	24	_	det	_	_	_
 24	territoire	_	territoire	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_
@@ -2401,7 +2337,6 @@
 13	un	_	un	DET	DET	_	_	_	14	_	det	_	_	_	_
 14	diplomate	_	diplomate	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_	_
 15	basé	_	baser	VERB	VERB	_	_	_	14	_	acl	Y	base.01	_	_
-16-17	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	à	_	à	ADP	ADP	_	_	_	18	_	case	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_
 18	Caire	_	Caire	PROPN	PROPN	_	_	_	15	_	nmod	_	_	_	_
@@ -2428,11 +2363,9 @@
 10	Camella	_	camella	NOUN	NOUN	_	_	_	7	_	dobj	_	_	A1	_	_	_
 11	blanca	_	blanc	ADJ	ADJ	_	_	_	10	_	amod	_	_	_	_	_	_
 12	"	_	"	PUNCT	PUNCT	_	_	_	10	_	punct	_	_	_	_	_	_
-13-14	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	à	_	à	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_	_
 14	les	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_	_
 15	réalisateurs	_	réalisateur	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	_	_	_
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_	_
 18	film	_	film	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_	_
@@ -2462,7 +2395,6 @@
 42	aussi	_	aussi	ADV	ADV	_	_	_	43	_	advmod	_	_	_	_	_	_
 43	combatif	_	combatif	ADJ	ADJ	_	_	_	37	_	conj	_	_	_	_	_	_
 44	"	_	"	PUNCT	PUNCT	_	_	_	37	_	punct	_	_	_	_	_	_
-45-46	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 45	de	_	de	ADP	ADP	_	_	_	47	_	case	_	_	_	_	_	_
 46	le	_	le	DET	DET	_	_	_	47	_	det	_	_	_	_	_	_
 47	peuple	_	peuple	NOUN	NOUN	_	_	_	32	_	nmod	_	_	_	_	_	_
@@ -2496,12 +2428,10 @@
 25	l'	_	le	DET	DET	_	_	_	26	_	det	_	_	_	_
 26	envoyé	_	envoyé	NOUN	NOUN	_	_	_	23	_	nmod	_	_	_	_
 27	personnel	_	personnel	ADJ	ADJ	_	_	_	26	_	amod	_	_	_	_
-28-29	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	de	_	de	ADP	ADP	_	_	_	30	_	case	_	_	_	_
 29	le	_	le	DET	DET	_	_	_	30	_	det	_	_	_	_
 30	secrétaire	_	secrétaire	NOUN	NOUN	_	_	_	26	_	nmod	_	_	_	_
 31	général	_	général	ADJ	ADJ	_	_	_	30	_	amod	_	_	_	_
-32-33	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 32	de	_	de	ADP	ADP	_	_	_	34	_	case	_	_	_	_
 33	les	_	le	DET	DET	_	_	_	34	_	det	_	_	_	_
 34	Nations	_	Nations	PROPN	PROPN	_	_	_	30	_	nmod	_	_	_	_
@@ -2517,11 +2447,9 @@
 44	,	_	,	PUNCT	PUNCT	_	_	_	20	_	punct	_	_	_	_
 45	en	_	en	ADP	ADP	_	_	_	46	_	case	_	_	_	_
 46	présence	_	présence	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_	_
-47-48	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 47	de	_	de	ADP	ADP	_	_	_	49	_	case	_	_	_	_
 48	les	_	le	DET	DET	_	_	_	49	_	det	_	_	_	_
 49	délégations	_	délégation	NOUN	NOUN	_	_	_	46	_	nmod	_	_	_	_
-50-51	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 50	de	_	de	ADP	ADP	_	_	_	53	_	case	_	_	_	_
 51	les	_	le	DET	DET	_	_	_	53	_	det	_	_	_	_
 52	deux	_	deux	NUM	NUM	_	_	_	53	_	nummod	_	_	_	_
@@ -2529,7 +2457,6 @@
 54	et	_	et	CONJ	CONJ	_	_	_	49	_	cc	_	_	_	_
 55	des	_	un	DET	DET	_	_	_	56	_	det	_	_	_	_
 56	représentants	_	représentant	NOUN	NOUN	_	_	_	49	_	conj	_	_	_	_
-57-58	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 57	de	_	de	ADP	ADP	_	_	_	60	_	case	_	_	_	_
 58	les	_	le	DET	DET	_	_	_	60	_	det	_	_	_	_
 59	deux	_	deux	NUM	NUM	_	_	_	60	_	nummod	_	_	_	_
@@ -2557,7 +2484,6 @@
 2	aucun	_	aucun	DET	DET	_	_	_	3	_	neg	_	_	_
 3	moment	_	moment	NOUN	NOUN	_	_	_	0	_	root	_	_	_
 4	,	_	,	PUNCT	PUNCT	_	_	_	3	_	punct	_	_	_
-5-6	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	de	_	de	ADP	ADP	_	_	_	7	_	case	_	_	_
 6	le	_	le	DET	DET	_	_	_	7	_	det	_	_	_
 7	jour	_	jour	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_
@@ -2602,13 +2528,11 @@
 3	,	_	,	PUNCT	PUNCT	_	_	_	21	_	punct	_	_	_
 4	l'	_	le	DET	DET	_	_	_	5	_	det	_	_	_
 5	Opep	_	Opep	PROPN	PROPN	_	_	_	21	_	nsubj	_	_	A0
-6-7	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_	_
 7	le	_	le	DET	DET	_	_	_	8	_	det	_	_	_
 8	gaz	_	gaz	NOUN	NOUN	_	_	_	5	_	nmod	_	_	_
 9	ou	_	ou	CONJ	CONJ	_	_	_	5	_	cc	_	_	_
 10	Forum	_	forum	NOUN	NOUN	_	_	_	5	_	conj	_	_	_
-11-12	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	de	_	de	ADP	ADP	_	_	_	13	_	case	_	_	_
 12	les	_	le	DET	DET	_	_	_	13	_	det	_	_	_
 13	pays	_	pays	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_
@@ -2660,11 +2584,9 @@
 12	pour	_	pour	ADP	ADP	_	_	_	14	_	case	_	_	_
 13	la	_	le	DET	DET	_	_	_	14	_	det	_	_	_
 14	protection	_	protection	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_
-15-16	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 15	de	_	de	ADP	ADP	_	_	_	17	_	case	_	_	_
 16	les	_	le	DET	DET	_	_	_	17	_	det	_	_	_
 17	agresseurs	_	agresseur	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_
-18-19	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_
 19	les	_	le	DET	DET	_	_	_	20	_	det	_	_	_
 20	droits	_	droit	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_
@@ -2698,7 +2620,6 @@
 15	,	_	,	PUNCT	PUNCT	_	_	_	3	_	punct	_	_	_	_	_	_
 16	Rabat	_	Rabat	PROPN	PROPN	_	_	_	17	_	nsubj	_	_	_	_	_	_
 17	bénéficiant	_	bénéficier	VERB	VERB	_	_	_	3	_	acl	Y	benefit.01	_	_	_	_
-18-19	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_	_	_	_
 19	le	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_	_	_
 20	soutien	_	soutien	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_	_	_	A1
@@ -2710,7 +2631,6 @@
 26	un	_	un	DET	DET	_	_	_	27	_	det	_	_	_	_	_	_
 27	membre	_	membre	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_	_	_	_
 28	permanent	_	permanent	ADJ	ADJ	_	_	_	27	_	amod	_	_	_	_	_	_
-29-30	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 29	de	_	de	ADP	ADP	_	_	_	31	_	case	_	_	_	_	_	_
 30	le	_	le	DET	DET	_	_	_	31	_	det	_	_	_	_	_	_
 31	Conseil	_	Conseil	PROPN	PROPN	_	_	_	27	_	nmod	_	_	_	_	_	_
@@ -2756,7 +2676,6 @@
 5	de	_	de	ADP	ADP	_	_	_	6	_	case	_	_	_
 6	Paris	_	Paris	PROPN	PROPN	_	_	_	2	_	nmod	_	_	_
 7	déconseille	_	déconseiller	VERB	VERB	_	_	_	0	_	root	_	_	_
-8-9	aux	_	_	_	_	_	_	_	_	_	_	_	_	_
 8	à	_	à	ADP	ADP	_	_	_	10	_	case	_	_	_
 9	les	_	le	DET	DET	_	_	_	10	_	det	_	_	_
 10	automobilistes	_	automobiliste	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_
@@ -2871,7 +2790,6 @@
 7	aider	_	aider	VERB	VERB	_	_	_	28	_	advcl	Y	help.01	_	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_	_	_	_
 9	club	_	club	NOUN	NOUN	_	_	_	7	_	dobj	_	_	A1	_	_	_	_
-10-11	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 10	à	_	à	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_	_	_
 11	le	_	le	DET	DET	_	_	_	10	_	mwe	_	_	_	_	_	_	_
 12	travers	_	travers	NOUN	NOUN	_	_	_	10	_	mwe	_	_	_	_	_	_	_
@@ -2921,7 +2839,6 @@
 11	,	_	,	PUNCT	PUNCT	_	_	_	22	_	punct	_	_	_	_
 12	la	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_
 13	plupart	_	plupart	NOUN	NOUN	_	_	_	22	_	nsubjpass	_	_	_	_
-14-15	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	de	_	de	ADP	ADP	_	_	_	17	_	case	_	_	_	_
 15	les	_	le	DET	DET	_	_	_	17	_	det	_	_	_	_
 16	jeunes	_	jeune	ADJ	ADJ	_	_	_	17	_	amod	_	_	_	_
@@ -3018,7 +2935,6 @@
 10	!	_	!	PUNCT	PUNCT	_	_	_	8	_	punct	_	_	_
 11	"	_	"	PUNCT	PUNCT	_	_	_	8	_	punct	_	_	_
 
-1-2	Du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 1	de	_	de	ADP	ADP	_	_	_	3	_	case	_	_	_	_
 2	le	_	le	DET	DET	_	_	_	3	_	det	_	_	_	_
 3	Vatican	_	Vatican	PROPN	PROPN	_	_	_	0	_	root	_	_	_	_
@@ -3031,7 +2947,6 @@
 10	la	_	le	DET	DET	_	_	_	11	_	det	_	_	_	_
 11	vie	_	vie	NOUN	NOUN	_	_	_	8	_	nmod	_	_	_	_
 12	privée	_	privé	ADJ	ADJ	_	_	_	11	_	amod	_	_	_	_
-13-14	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_
 15	Cavaliere	_	Cavaliere	PROPN	PROPN	_	_	_	11	_	nmod	_	_	_	_
@@ -3081,7 +2996,6 @@
 2	visites	_	visite	NOUN	NOUN	_	_	_	4	_	nsubj	_	_	_	A0	_
 3	commentées	_	commenter	VERB	VERB	_	_	_	2	_	acl	Y	comment.01	_	_	_
 4	permettront	_	permettre	VERB	VERB	_	_	_	0	_	root	Y	allow.01	_	_	_
-5-6	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	à	_	à	ADP	ADP	_	_	_	7	_	case	_	_	_	_	_
 6	le	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_	_
 7	public	_	public	NOUN	NOUN	_	_	_	4	_	nmod	_	_	_	_	_
@@ -3202,7 +3116,6 @@
 22	écrivain	_	écrivain	NOUN	NOUN	_	_	_	20	_	conj	_	_	_	_
 23	et	_	et	CONJ	CONJ	_	_	_	20	_	cc	_	_	_	_
 24	fondateur	_	fondateur	NOUN	NOUN	_	_	_	20	_	conj	_	_	_	_
-25-26	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 25	de	_	de	ADP	ADP	_	_	_	27	_	case	_	_	_	_
 26	le	_	le	DET	DET	_	_	_	27	_	det	_	_	_	_
 27	mouvement	_	mouvement	NOUN	NOUN	_	_	_	24	_	nmod	_	_	_	_
@@ -3216,7 +3129,6 @@
 35	Budapest	_	Budapest	PROPN	PROPN	_	_	_	15	_	nmod	_	_	_	_
 36	.	_	.	PUNCT	PUNCT	_	_	_	5	_	punct	_	_	_	_
 
-1-2	Au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 1	à	_	à	ADP	ADP	_	_	_	6	_	case	_	_	_	_	_	_
 2	le	_	le	DET	DET	_	_	_	1	_	mwe	_	_	_	_	_	_
 3	sein	_	sein	NOUN	NOUN	_	_	_	1	_	mwe	_	_	_	_	_	_
@@ -3236,7 +3148,6 @@
 17	jouer	_	jouer	VERB	VERB	_	_	_	15	_	acl	Y	play.01	_	_	_	_
 18	pour	_	pour	ADP	ADP	_	_	_	19	_	mark	_	_	_	_	_	_
 19	contribuer	_	contribuer	VERB	VERB	_	_	_	15	_	advcl	Y	contribute.01	_	_	_	_
-20-21	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 20	à	_	à	ADP	ADP	_	_	_	22	_	case	_	_	_	_	_	_
 21	le	_	le	DET	DET	_	_	_	22	_	det	_	_	_	_	_	_
 22	rayonnement	_	rayonnement	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_	_	_	_
@@ -3279,7 +3190,6 @@
 25	en	_	en	ADP	ADP	_	_	_	26	_	case	_	_	_
 26	match	_	match	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_
 27	aller	_	aller	NOUN	NOUN	_	_	_	26	_	compound	_	_	_
-28-29	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	de	_	de	ADP	ADP	_	_	_	30	_	case	_	_	_
 29	les	_	le	DET	DET	_	_	_	30	_	det	_	_	_
 30	quarts	_	quart	NOUN	NOUN	_	_	_	26	_	nmod	_	_	_
@@ -3288,7 +3198,6 @@
 33	de	_	de	ADP	ADP	_	_	_	35	_	case	_	_	_
 34	la	_	le	DET	DET	_	_	_	35	_	det	_	_	_
 35	Ligue	_	Ligue	PROPN	PROPN	_	_	_	30	_	nmod	_	_	_
-36-37	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 36	de	_	de	ADP	ADP	_	_	_	38	_	case	_	_	_
 37	les	_	le	DET	DET	_	_	_	38	_	det	_	_	_
 38	champions	_	champion	NOUN	NOUN	_	_	_	35	_	nmod	_	_	_
@@ -3298,7 +3207,6 @@
 42	quelques	_	quelque	DET	DET	_	_	_	43	_	det	_	_	_
 43	blessures	_	blessure	NOUN	NOUN	_	_	_	41	_	dobj	_	_	_
 44	,	_	,	PUNCT	PUNCT	_	_	_	43	_	punct	_	_	_
-45-46	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 45	à	_	à	ADP	ADP	_	_	_	47	_	case	_	_	_
 46	le	_	le	DET	DET	_	_	_	47	_	det	_	_	_
 47	corps	_	corps	NOUN	NOUN	_	_	_	43	_	nmod	_	_	_
@@ -3323,7 +3231,6 @@
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_
 14	la	_	le	DET	DET	_	_	_	15	_	det	_	_	_
 15	finale	_	finale	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_
 18	200m	_	200m	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_
@@ -3345,7 +3252,6 @@
 10	ce	_	ce	PRON	PRON	_	_	_	4	_	expl	_	_	_
 11	qui	_	qui	PRON	PRON	_	_	_	12	_	nsubj	_	_	_
 12	équivaut	_	équivaloir	VERB	VERB	_	_	_	10	_	conj	_	_	_
-13-14	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	à	_	à	ADP	ADP	_	_	_	15	_	case	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_
 15	Québec	_	Québec	PROPN	PROPN	_	_	_	12	_	nmod	_	_	_
@@ -3373,7 +3279,6 @@
 13	avant	_	avant	ADP	ADP	_	_	_	15	_	mark	_	_	_	_	_	_
 14	de	_	de	ADP	ADP	_	_	_	13	_	mwe	_	_	_	_	_	_
 15	répondre	_	répondre	VERB	VERB	_	_	_	9	_	acl	Y	answer.01	_	_	_	_
-16-17	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	à	_	à	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_	_
 17	les	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_	_
 18	préoccupations	_	préoccupation	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_	_
@@ -3407,7 +3312,6 @@
 15	,	_	,	PUNCT	PUNCT	_	_	_	14	_	punct	_	_	_	_
 16	un	_	un	DET	DET	_	_	_	17	_	det	_	_	_	_
 17	quartier	_	quartier	NOUN	NOUN	_	_	_	14	_	appos	_	_	_	_
-18-19	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_	_
 19	le	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_
 20	sud-ouest	_	sud-ouest	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_	_
@@ -3427,7 +3331,6 @@
 10	à	_	à	ADP	ADP	_	_	_	12	_	case	_	_	_	_
 11	la	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_
 12	primaire	_	primaire	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_
-13-14	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_
 15	PS	_	PS	PROPN	PROPN	_	_	_	12	_	nmod	_	_	_	_
@@ -3440,7 +3343,6 @@
 22	de	_	de	ADP	ADP	_	_	_	24	_	case	_	_	_	_
 23	première	_	premier	ADJ	ADJ	_	_	_	24	_	amod	_	_	_	_
 24	secrétaire	_	secrétaire	NOUN	NOUN	_	_	_	21	_	nmod	_	_	_	_
-25-26	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 25	de	_	de	ADP	ADP	_	_	_	27	_	case	_	_	_	_
 26	le	_	le	DET	DET	_	_	_	27	_	det	_	_	_	_
 27	parti	_	parti	NOUN	NOUN	_	_	_	24	_	nmod	_	_	_	_
@@ -3514,7 +3416,6 @@
 36	en	_	en	ADP	ADP	_	_	_	37	_	case	_	_	_	_	_	_	_
 37	nombre	_	nombre	NOUN	NOUN	_	_	_	35	_	nmod	_	_	_	_	_	_	_
 38	record	_	record	NOUN	NOUN	_	_	_	37	_	compound	_	_	_	_	_	_	_
-39-40	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 39	à	_	à	ADP	ADP	_	_	_	41	_	case	_	_	_	_	_	_	_
 40	les	_	le	DET	DET	_	_	_	41	_	det	_	_	_	_	_	_	_
 41	meetings	_	meeting	NOUN	NOUN	_	_	_	35	_	nmod	_	_	_	_	_	_	_
@@ -3529,7 +3430,6 @@
 50	,	_	,	PUNCT	PUNCT	_	_	_	48	_	punct	_	_	_	_	_	_	_
 51	principal	_	principal	ADJ	ADJ	_	_	_	52	_	amod	_	_	_	_	_	_	_
 52	quotidien	_	quotidien	NOUN	NOUN	_	_	_	48	_	appos	_	_	_	_	_	_	_
-53-54	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 53	de	_	de	ADP	ADP	_	_	_	55	_	case	_	_	_	_	_	_	_
 54	le	_	le	DET	DET	_	_	_	55	_	det	_	_	_	_	_	_	_
 55	pays	_	pays	NOUN	NOUN	_	_	_	52	_	nmod	_	_	_	_	_	_	_
@@ -3537,7 +3437,6 @@
 57	considéré	_	considérer	VERB	VERB	_	_	_	48	_	acl	Y	consider.01	_	_	_	_	_
 58	comme	_	comme	ADP	ADP	_	_	_	59	_	case	_	_	_	_	_	_	_
 59	favorable	_	favorable	ADJ	ADJ	_	_	_	57	_	amod	_	_	_	_	_	_	_
-60-61	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 60	à	_	à	ADP	ADP	_	_	_	62	_	case	_	_	_	_	_	_	_
 61	le	_	le	DET	DET	_	_	_	62	_	det	_	_	_	_	_	_	_
 62	PAP	_	PAP	PROPN	PROPN	_	_	_	59	_	nmod	_	_	_	_	_	_	_
@@ -3557,7 +3456,6 @@
 12	plus	_	plus	ADV	ADV	_	_	_	13	_	advmod	_	_	_
 13	grand	_	grand	ADJ	ADJ	_	_	_	14	_	amod	_	_	_
 14	plaisir	_	plaisir	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_
-15-16	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 15	de	_	de	ADP	ADP	_	_	_	17	_	case	_	_	_
 16	les	_	le	DET	DET	_	_	_	17	_	det	_	_	_
 17	gourmands	_	gourmand	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_
@@ -3640,7 +3538,6 @@
 22	en	_	en	ADP	ADP	_	_	_	23	_	mark	_	_	_	_	_	_	_	_
 23	faisant	_	faire	VERB	VERB	_	_	_	17	_	advcl	Y	do.02	_	_	_	_	_	_
 24	croire	_	croire	VERB	VERB	_	_	_	23	_	xcomp	Y	believe.01	_	_	_	_	_	_
-25-26	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 25	à	_	à	ADP	ADP	_	_	_	27	_	case	_	_	_	_	_	_	_	_
 26	les	_	le	DET	DET	_	_	_	27	_	det	_	_	_	_	_	_	_	_
 27	investisseurs	_	investisseur	NOUN	NOUN	_	_	_	24	_	nmod	_	_	_	_	_	_	_	_
@@ -3723,7 +3620,6 @@
 13	joueurs	_	joueur	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_	_	_
 14	ayant	_	avoir	AUX	AUX	_	_	_	15	_	aux	_	_	_	_	_
 15	disputé	_	disputer	VERB	VERB	_	_	_	13	_	acl	Y	fight.01	_	_	_
-16-17	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	à	_	à	ADP	ADP	_	_	_	19	_	advmod	_	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	16	_	mwe	_	_	_	_	_
 18	moins	_	moins	ADV	ADV	_	_	_	16	_	mwe	_	_	_	_	_
@@ -3740,7 +3636,6 @@
 
 1	L'	_	le	DET	DET	_	_	_	2	_	det	_	_	_	_
 2	attaquant	_	attaquant	NOUN	NOUN	_	_	_	7	_	nsubj	_	_	A0	_
-3-4	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 3	de	_	de	ADP	ADP	_	_	_	5	_	case	_	_	_	_
 4	le	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_
 5	Bayern	_	Bayern	PROPN	PROPN	_	_	_	2	_	nmod	_	_	_	_
@@ -3797,7 +3692,6 @@
 34	8/10e	_	8/10e	NUM	NUM	_	_	_	30	_	nmod	_	_	_
 35	de	_	de	ADP	ADP	_	_	_	36	_	case	_	_	_
 36	seconde	_	seconde	NOUN	NOUN	_	_	_	34	_	nmod	_	_	_
-37-38	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 37	de	_	de	ADP	ADP	_	_	_	39	_	case	_	_	_
 38	le	_	le	DET	DET	_	_	_	39	_	det	_	_	_
 39	leader	_	leader	NOUN	NOUN	_	_	_	30	_	nmod	_	_	_
@@ -3809,11 +3703,9 @@
 4	,	_	,	PUNCT	PUNCT	_	_	_	15	_	punct	_	_	_	_
 5	la	_	le	DET	DET	_	_	_	6	_	det	_	_	_	_
 6	réorientation	_	réorientation	NOUN	NOUN	_	_	_	15	_	nsubj	_	_	A0	_
-7-8	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	de	_	de	ADP	ADP	_	_	_	9	_	case	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_
 9	géant	_	géant	NOUN	NOUN	_	_	_	6	_	nmod	_	_	_	_
-10-11	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 10	de	_	de	ADP	ADP	_	_	_	12	_	case	_	_	_	_
 11	les	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_
 12	réseaux	_	réseau	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_
@@ -3827,7 +3719,6 @@
 20	pour	_	pour	ADP	ADP	_	_	_	22	_	case	_	_	_	_
 21	les	_	le	DET	DET	_	_	_	22	_	det	_	_	_	_
 22	adeptes	_	adepte	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_
-23-24	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 23	de	_	de	ADP	ADP	_	_	_	25	_	case	_	_	_	_
 24	le	_	le	DET	DET	_	_	_	25	_	det	_	_	_	_
 25	Wimax	_	Wimax	PROPN	PROPN	_	_	_	22	_	nmod	_	_	_	_
@@ -3840,7 +3731,6 @@
 32	plus	_	plus	ADV	ADV	_	_	_	29	_	mwe	_	_	_	_
 33	pied	_	pied	NOUN	NOUN	_	_	_	28	_	dobj	_	_	_	A1
 34	face	_	face	NOUN	NOUN	_	_	_	37	_	case	_	_	_	_
-35-36	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 35	à	_	à	ADP	ADP	_	_	_	34	_	mwe	_	_	_	_
 36	le	_	le	DET	DET	_	_	_	37	_	det	_	_	_	_
 37	LTE	_	LTE	PROPN	PROPN	_	_	_	28	_	nmod	_	_	_	_
@@ -3854,11 +3744,9 @@
 6	très	_	très	ADV	ADV	_	_	_	7	_	advmod	_	_	_
 7	absent	_	absent	ADJ	ADJ	_	_	_	5	_	amod	_	_	_
 8	tout	_	tout	ADV	ADV	_	_	_	14	_	case	_	_	_
-9-10	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 9	à	_	à	ADP	ADP	_	_	_	8	_	mwe	_	_	_
 10	le	_	le	DET	DET	_	_	_	8	_	mwe	_	_	_
 11	long	_	long	NOUN	NOUN	_	_	_	8	_	mwe	_	_	_
-12-13	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 12	de	_	de	ADP	ADP	_	_	_	8	_	mwe	_	_	_
 13	le	_	le	DET	DET	_	_	_	14	_	det	_	_	_
 14	roman	_	roman	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_
@@ -3963,7 +3851,6 @@
 16	dans	_	dans	ADP	ADP	_	_	_	18	_	case	_	_	_	_
 17	80	_	80	NUM	NUM	_	_	_	18	_	nummod	_	_	_	_
 18	%	_	%	SYM	SYM	_	_	_	15	_	nmod	_	_	_	_
-19-20	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	de	_	de	ADP	ADP	_	_	_	21	_	case	_	_	_	_
 20	les	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_
 21	cas	_	cas	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_
@@ -3993,7 +3880,6 @@
 15	accru	_	accroître	VERB	VERB	_	_	_	0	_	root	_	_
 16	la	_	le	DET	DET	_	_	_	17	_	det	_	_
 17	portée	_	portée	NOUN	NOUN	_	_	_	15	_	dobj	_	_
-18-19	des	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_
 19	les	_	le	DET	DET	_	_	_	20	_	det	_	_
 20	actions	_	action	NOUN	NOUN	_	_	_	17	_	nmod	_	_
@@ -4005,7 +3891,6 @@
 1	Il	_	il	PRON	PRON	_	_	_	3	_	nsubj	_	_	A1	_	_
 2	s'	_	se	PRON	PRON	_	_	_	3	_	dobj	_	_	_	_	_
 3	agit	_	agir	VERB	VERB	_	_	_	0	_	root	Y	be.01	_	_	_
-4-5	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 4	de	_	de	ADP	ADP	_	_	_	6	_	case	_	_	_	_	_
 5	les	_	le	DET	DET	_	_	_	6	_	det	_	_	_	_	_
 6	importateurs	_	importateur	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_	_	_
@@ -4018,11 +3903,9 @@
 13	établir	_	établir	VERB	VERB	_	_	_	7	_	advcl	Y	establish.01	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	baromètre	_	baromètre	NOUN	NOUN	_	_	_	13	_	dobj	_	_	_	_	A1
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_
 18	passage	_	passage	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_
-19-20	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	à	_	à	ADP	ADP	_	_	_	21	_	case	_	_	_	_	_
 20	le	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_	_
 21	port	_	port	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_
@@ -4145,13 +4028,11 @@
 19	le	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_
 20	caractère	_	caractère	NOUN	NOUN	_	_	_	18	_	dobj	_	_	_	_
 21	désastreux	_	désastreux	ADJ	ADJ	_	_	_	20	_	amod	_	_	_	_
-22-23	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 22	de	_	de	ADP	ADP	_	_	_	24	_	case	_	_	_	_
 23	le	_	le	DET	DET	_	_	_	24	_	det	_	_	_	_
 24	système	_	système	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_	_
 25	d'	_	de	ADP	ADP	_	_	_	26	_	case	_	_	_	_
 26	éclairage	_	éclairage	NOUN	NOUN	_	_	_	24	_	nmod	_	_	_	_
-27-28	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 27	à	_	à	ADP	ADP	_	_	_	29	_	case	_	_	_	_
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_
 29	kérosène	_	kérosène	NOUN	NOUN	_	_	_	26	_	nmod	_	_	_	_
@@ -4225,7 +4106,6 @@
 15	de	_	de	ADP	ADP	_	_	_	14	_	mwe	_	_	_	_
 16	15	_	15	NUM	NUM	_	_	_	17	_	nummod	_	_	_	_
 17	ans	_	an	NOUN	NOUN	_	_	_	12	_	dobj	_	_	_	A1
-18-19	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_	_
 19	les	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_
 20	centres	_	centre	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_	_
@@ -4249,7 +4129,6 @@
 14	,	_	,	PUNCT	PUNCT	_	_	_	5	_	punct	_	_	_	_	_
 15	la	_	le	DET	DET	_	_	_	16	_	det	_	_	_	_	_
 16	revanche	_	revanche	NOUN	NOUN	_	_	_	5	_	conj	_	_	_	_	_
-17-18	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	de	_	de	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_
 18	les	_	le	DET	DET	_	_	_	19	_	det	_	_	_	_	_
 19	championnats	_	championnat	NOUN	NOUN	_	_	_	16	_	nmod	_	_	_	_	_
@@ -4312,7 +4191,6 @@
 25	à	_	à	ADP	ADP	_	_	_	27	_	case	_	_	_
 26	9,1	_	9,1	NUM	NUM	_	_	_	27	_	nummod	_	_	_
 27	%	_	%	SYM	SYM	_	_	_	23	_	nmod	_	_	_
-28-29	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	de	_	de	ADP	ADP	_	_	_	30	_	case	_	_	_
 29	le	_	le	DET	DET	_	_	_	30	_	det	_	_	_
 30	PIB	_	PIB	NOUN	NOUN	_	_	_	27	_	nmod	_	_	_
@@ -4342,7 +4220,6 @@
 14	italien	_	italien	ADJ	ADJ	_	_	_	13	_	amod	_	_	_
 15	,	_	,	PUNCT	PUNCT	_	_	_	13	_	punct	_	_	_
 16	une	_	un	PRON	PRON	_	_	_	13	_	appos	_	_	_
-17-18	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	de	_	de	ADP	ADP	_	_	_	19	_	case	_	_	_
 18	les	_	le	DET	DET	_	_	_	19	_	det	_	_	_
 19	lanternes	_	lanterne	NOUN	NOUN	_	_	_	16	_	nmod	_	_	_
@@ -4353,7 +4230,6 @@
 24	sur	_	sur	ADP	ADP	_	_	_	26	_	case	_	_	_
 25	le	_	le	DET	DET	_	_	_	26	_	det	_	_	_
 26	classement	_	classement	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_
-27-28	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 27	de	_	de	ADP	ADP	_	_	_	29	_	case	_	_	_
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_
 29	Wef	_	Wef	PROPN	PROPN	_	_	_	26	_	nmod	_	_	_
@@ -4369,7 +4245,6 @@
 5	la	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_
 6	deuxième	_	deuxième	ADJ	ADJ	_	_	_	7	_	amod	_	_	_	_
 7	Coupe	_	coupe	NOUN	NOUN	_	_	_	4	_	dobj	_	_	A1	_
-8-9	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 8	de	_	de	ADP	ADP	_	_	_	10	_	case	_	_	_	_
 9	le	_	le	DET	DET	_	_	_	10	_	det	_	_	_	_
 10	Monde	_	Monde	PROPN	PROPN	_	_	_	7	_	nmod	_	_	_	_
@@ -4454,7 +4329,6 @@
 22	centrale	_	centrale	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_
 23	de	_	de	ADP	ADP	_	_	_	24	_	case	_	_	_
 24	Fukushima	_	Fukushima	PROPN	PROPN	_	_	_	22	_	nmod	_	_	_
-25-26	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 25	à	_	à	ADP	ADP	_	_	_	27	_	case	_	_	_
 26	le	_	le	DET	DET	_	_	_	27	_	det	_	_	_
 27	niveau	_	niveau	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_
@@ -4487,7 +4361,6 @@
 8	son	_	son	DET	DET	_	_	_	9	_	nmod:poss	_	_	_	_	_
 9	soutien	_	soutien	NOUN	NOUN	_	_	_	7	_	dobj	_	_	A1	_	_
 10	logistique	_	logistique	ADJ	ADJ	_	_	_	9	_	amod	_	_	_	_	_
-11-12	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	à	_	à	ADP	ADP	_	_	_	13	_	case	_	_	_	_	_
 12	le	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_	_
 13	président	_	président	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	_	_
@@ -4522,14 +4395,12 @@
 42	dans	_	dans	ADP	ADP	_	_	_	44	_	case	_	_	_	_	_
 43	l'	_	le	DET	DET	_	_	_	44	_	det	_	_	_	_	_
 44	histoire	_	histoire	NOUN	NOUN	_	_	_	40	_	nmod	_	_	_	_	_
-45-46	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 45	de	_	de	ADP	ADP	_	_	_	47	_	case	_	_	_	_	_
 46	le	_	le	DET	DET	_	_	_	47	_	det	_	_	_	_	_
 47	club	_	club	NOUN	NOUN	_	_	_	44	_	nmod	_	_	_	_	_
 48	.	_	.	PUNCT	PUNCT	_	_	_	7	_	punct	_	_	_	_	_
 
 1	Même	_	même	ADV	ADV	_	_	_	4	_	advmod	_	_	_
-2-3	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 2	de	_	de	ADP	ADP	_	_	_	4	_	case	_	_	_
 3	le	_	le	DET	DET	_	_	_	4	_	det	_	_	_
 4	fond	_	fond	NOUN	NOUN	_	_	_	11	_	nmod	_	_	_
@@ -4554,7 +4425,6 @@
 7	dans	_	dans	ADP	ADP	_	_	_	9	_	case	_	_	_	_
 8	les	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_
 9	pays	_	pays	NOUN	NOUN	_	_	_	6	_	nmod	_	_	_	_
-10-11	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 10	de	_	de	ADP	ADP	_	_	_	12	_	case	_	_	_	_
 11	le	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_
 12	sous-continent	_	sous-continent	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_
@@ -4565,7 +4435,6 @@
 2	a	_	avoir	AUX	AUX	_	_	_	4	_	aux	_	_	_	_	_
 3	également	_	également	ADV	ADV	_	_	_	4	_	advmod	_	_	AM-MNR	_	_
 4	perdu	_	perdre	VERB	VERB	_	_	_	0	_	root	Y	lose.02	_	_	_
-5-6	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	de	_	de	ADP	ADP	_	_	_	7	_	case	_	_	_	_	_
 6	le	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_	_
 7	terrain	_	terrain	NOUN	NOUN	_	_	_	4	_	nmod	_	_	A1	_	_
@@ -4592,7 +4461,6 @@
 3	ai	_	avoir	AUX	AUX	_	_	_	4	_	aux	_	_	_	_
 4	senti	_	sentir	VERB	VERB	_	_	_	0	_	root	Y	smell.01	_	_
 5	,	_	,	PUNCT	PUNCT	_	_	_	4	_	punct	_	_	_	_
-6-7	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	à	_	à	ADP	ADP	_	_	_	11	_	case	_	_	_	_
 7	le	_	le	DET	DET	_	_	_	6	_	mwe	_	_	_	_
 8	cours	_	cours	NOUN	NOUN	_	_	_	6	_	mwe	_	_	_	_
@@ -4652,7 +4520,6 @@
 20	des	_	un	DET	DET	_	_	_	21	_	det	_	_	_
 21	villages	_	village	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_
 22	chiites	_	chiite	ADJ	ADJ	_	_	_	21	_	amod	_	_	_
-23-24	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 23	de	_	de	ADP	ADP	_	_	_	25	_	case	_	_	_
 24	les	_	le	DET	DET	_	_	_	25	_	det	_	_	_
 25	environs	_	environs	NOUN	NOUN	_	_	_	21	_	nmod	_	_	_
@@ -4680,7 +4547,6 @@
 11	intervenus	_	intervenir	VERB	VERB	_	_	_	0	_	root	Y	intervene.01	_	_
 12	pour	_	pour	ADP	ADP	_	_	_	13	_	mark	_	_	_	_
 13	parler	_	parler	VERB	VERB	_	_	_	11	_	advcl	Y	talk.01	_	_
-14-15	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	à	_	à	ADP	ADP	_	_	_	16	_	case	_	_	_	_
 15	les	_	le	DET	DET	_	_	_	16	_	det	_	_	_	_
 16	élèves	_	élève	NOUN	NOUN	_	_	_	13	_	nmod	_	_	_	_
@@ -4734,7 +4600,6 @@
 11	général	_	général	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	_	_
 12	Michel	_	Michel	PROPN	PROPN	_	_	_	11	_	appos	_	_	_	_	_
 13	Aoun	_	Aoun	PROPN	PROPN	_	_	_	12	_	name	_	_	_	_	_
-14-15	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	à	_	à	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_
 15	le	_	le	DET	DET	_	_	_	14	_	mwe	_	_	_	_	_
 16	cours	_	cours	NOUN	NOUN	_	_	_	14	_	mwe	_	_	_	_	_
@@ -4747,12 +4612,10 @@
 23	après	_	après	ADP	ADP	_	_	_	25	_	case	_	_	_	_	_
 24	la	_	le	DET	DET	_	_	_	25	_	det	_	_	_	_	_
 25	réunion	_	réunion	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_	_	_
-26-27	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 26	de	_	de	ADP	ADP	_	_	_	28	_	case	_	_	_	_	_
 27	le	_	le	DET	DET	_	_	_	28	_	det	_	_	_	_	_
 28	bloc	_	bloc	NOUN	NOUN	_	_	_	25	_	nmod	_	_	_	_	_
 29	parlementaire	_	parlementaire	ADJ	ADJ	_	_	_	28	_	amod	_	_	_	_	_
-30-31	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 30	de	_	de	ADP	ADP	_	_	_	32	_	case	_	_	_	_	_
 31	le	_	le	DET	DET	_	_	_	32	_	det	_	_	_	_	_
 32	Changement	_	changement	NOUN	NOUN	_	_	_	28	_	nmod	_	_	_	_	_
@@ -4786,7 +4649,6 @@
 10	avec	_	avec	ADP	ADP	_	_	_	12	_	case	_	_	_
 11	le	_	le	DET	DET	_	_	_	12	_	det	_	_	_
 12	Salon	_	salon	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_
-13-14	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_
 15	jeu	_	jeu	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_
@@ -4828,7 +4690,6 @@
 4	plate-forme	_	plate-forme	NOUN	NOUN	_	_	_	27	_	nmod	_	_	_	_	_
 5	logicielle	_	logiciel	ADJ	ADJ	_	_	_	4	_	amod	_	_	_	_	_
 6	intégrée	_	intégré	ADJ	ADJ	_	_	_	4	_	amod	_	_	_	_	_
-7-8	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	à	_	à	ADP	ADP	_	_	_	9	_	case	_	_	_	_	_
 8	les	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_	_
 9	capacités	_	capacité	NOUN	NOUN	_	_	_	4	_	nmod	_	_	_	_	_
@@ -4836,7 +4697,6 @@
 11	dans	_	dans	ADP	ADP	_	_	_	13	_	case	_	_	_	_	_
 12	la	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_	_
 13	gestion	_	gestion	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_	_	_
-14-15	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	de	_	de	ADP	ADP	_	_	_	16	_	case	_	_	_	_	_
 15	les	_	le	DET	DET	_	_	_	16	_	det	_	_	_	_	_
 16	emails	_	e-mail	NOUN	NOUN	_	_	_	13	_	nmod	_	_	_	_	_
@@ -4926,7 +4786,6 @@
 
 1	Les	_	le	DET	DET	_	_	_	2	_	det	_	_	_	_	_
 2	problèmes	_	problème	NOUN	NOUN	_	_	_	10	_	nsubj	_	_	A1	_	_
-3-4	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 3	de	_	de	ADP	ADP	_	_	_	5	_	case	_	_	_	_	_
 4	les	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_	_
 5	Etats	_	état	NOUN	NOUN	_	_	_	2	_	nmod	_	_	_	_	_
@@ -4942,7 +4801,6 @@
 15	limitent	_	limiter	VERB	VERB	_	_	_	10	_	conj	Y	limit.01	_	_	_
 16	selon	_	selon	ADP	ADP	_	_	_	17	_	case	_	_	_	_	_
 17	nous	_	lui	PRON	PRON	_	_	_	15	_	nmod	_	_	_	_	_
-18-19	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	à	_	à	ADP	ADP	_	_	_	20	_	case	_	_	_	_	_
 19	les	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_	_
 20	frontières	_	frontière	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_
@@ -4955,7 +4813,6 @@
 27	moins	_	moins	ADV	ADV	_	_	_	26	_	advmod	_	_	_	_	AM-TMP
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_	_
 29	reste	_	reste	NOUN	NOUN	_	_	_	26	_	dobj	_	_	_	_	A1
-30-31	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 30	de	_	de	ADP	ADP	_	_	_	32	_	case	_	_	_	_	_
 31	le	_	le	DET	DET	_	_	_	32	_	det	_	_	_	_	_
 32	monde	_	monde	NOUN	NOUN	_	_	_	29	_	nmod	_	_	_	_	_
@@ -4975,7 +4832,6 @@
 11	et	_	et	CONJ	CONJ	_	_	_	5	_	cc	_	_	_	_	_
 12	la	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_	_
 13	chute	_	chute	NOUN	NOUN	_	_	_	17	_	nsubj	_	_	_	A0	_
-14-15	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 14	de	_	de	ADP	ADP	_	_	_	16	_	case	_	_	_	_	_
 15	le	_	le	DET	DET	_	_	_	16	_	det	_	_	_	_	_
 16	cours	_	cours	NOUN	NOUN	_	_	_	13	_	nmod	_	_	_	_	_
@@ -5020,7 +4876,6 @@
 13	ou	_	ou	CONJ	CONJ	_	_	_	7	_	cc	_	_	_	_	_
 14	l'	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	agrandissement	_	agrandissement	NOUN	NOUN	_	_	_	7	_	conj	_	_	_	_	_
-16-17	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_
 17	les	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_
 18	sites	_	site	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_
@@ -5045,11 +4900,9 @@
 3	les	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_	_	_
 4	35	_	35	NUM	NUM	_	_	_	5	_	nummod	_	_	_	_	_	_
 5	ans	_	an	NOUN	NOUN	_	_	_	2	_	dobj	_	_	A1	_	_	_
-6-7	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_	_	_	_	_
 7	le	_	le	DET	DET	_	_	_	8	_	det	_	_	_	_	_	_
 8	Théâtre	_	théâtre	NOUN	NOUN	_	_	_	5	_	nmod	_	_	_	_	_	_
-9-10	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 9	de	_	de	ADP	ADP	_	_	_	11	_	case	_	_	_	_	_	_
 10	le	_	le	DET	DET	_	_	_	11	_	det	_	_	_	_	_	_
 11	Trillium	_	Trillium	PROPN	PROPN	_	_	_	8	_	nmod	_	_	_	_	_	_
@@ -5213,7 +5066,6 @@
 25	à	_	à	ADP	ADP	_	_	_	26	_	mark	_	_	_	_	_	_	_
 26	rejoindre	_	rejoindre	VERB	VERB	_	_	_	24	_	acl	Y	meet.03	_	_	_	_	_
 27	Clermont	_	Clermont	PROPN	PROPN	_	_	_	26	_	dobj	_	_	_	A1	_	_	_
-28-29	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 28	à	_	à	ADP	ADP	_	_	_	30	_	case	_	_	_	_	_	_	_
 29	le	_	le	DET	DET	_	_	_	30	_	det	_	_	_	_	_	_	_
 30	terme	_	terme	NOUN	NOUN	_	_	_	26	_	nmod	_	_	_	_	_	_	_
@@ -5255,7 +5107,6 @@
 8	de	_	de	ADP	ADP	_	_	_	10	_	case	_	_	_	_	_
 9	vos	_	son	DET	DET	_	_	_	10	_	nmod:poss	_	_	_	_	_
 10	coordonnées	_	coordonnée	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	A1	_
-11-12	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	à	_	à	ADP	ADP	_	_	_	13	_	case	_	_	_	_	_
 12	le	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_	_
 13	6_20_30	_	6_20_30	NUM	NUM	_	_	_	1	_	nmod	_	_	_	_	_
@@ -5266,14 +5117,12 @@
 18	euro	_	euro	NOUN	NOUN	_	_	_	16	_	nmod	_	_	_	_	_
 19	+	_	+	SYM	SYM	_	_	_	18	_	cc	_	_	_	_	_
 20	coût	_	coût	NOUN	NOUN	_	_	_	18	_	conj	_	_	_	_	_
-21-22	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 21	de	_	de	ADP	ADP	_	_	_	23	_	case	_	_	_	_	_
 22	le	_	le	DET	DET	_	_	_	23	_	det	_	_	_	_	_
 23	SMS	_	SMS	NOUN	NOUN	_	_	_	20	_	nmod	_	_	_	_	_
 24	)	_	)	PUNCT	PUNCT	_	_	_	18	_	punct	_	_	_	_	_
 25	et	_	et	CONJ	CONJ	_	_	_	1	_	cc	_	_	_	_	_
 26	répondez	_	répondre	VERB	VERB	_	_	_	1	_	conj	Y	answer.01	_	_	_
-27-28	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 27	à	_	à	ADP	ADP	_	_	_	29	_	case	_	_	_	_	_
 28	le	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_	_
 29	quiz	_	quiz	NOUN	NOUN	_	_	_	26	_	nmod	_	_	_	_	_
@@ -5296,11 +5145,9 @@
 15	toutes	_	tout	DET	DET	_	_	_	17	_	det	_	_	_	_	_	_	_	_
 16	les	_	le	DET	DET	_	_	_	17	_	det	_	_	_	_	_	_	_	_
 17	plages	_	plage	NOUN	NOUN	_	_	_	25	_	nsubj	_	_	_	_	A1	_	_	_
-18-19	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 18	de	_	de	ADP	ADP	_	_	_	20	_	case	_	_	_	_	_	_	_	_
 19	le	_	le	DET	DET	_	_	_	20	_	det	_	_	_	_	_	_	_	_
 20	golfe	_	golfe	NOUN	NOUN	_	_	_	17	_	nmod	_	_	_	_	_	_	_	_
-21-22	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 21	de	_	de	ADP	ADP	_	_	_	23	_	case	_	_	_	_	_	_	_	_
 22	le	_	le	DET	DET	_	_	_	23	_	det	_	_	_	_	_	_	_	_
 23	Mexique	_	Mexique	PROPN	PROPN	_	_	_	20	_	nmod	_	_	_	_	_	_	_	_
@@ -5344,13 +5191,11 @@
 7	et	_	et	CONJ	CONJ	_	_	_	2	_	cc	_	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_	_
 9	contrôle	_	contrôle	NOUN	NOUN	_	_	_	2	_	conj	_	_	_	_	_
-10-11	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 10	de	_	de	ADP	ADP	_	_	_	12	_	case	_	_	_	_	_
 11	les	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_	_
 12	coûts	_	coût	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_	_
 13	ont	_	avoir	AUX	AUX	_	_	_	14	_	aux	_	_	_	_	_
 14	permis	_	permettre	VERB	VERB	_	_	_	0	_	root	Y	allow.01	_	_	_
-15-16	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 15	à	_	à	ADP	ADP	_	_	_	17	_	case	_	_	_	_	_
 16	le	_	le	DET	DET	_	_	_	17	_	det	_	_	_	_	_
 17	groupe	_	groupe	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_	_	_
@@ -5398,14 +5243,12 @@
 10	malgré	_	malgré	ADP	ADP	_	_	_	12	_	case	_	_	_
 11	la	_	le	DET	DET	_	_	_	12	_	det	_	_	_
 12	déclaration	_	déclaration	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_
-13-14	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_
 15	porte-parole	_	porte-parole	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_
 17	la	_	le	DET	DET	_	_	_	18	_	det	_	_	_
 18	compagnie	_	compagnie	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_
-19-20	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	à	_	à	ADP	ADP	_	_	_	22	_	case	_	_	_
 20	le	_	le	DET	DET	_	_	_	22	_	det	_	_	_
 21	premier	_	premier	ADJ	ADJ	_	_	_	22	_	amod	_	_	_
@@ -5458,7 +5301,6 @@
 4	)	_	)	PUNCT	PUNCT	_	_	_	3	_	punct	_	_	_	_
 5	coiffe	_	coiffer	VERB	VERB	_	_	_	0	_	root	Y	comb.01	_	_
 6	ainsi	_	ainsi	ADV	ADV	_	_	_	5	_	advmod	_	_	AM-TMP	_
-7-8	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	à	_	à	ADP	ADP	_	_	_	9	_	case	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_
 9	poteau	_	poteau	NOUN	NOUN	_	_	_	5	_	nmod	_	_	_	_
@@ -5505,7 +5347,6 @@
 4	d'	_	de	ADP	ADP	_	_	_	5	_	case	_	_	_	_	_	_
 5	anglais	_	anglais	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_	_	_	_
 6	,	_	,	PUNCT	PUNCT	_	_	_	3	_	punct	_	_	_	_	_	_
-7-8	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	à	_	à	ADP	ADP	_	_	_	9	_	case	_	_	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_	_	_
 9	lycée	_	lycée	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_	_	_	_
@@ -5539,12 +5380,10 @@
 10	fustigeait	_	fustiger	VERB	VERB	_	_	_	44	_	advcl	_	_	_	_	_
 11	le	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_	_
 12	comportement	_	comportement	NOUN	NOUN	_	_	_	10	_	dobj	_	_	_	_	_
-13-14	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_
 14	les	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	éléments	_	élément	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_	_	_
 16	incontrôlés	_	incontrôlé	ADJ	ADJ	_	_	_	15	_	acl	_	_	_	_	_
-17-18	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	de	_	de	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_
 18	les	_	le	DET	DET	_	_	_	19	_	det	_	_	_	_	_
 19	Frci	_	Frci	PROPN	PROPN	_	_	_	15	_	nmod	_	_	_	_	_
@@ -5569,7 +5408,6 @@
 38	militaires	_	militaire	NOUN	NOUN	_	_	_	44	_	nsubj	_	_	A1	A0	_
 39	armés	_	armer	VERB	VERB	_	_	_	38	_	acl	Y	arm.01	_	_	_
 40	jusqu'	_	jusque	ADP	ADP	_	_	_	43	_	case	_	_	_	_	_
-41-42	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 41	à	_	à	ADP	ADP	_	_	_	40	_	mwe	_	_	_	_	_
 42	les	_	le	DET	DET	_	_	_	43	_	det	_	_	_	_	_
 43	dents	_	dent	NOUN	NOUN	_	_	_	39	_	nmod	_	_	_	_	_
@@ -5612,7 +5450,6 @@
 1	La	_	le	DET	DET	_	_	_	3	_	det	_	_	_
 2	18e	_	18e	ADJ	ADJ	_	_	_	3	_	amod	_	_	_
 3	édition	_	édition	NOUN	NOUN	_	_	_	12	_	nsubj	_	_	A0
-4-5	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 4	de	_	de	ADP	ADP	_	_	_	6	_	case	_	_	_
 5	les	_	le	DET	DET	_	_	_	6	_	det	_	_	_
 6	Victoires	_	victoire	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_
@@ -5662,7 +5499,6 @@
 3	minutes	_	minute	NOUN	NOUN	_	_	_	0	_	root	_	_
 4	à	_	à	ADP	ADP	_	_	_	5	_	case	_	_
 5	pieds	_	pied	NOUN	NOUN	_	_	_	3	_	nmod	_	_
-6-7	du	_	_	_	_	_	_	_	_	_	_	_	_
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_
 7	le	_	le	DET	DET	_	_	_	8	_	det	_	_
 8	métro	_	métro	NOUN	NOUN	_	_	_	3	_	nmod	_	_
@@ -5708,7 +5544,6 @@
 2	je	_	il	PRON	PRON	_	_	_	3	_	nsubj	_	_	A1	_	_	_	_	_	_	_
 3	retournes	_	retourner	VERB	VERB	_	_	_	0	_	root	Y	return.01	_	_	_	_	_	_	_	_
 4	souvent	_	souvent	ADV	ADV	_	_	_	3	_	advmod	_	_	AM-TMP	_	_	_	_	_	_	_
-5-6	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	à	_	à	ADP	ADP	_	_	_	7	_	case	_	_	_	_	_	_	_	_	_	_
 6	le	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_	_	_	_	_	_	_
 7	Campuchea	_	Campuchea	PROPN	PROPN	_	_	_	3	_	nmod	_	_	_	_	_	_	_	_	_	_
@@ -5793,7 +5628,6 @@
 22	foulé	_	fouler	VERB	VERB	_	_	_	20	_	acl	Y	sprain.01	_	_	_
 23	.	_	.	PUNCT	PUNCT	_	_	_	10	_	punct	_	_	_	_	_
 
-1-2	Au	_	_	_	_	_	_	_	_	_	_	_	_
 1	à	_	à	ADP	ADP	_	_	_	3	_	case	_	_
 2	le	_	le	DET	DET	_	_	_	3	_	det	_	_
 3	menu	_	menu	NOUN	NOUN	_	_	_	9	_	nmod	_	_
@@ -5820,7 +5654,6 @@
 24	balsamique	_	balsamique	ADJ	ADJ	_	_	_	23	_	amod	_	_
 25	.	_	.	PUNCT	PUNCT	_	_	_	9	_	punct	_	_
 
-1-2	Au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 1	à	_	à	ADP	ADP	_	_	_	6	_	case	_	_	_	_
 2	le	_	le	DET	DET	_	_	_	1	_	mwe	_	_	_	_
 3	sortir	_	sortir	NOUN	NOUN	_	_	_	1	_	mwe	_	_	_	_
@@ -5935,7 +5768,6 @@
 2	,	_	,	PUNCT	PUNCT	_	_	_	11	_	punct	_	_	_	_
 3	la	_	le	DET	DET	_	_	_	4	_	det	_	_	_	_
 4	rue	_	rue	NOUN	NOUN	_	_	_	11	_	nsubj	_	_	A0	A0
-5-6	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 5	de	_	de	ADP	ADP	_	_	_	7	_	case	_	_	_	_
 6	les	_	le	DET	DET	_	_	_	7	_	det	_	_	_	_
 7	maréchaux	_	maréchal	NOUN	NOUN	_	_	_	4	_	nmod	_	_	_	_
@@ -5961,7 +5793,6 @@
 2	:	_	:	PUNCT	PUNCT	_	_	_	1	_	punct	_	_
 3	le	_	le	DET	DET	_	_	_	4	_	det	_	_
 4	refus	_	refus	NOUN	NOUN	_	_	_	1	_	appos	_	_
-5-6	des	_	_	_	_	_	_	_	_	_	_	_	_
 5	de	_	de	ADP	ADP	_	_	_	7	_	case	_	_
 6	les	_	le	DET	DET	_	_	_	7	_	det	_	_
 7	cartes	_	carte	NOUN	NOUN	_	_	_	4	_	nmod	_	_
@@ -5989,11 +5820,9 @@
 5	de	_	de	ADP	ADP	_	_	_	7	_	mark	_	_	_	_
 6	pouvoir	_	pouvoir	AUX	AUX	_	_	_	7	_	aux	_	_	_	_
 7	dîner	_	dîner	VERB	VERB	_	_	_	4	_	acl	Y	dine.01	_	_
-8-9	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 8	à	_	à	ADP	ADP	_	_	_	10	_	case	_	_	_	_
 9	le	_	le	DET	DET	_	_	_	10	_	det	_	_	_	_
 10	coin	_	coin	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_	_
-11-12	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 11	de	_	de	ADP	ADP	_	_	_	13	_	case	_	_	_	_
 12	le	_	le	DET	DET	_	_	_	13	_	det	_	_	_	_
 13	feu	_	feu	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_	_
@@ -6154,7 +5983,6 @@
 10	pro	_	professionnel	ADJ	ADJ	_	_	_	8	_	conj	_	_	_	_	_
 11	survivra	_	survivre	VERB	VERB	_	_	_	2	_	ccomp	Y	survive.01	_	_	_
 12	face	_	face	NOUN	NOUN	_	_	_	15	_	case	_	_	_	_	_
-13-14	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	à	_	à	ADP	ADP	_	_	_	12	_	mwe	_	_	_	_	_
 14	les	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	autres	_	autre	PRON	PRON	_	_	_	11	_	nmod	_	_	_	_	_
@@ -6202,7 +6030,6 @@
 10	par	_	par	ADP	ADP	_	_	_	12	_	case	_	_	_	_	_
 11	la	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_	_
 12	qualité	_	qualité	NOUN	NOUN	_	_	_	9	_	nmod	_	_	_	_	_
-13-14	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	de	_	de	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_
 14	les	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	prestations	_	prestation	NOUN	NOUN	_	_	_	12	_	nmod	_	_	_	_	_
@@ -6237,7 +6064,6 @@
 1	Et	_	et	CONJ	CONJ	_	_	_	12	_	cc	_	_	_
 2	la	_	le	DET	DET	_	_	_	3	_	det	_	_	_
 3	qualité	_	qualité	NOUN	NOUN	_	_	_	12	_	nsubj	_	_	A1
-4-5	du	_	_	_	_	_	_	_	_	_	_	_	_	_
 4	de	_	de	ADP	ADP	_	_	_	6	_	case	_	_	_
 5	le	_	le	DET	DET	_	_	_	6	_	det	_	_	_
 6	service	_	service	NOUN	NOUN	_	_	_	3	_	nmod	_	_	_
@@ -6344,7 +6170,6 @@
 14	tournes	_	tourner	VERB	VERB	_	_	_	9	_	advcl	Y	turn.02	_	_	_	_	_
 15	le	_	le	DET	DET	_	_	_	16	_	det	_	_	_	_	_	_	_
 16	volant	_	volant	NOUN	NOUN	_	_	_	14	_	dobj	_	_	_	_	A1	_	_
-17-18	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	à	_	à	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_	_	_
 18	le	_	le	DET	DET	_	_	_	19	_	det	_	_	_	_	_	_	_
 19	maximum	_	maximum	NOUN	NOUN	_	_	_	14	_	nmod	_	_	_	_	_	_	_
@@ -6521,13 +6346,11 @@
 19	un	_	un	DET	DET	_	_	_	20	_	det	_	_	_	_	_	_	_
 20	centre	_	centre	NOUN	NOUN	_	_	_	18	_	dobj	_	_	_	_	A1	A1	_
 21	consacré	_	consacrer	VERB	VERB	_	_	_	20	_	acl	Y	devote.01	_	_	_	_	_
-22-23	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 22	à	_	à	ADP	ADP	_	_	_	24	_	case	_	_	_	_	_	_	_
 23	le	_	le	DET	DET	_	_	_	24	_	det	_	_	_	_	_	_	_
 24	Yoga	_	Yoga	PROPN	PROPN	_	_	_	21	_	nmod	_	_	_	_	_	_	_
 25	authentique	_	authentique	ADJ	ADJ	_	_	_	24	_	amod	_	_	_	_	_	_	_
 26	et	_	et	CONJ	CONJ	_	_	_	24	_	cc	_	_	_	_	_	_	_
-27-28	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 27	à	_	à	ADP	ADP	_	_	_	29	_	case	_	_	_	_	_	_	_
 28	les	_	le	DET	DET	_	_	_	29	_	det	_	_	_	_	_	_	_
 29	techniques	_	technique	NOUN	NOUN	_	_	_	24	_	conj	_	_	_	_	_	_	_
@@ -6645,7 +6468,6 @@
 3	Marie-Reine-des-Coeurs	_	Marie-Reine-des-Coeurs	PROPN	PROPN	_	_	_	2	_	name	_	_	_
 4	est	_	être	AUX	AUX	_	_	_	5	_	auxpass	_	_	_
 5	située	_	situer	VERB	VERB	_	_	_	0	_	root	Y	locate.01	_
-6-7	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	à	_	à	ADP	ADP	_	_	_	11	_	case	_	_	_
 7	le	_	le	DET	DET	_	_	_	11	_	det	_	_	_
 8	:	_	:	PUNCT	PUNCT	_	_	_	6	_	punct	_	_	_
@@ -6701,11 +6523,9 @@
 10	négliger	_	négliger	VERB	VERB	_	_	_	4	_	acl	Y	neglect.01	_	_	_
 11	les	_	le	DET	DET	_	_	_	12	_	det	_	_	_	_	_
 12	plats	_	plat	NOUN	NOUN	_	_	_	10	_	dobj	_	_	_	_	A1
-13-14	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 13	à	_	à	ADP	ADP	_	_	_	15	_	case	_	_	_	_	_
 14	le	_	le	DET	DET	_	_	_	15	_	det	_	_	_	_	_
 15	profit	_	profit	NOUN	NOUN	_	_	_	10	_	nmod	_	_	_	_	_
-16-17	des	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_	_
 17	les	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_	_
 18	vins	_	vin	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_
@@ -6762,7 +6582,6 @@
 5	pour	_	pour	ADP	ADP	_	_	_	7	_	case	_	_	_
 6	la	_	le	DET	DET	_	_	_	7	_	det	_	_	_
 7	qualité	_	qualité	NOUN	NOUN	_	_	_	4	_	nmod	_	_	_
-8-9	des	_	_	_	_	_	_	_	_	_	_	_	_	_
 8	de	_	de	ADP	ADP	_	_	_	10	_	case	_	_	_
 9	les	_	le	DET	DET	_	_	_	10	_	det	_	_	_
 10	produits	_	produit	NOUN	NOUN	_	_	_	7	_	nmod	_	_	_
@@ -6886,7 +6705,6 @@
 3	dans	_	dans	ADP	ADP	_	_	_	5	_	case	_	_	_	_
 4	le	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_
 5	domaine	_	domaine	NOUN	NOUN	_	_	_	2	_	nmod	_	_	_	_
-6-7	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_	_	_
 7	le	_	le	DET	DET	_	_	_	8	_	det	_	_	_	_
 8	destockage	_	destockage	NOUN	NOUN	_	_	_	5	_	nmod	_	_	_	_
@@ -6955,7 +6773,6 @@
 16	et	_	et	CONJ	CONJ	_	_	_	15	_	cc	_	_	_	_	_
 17	saleté	_	saleté	NOUN	NOUN	_	_	_	15	_	conj	_	_	_	_	_
 18	étaient	_	être	VERB	VERB	_	_	_	3	_	parataxis	Y	be.01	_	_	_
-19-20	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 19	à	_	à	ADP	ADP	_	_	_	21	_	case	_	_	_	_	_
 20	le	_	le	DET	DET	_	_	_	21	_	det	_	_	_	_	_
 21	rendez-vous	_	rendez-vous	NOUN	NOUN	_	_	_	18	_	nmod	_	_	_	_	_
@@ -7011,7 +6828,6 @@
 4	vin	_	vin	NOUN	NOUN	_	_	_	2	_	nmod	_	_	_	_
 5	à	_	à	ADP	ADP	_	_	_	6	_	mark	_	_	_	_
 6	boire	_	boire	VERB	VERB	_	_	_	2	_	acl	Y	drink.01	_	_
-7-8	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 7	à	_	à	ADP	ADP	_	_	_	9	_	case	_	_	_	_
 8	le	_	le	DET	DET	_	_	_	9	_	det	_	_	_	_
 9	verre	_	verre	NOUN	NOUN	_	_	_	6	_	nmod	_	_	_	_
@@ -7021,7 +6837,6 @@
 13	€	_	€	SYM	SYM	_	_	_	2	_	nmod	_	_	_	_
 14	,	_	,	PUNCT	PUNCT	_	_	_	2	_	punct	_	_	_	_
 15	bière	_	bière	NOUN	NOUN	_	_	_	19	_	nsubj	_	_	_	A0
-16-17	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 16	de	_	de	ADP	ADP	_	_	_	18	_	case	_	_	_	_
 17	le	_	le	DET	DET	_	_	_	18	_	det	_	_	_	_
 18	Montblanc	_	Montblanc	PROPN	PROPN	_	_	_	15	_	nmod	_	_	_	_
@@ -7236,11 +7051,9 @@
 14	vous	_	vous	PRON	PRON	_	_	_	15	_	nsubj	_	_	_	_	_	A0
 15	aurez	_	avoir	VERB	VERB	_	_	_	0	_	root	Y	have.03	_	_	_	_
 16	droit	_	droit	NOUN	NOUN	_	_	_	15	_	dobj	_	_	_	_	_	A1
-17-18	au	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 17	à	_	à	ADP	ADP	_	_	_	19	_	case	_	_	_	_	_	_
 18	le	_	le	DET	DET	_	_	_	19	_	det	_	_	_	_	_	_
 19	pire	_	pire	NOUN	NOUN	_	_	_	15	_	nmod	_	_	_	_	_	_
-20-21	du	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 20	de	_	de	ADP	ADP	_	_	_	22	_	case	_	_	_	_	_	_
 21	le	_	le	DET	DET	_	_	_	22	_	det	_	_	_	_	_	_
 22	pire	_	pire	NOUN	NOUN	_	_	_	19	_	nmod	_	_	_	_	_	_
@@ -7425,7 +7238,6 @@
 6	de	_	de	ADP	ADP	_	_	_	8	_	case	_	_	_
 7	cette	_	ce	DET	DET	_	_	_	8	_	det	_	_	_
 8	soirée	_	soirée	NOUN	NOUN	_	_	_	5	_	nmod	_	_	A1
-9-10	au	_	_	_	_	_	_	_	_	_	_	_	_	_
 9	à	_	à	ADP	ADP	_	_	_	11	_	case	_	_	_
 10	le	_	le	DET	DET	_	_	_	11	_	det	_	_	_
 11	MH	_	MH	PROPN	PROPN	_	_	_	8	_	nmod	_	_	_
@@ -7448,7 +7260,6 @@
 
 1	pour	_	pour	ADP	ADP	_	_	_	2	_	mark	_	_	_	_	_
 2	mettre	_	mettre	VERB	VERB	_	_	_	15	_	advcl	Y	put.01	_	_	_
-3-4	aux	_	_	_	_	_	_	_	_	_	_	_	_	_	_	_
 3	à	_	à	ADP	ADP	_	_	_	5	_	case	_	_	_	_	_
 4	les	_	le	DET	DET	_	_	_	5	_	det	_	_	_	_	_
 5	normes	_	norme	NOUN	NOUN	_	_	_	2	_	nmod	_	_	_	_	_

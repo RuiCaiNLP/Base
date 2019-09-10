@@ -12,6 +12,8 @@ for line in file_in.readlines():
     if start:
         start = False
         continue
+    if '-' in part[0]:
+        continue
     new_parts = [part[0], part[1],  '_', part[2], part[3],  part[4], '_',  '_', '_', part[6], '_' ]
     new_parts = new_parts + part[7:]
     line = '\t'.join(new_parts)
