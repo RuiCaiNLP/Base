@@ -11,7 +11,7 @@ def make_dataset():
     # because the train and dev file is with full format, wo just copy them
     raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-train.txt')
     raw_dev_file = os.path.join(base_path,
-                                'CoNLL2009-ST-English-development.txt')
+                                'fr-test')
 
     """
     # because the eval file is lack of 9, 11, 14, 15 so we need to merge them
@@ -246,7 +246,7 @@ if __name__ == '__main__':
     pretrain_file = os.path.join(os.path.dirname(__file__), 'data/en.vec.txt')  # words.vector
     pretrained_emb_size = 300
     pretrain_path = os.path.join(os.path.dirname(__file__), 'temp')
-    shrink_pretrained_embedding(train_file, dev_file, train_file, pretrain_file, pretrained_emb_size, pretrain_path)
+    shrink_pretrained_embedding(train_file, train_file, train_file, pretrain_file, pretrained_emb_size, pretrain_path)
 
     print('\n-- shrink french pretrained embeding --')
     pretrain_file_fr = os.path.join(os.path.dirname(__file__), 'data/fr.vec.txt')  # words.vector
