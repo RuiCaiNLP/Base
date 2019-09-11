@@ -20,7 +20,7 @@ print(char_dict['c'])
 
 
 def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
-              deprel2idx, argument2idx, idx2word, shuffle=False, withParrallel=True, lang="En"):
+              deprel2idx, argument2idx, idx2word, shuffle=False, withParrallel=False, lang="En"):
 
     if shuffle:
         random.shuffle(input_data)
