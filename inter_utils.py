@@ -94,6 +94,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             fr_pad_word_batch = np.array(pad_batch(fr_word_batch, batch_size, fr_word2idx[_PAD_]))
 
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
+            print(batch_size)
             for i in range(batch_size):
                 fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
                 #fr_pad_flag_batch[i][1] = 1
