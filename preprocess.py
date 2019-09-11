@@ -241,11 +241,13 @@ if __name__ == '__main__':
     print('predicate:')
     make_pred_vocab(train_file, dev_file, None, vocab_path)
 
+    pretrain_path = os.path.join(os.path.dirname(__file__), 'temp')
+    deprel_vocab = load_deprel_vocab(os.path.join(pretrain_path, 'deprel.vocab'))
     # shrink pretrained embeding
     print('\n-- shrink pretrained embeding --')
     pretrain_file = os.path.join(os.path.dirname(__file__), 'data/en.vec.txt')  # words.vector
     pretrained_emb_size = 300
-    pretrain_path = os.path.join(os.path.dirname(__file__), 'temp')
+
     shrink_pretrained_embedding(train_file, train_file, train_file, pretrain_file, pretrained_emb_size, pretrain_path)
 
     print('\n-- shrink french pretrained embeding --')
@@ -254,6 +256,12 @@ if __name__ == '__main__':
     pretrain_path_fr = os.path.join(os.path.dirname(__file__), 'temp')
     fr_shrink_pretrained_embedding(dev_file, dev_file, dev_file, pretrain_file_fr, pretrained_emb_size_fr, pretrain_path_fr)
 
+    make_dataset_input(train_file, os.path.join(pretrain_path, 'train.input'), unify_pred=False,
+                       deprel_vocab=deprel_vocab, pickle_dump_path=os.path.join(pretrain_path, 'train.pickle.input'))
+    make_dataset_input(dev_file, os.path.join(pretrain_path, 'dev.input'), unify_pred=False, deprel_vocab=deprel_vocab,
+                       pickle_dump_path=os.path.join(pretrain_path, 'dev.pickle.input'))
+
+    log(' data preprocessing finished!')
     #
     # make_pred_dataset_input(train_file, os.path.join(os.path.dirname(__file__),'temp/pred_train.input'))
     # make_pred_dataset_input(dev_file, os.path.join(os.path.dirname(__file__),'temp/pred_dev.input'))

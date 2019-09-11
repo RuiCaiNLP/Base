@@ -265,6 +265,10 @@ if __name__ == '__main__':
 
     log('\t data loading finished! consuming {} s'.format(int(time.time() - start_t)))
 
+    log(word2idx['<UNK>'])
+    log(pretrain_emb_weight[word2idx['<UNK>']])
+    log(fr_word2idx['<UNK>'])
+    log(fr_pretrain_emb_weight[fr_word2idx['<UNK>']])
     # result_path = os.path.join(os.path.dirname(__file__),'result/')
 
     result_path = args.result_path
