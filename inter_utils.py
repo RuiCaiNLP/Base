@@ -93,7 +93,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
 
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
             for i in range(batch_size):
-                fr_pad_flag_batch[i][fr_preidx_batch] = 1
+                fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
         else:
             fr_pad_word_batch = None
             fr_pad_flag_batch = None
