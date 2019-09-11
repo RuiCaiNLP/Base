@@ -28,12 +28,14 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         fr_input_data = []
         fr_input_preidx = []
         fr_file = open("flat_train_fr_cleaned", 'r')
+        idx = 0
         for line in fr_file.readlines():
             part = line.strip().split()
-            if len(part) == 1:
+            if idx%2 == 0:
                 fr_input_preidx.append(int(part[0]))
             else:
                 fr_input_data.append(part)
+            idx += 1
     else:
         fr_input_preidx = None
 
@@ -93,8 +95,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
 
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
             for i in range(batch_size):
-                #fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
-                fr_pad_flag_batch[i][1] = 1
+                fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
+                #fr_pad_flag_batch[i][1] = 1
         else:
             fr_pad_word_batch = None
             fr_pad_flag_batch = None
