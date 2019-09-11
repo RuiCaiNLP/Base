@@ -83,8 +83,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             word_batch = [[word2idx.get(item[6],word2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_word_batch = np.array(pad_batch(word_batch, batch_size, word2idx[_PAD_]))
         else:
-            word_batch = [[fr_word2idx.get(item[6], word2idx[_UNK_]) for item in sentence] for sentence in data_batch]
-            pad_word_batch = np.array(pad_batch(word_batch, batch_size, word2idx[_PAD_]))
+            word_batch = [[fr_word2idx.get(item[6], fr_word2idx[_UNK_]) for item in sentence] for sentence in data_batch]
+            pad_word_batch = np.array(pad_batch(word_batch, batch_size, fr_word2idx[_PAD_]))
 
 
         if withParrallel:
@@ -93,7 +93,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
 
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
             for i in range(batch_size):
-                fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
+                #fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
+                fr_pad_flag_batch[i][1] = 1
         else:
             fr_pad_word_batch = None
             fr_pad_flag_batch = None
