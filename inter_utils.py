@@ -27,14 +27,21 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
     if withParrallel:
         fr_input_data = []
         fr_input_preidx = []
+        fr_loss_mask = []
         fr_file = open("flat_train_fr_cleaned", 'r')
         idx = 0
         for line in fr_file.readlines():
             part = line.strip().split()
             if idx%2 == 0:
                 fr_input_preidx.append(int(part[0]))
+                if int(part[0]) == -1:
+                    fr_loss_mask.append(0)
+                else:
+                    fr_loss_mask.append(1)
+                #print(part[0])
             else:
                 fr_input_data.append(part)
+                #print(part)
             idx += 1
     else:
         fr_input_preidx = None
@@ -92,15 +99,18 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         if withParrallel:
             fr_word_batch = [[fr_word2idx.get(item, fr_word2idx[_UNK_]) for item in sentence] for sentence in fr_data_batch]
             fr_pad_word_batch = np.array(pad_batch(fr_word_batch, batch_size, fr_word2idx[_PAD_]))
-
+            fr_loss_mask_batch = np.array(fr_loss_mask[start_i, end_i])
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
+            print(fr_data_batch)
             print(batch_size)
             for i in range(batch_size):
                 fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
                 #fr_pad_flag_batch[i][1] = 1
+                #print(fr_pad_flag_batch[i])
         else:
             fr_pad_word_batch = None
             fr_pad_flag_batch = None
+            fr_loss_mask_batch = None
 
         _, sen_max_len = pad_word_batch.shape
         flat_word_batch = pad_word_batch.ravel()
@@ -215,6 +225,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             "index":index_batch,
             "flag":pad_flag_batch,
             "fr_flag": fr_pad_flag_batch,
+            "fr_loss_mask":fr_loss_mask_batch,
             "word":pad_word_batch,
             "fr_word": fr_pad_word_batch,
             "char": pad_char_batch,
