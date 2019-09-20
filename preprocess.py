@@ -238,7 +238,7 @@ if __name__ == '__main__':
     print('deprel:')
     make_deprel_vocab(train_file, vocab_path, unify_pred=False)
     print('argument:')
-    make_argument_vocab(train_file, dev_file, None, vocab_path, unify_pred=False)
+    make_argument_vocab(dev_file, dev_file, None, vocab_path, unify_pred=False)
     print('predicate:')
     make_pred_vocab(train_file, dev_file, None, vocab_path)
 

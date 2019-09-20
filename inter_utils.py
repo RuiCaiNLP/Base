@@ -99,10 +99,10 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         if withParrallel:
             fr_word_batch = [[fr_word2idx.get(item, fr_word2idx[_UNK_]) for item in sentence] for sentence in fr_data_batch]
             fr_pad_word_batch = np.array(pad_batch(fr_word_batch, batch_size, fr_word2idx[_PAD_]))
-            fr_loss_mask_batch = np.array(fr_loss_mask[start_i, end_i])
+            fr_loss_mask_batch = np.array(fr_loss_mask[start_i:end_i])
             fr_pad_flag_batch = np.zeros_like(fr_pad_word_batch)
-            print(fr_data_batch)
-            print(batch_size)
+            #print(fr_data_batch)
+            #print(batch_size)
             for i in range(batch_size):
                 fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
                 #fr_pad_flag_batch[i][1] = 1
@@ -168,7 +168,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
                 sep_pad_gold_link_batch[i][j] = 1
         """
 
-        argument_batch = [[argument2idx.get(item[12],argument2idx[_UNK_]) for item in sentence] for sentence in data_batch]
+        argument_batch = [[argument2idx.get(item[12],argument2idx["_"]) for item in sentence] for sentence in data_batch]
         pad_argument_batch = np.array(pad_batch(argument_batch, batch_size, argument2idx[_PAD_]))
         flat_argument_batch = np.array([item for line in pad_argument_batch for item in line])
 
