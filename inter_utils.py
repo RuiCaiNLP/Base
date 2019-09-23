@@ -60,6 +60,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         if withParrallel:
             fr_data_batch = fr_input_data[start_i:end_i]
             fr_preidx_batch = fr_input_preidx[start_i:end_i]
+        else:
+            fr_preidx_batch = None
 
 
         role_index_batch = np.zeros((batch_size, role_number), dtype=int)
