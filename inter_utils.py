@@ -180,11 +180,12 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         for i in range(batch_size):
             for j in range(len(data_batch[i])):
                 role = data_batch[i][j][12]
-                if role == '_':
+                role_idx = argument2idx.get(role, argument2idx["_"])
+                if role_idx == 1:
                     continue
                 else:
-                    role_index_batch[i][argument2idx.get(role, argument2idx["_"])] = j
-                    role_mask_batch[i][argument2idx.get(role, argument2idx["_"])] = 1
+                    role_index_batch[i][role_idx] = j
+                    role_mask_batch[i][role_idx] = 1
 
 
 
@@ -235,7 +236,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         batch = {
             "sentence_id":sentence_id_batch,
             "predicate_id":predicate_id_batch,
-            "fr_predicates_idx":fr_input_preidx,
+            "fr_predicates_idx":fr_preidx_batch,
             "predicates_idx":predicates_idx_batch,
             "word_id":id_batch,
             "index":index_batch,

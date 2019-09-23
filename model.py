@@ -149,6 +149,20 @@ class End2EndModel(nn.Module):
                      requires_grad=True))
 
 
+        if USE_CUDA:
+            self.fr_bilstm_hidden_state = (
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda(),
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True).cuda())
+        else:
+            self.fr_bilstm_hidden_state = (
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True),
+            Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                     requires_grad=True))
+
+
 
 
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
@@ -328,8 +342,8 @@ class End2EndModel(nn.Module):
 
         role_index = get_torch_variable_from_np(batch_input['role_index'])
         role_mask = get_torch_variable_from_np(batch_input['role_mask'])
-
-        role2word_batch = word_batch.gather(dim=1, index=role_index)
+        role2word_batch = pretrain_batch.gather(dim=1, index=role_index)
+        role2word_emb = self.pretrained_embedding(role2word_batch).detach()
 
         if withParallel:
             fr_word_batch = get_torch_variable_from_np(batch_input['fr_word'])
@@ -345,17 +359,16 @@ class End2EndModel(nn.Module):
         if lang == "En":
             word_emb = self.word_embedding(word_batch)
             pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
-            role2word_emb = self.pretrained_embedding(role2word_batch)
+
         else:
             word_emb = self.fr_word_embedding(word_batch)
             pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
-            role2word_emb = self.fr_pretrained_embedding(role2word_batch)
-
 
         if withParallel:
             fr_word_emb = self.fr_word_embedding(fr_word_batch)
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
             fr_flag_emb = self.flag_embedding(fr_flag_batch)
+            fr_seq_len = fr_flag_batch.shape[1]
 
 
 
@@ -377,24 +390,40 @@ class End2EndModel(nn.Module):
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
-            #output = self.output_layer(hidden_input)
+        #output = self.output_layer(hidden_input)
+
+        arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
+        predicates_1D = batch_input['predicates_idx']
+        pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+        pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
+        output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
+                              num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
+        en_output = output.view(self.batch_size*seq_len, -1)
+
 
         if withParallel:
-            fr_input_emb = self.word_dropout(fr_input_emb)
-            bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(fr_input_emb, self.bilstm_hidden_state)
-            bilstm_output = bilstm_output.contiguous()
-            hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
-            hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
-
-        if self.use_biaffine:
+            fr_input_emb = self.word_dropout(fr_input_emb).detach()
+            fr_bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(fr_input_emb, self.fr_bilstm_hidden_state)
+            fr_bilstm_output = fr_bilstm_output.contiguous()
+            hidden_input = fr_bilstm_output.view(fr_bilstm_output.shape[0] * fr_bilstm_output.shape[1], -1)
+            hidden_input = hidden_input.view(self.batch_size, fr_seq_len, -1)
             arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
-            predicates_1D = batch_input['predicates_idx']
+            predicates_1D = batch_input['fr_predicates_idx']
             pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
             pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
-            output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
-                                  num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
-            output = output.view(self.batch_size*seq_len, -1)
-
-
-        return output
+            output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
+                              num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
+            output = F.softmax(output.view(self.batch_size,  fr_seq_len, -1), dim=2)
+            output = output.transpose(1, 2)
+            fr_role2word_emb = torch.bmm(output, fr_pretrain_emb)
+            criterion = nn.MSELoss(reduce=False)
+            l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
+                                  role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
+            l2_loss = l2_loss.sum(dim=1)
+            float_role_mask = role_mask.float().view(-1)
+            l2_loss = l2_loss * float_role_mask
+            l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
+            l2_loss = l2_loss.sum()/float_role_mask.sum()
+            return en_output, l2_loss
+        return en_output
 

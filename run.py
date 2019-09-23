@@ -418,7 +418,7 @@ if __name__ == '__main__':
                 sl = train_input_data['seq_len']
 
                 #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
-                out = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+                out, l2_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 loss = criterion(out, target_batch_variable)
 
                 #loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
@@ -429,13 +429,14 @@ if __name__ == '__main__':
                 #loss = loss + loss_pos + loss_PI + loss_deprel + loss_link
                 if batch_i%50 == 0:
                     log(batch_i, loss)
+                    log(batch_i, l2_loss)
                     #log("POS:")
                     #print_PRF(out_pos, gold_pos_batch_variable.view(-1))
                     #print_PRF(out_PI, gold_PI_batch_variable.view(-1))
                     #print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
 
                 optimizer.zero_grad()
-                loss.backward()
+                (loss+l2_loss).backward()
                 optimizer.step()
 
                 if batch_i > 0 and batch_i % show_steps == 0:
