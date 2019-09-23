@@ -423,7 +423,7 @@ class End2EndModel(nn.Module):
             float_role_mask = role_mask.float().view(-1)
             l2_loss = l2_loss * float_role_mask
             l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
-            l2_loss = l2_loss/(self.batch_size*self.target_vocab_size)
+            l2_loss = l2_loss.sum()/(self.batch_size*self.target_vocab_size)
             return en_output, l2_loss
         return en_output
 
