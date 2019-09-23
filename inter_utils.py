@@ -22,6 +22,9 @@ print(char_dict['c'])
 def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
               deprel2idx, argument2idx, idx2word, shuffle=False, withParrallel=False, lang="En"):
 
+
+    role_number = len(argument2idx)
+
     if shuffle:
         random.shuffle(input_data)
     if withParrallel:
@@ -59,6 +62,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             fr_preidx_batch = fr_input_preidx[start_i:end_i]
 
 
+        role_index_batch = np.zeros((batch_size, role_number), dtype=int)
+        role_mask_batch = np.zeros((batch_size, role_number), dtype=int)
 
         sentence_id_batch = [sentence[0][0] for sentence in data_batch]
         predicate_id_batch = [sentence[0][1] for sentence in data_batch]
@@ -172,6 +177,17 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         pad_argument_batch = np.array(pad_batch(argument_batch, batch_size, argument2idx[_PAD_]))
         flat_argument_batch = np.array([item for line in pad_argument_batch for item in line])
 
+        for i in range(batch_size):
+            for j in range(len(data_batch[i])):
+                role = data_batch[i][j][12]
+                if role == '_':
+                    continue
+                else:
+                    role_index_batch[i][argument2idx.get(role, argument2idx["_"])] = j
+                    role_mask_batch[i][argument2idx.get(role, argument2idx["_"])] = 1
+
+
+
         if lang=='En':
             pretrain_word_batch = [[pretrain2idx.get(item[6],pretrain2idx[_UNK_]) for item in sentence] for sentence in data_batch]
             pad_pretrain_word_batch = np.array(pad_batch(pretrain_word_batch, batch_size, pretrain2idx[_PAD_]))
@@ -254,6 +270,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             'predicates_flag':pad_sentence_flags_batch,
             'sep_dep_rel': sep_pad_gold_deprel_batch,
             'sep_dep_link': sep_pad_gold_link_batch,
+            'role_index': role_index_batch,
+            'role_mask': role_mask_batch,
         }
 
         yield batch

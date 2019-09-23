@@ -418,7 +418,7 @@ if __name__ == '__main__':
                 sl = train_input_data['seq_len']
 
                 #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
-                out = srl_model(train_input_data, elmo, withParallel=False, lang='En')
+                out = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 loss = criterion(out, target_batch_variable)
 
                 #loss_pos = criterion(out_pos, gold_pos_batch_variable.view(-1))
