@@ -431,7 +431,7 @@ class End2EndModel(nn.Module):
             emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
             emb_distance = emb_distance - emb_distance_min
             #log("###############")
-            #log(emb_distance[0][0])
+            #log(emb_distance[0,:,2])
             #log(role_mask[0])
             #log(output[0][0])
             weighted_distance = output * emb_distance
@@ -449,6 +449,7 @@ class End2EndModel(nn.Module):
             float_role_mask = role_mask.float()
             l2_loss = weighted_distance * float_role_mask
             l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
+            l2_loss = l2_loss.sum(1)*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()/float_role_mask.sum()
             return en_output, l2_loss
         return en_output
