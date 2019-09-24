@@ -414,15 +414,40 @@ class End2EndModel(nn.Module):
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = F.softmax(output.view(self.batch_size,  fr_seq_len, -1), dim=2)
+            # B T R
+            output = F.softmax(output, dim=1)
+            role2word_emb = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
+            role2word_emb = role2word_emb.unsqueeze(dim=1)
+            role2word_emb_expand = role2word_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
+            fr_pretrain_emb = fr_pretrain_emb.view(self.batch_size, fr_seq_len, -1)
+            fr_pretrain_emb = fr_pretrain_emb.unsqueeze(dim=2)
+            fr_pretrain_emb_expand = fr_pretrain_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
+            # B T R W
+            emb_distance = fr_pretrain_emb_expand - role2word_emb_expand
+            emb_distance = emb_distance*emb_distance
+            # B T R
+            emb_distance = emb_distance.sum(dim=3)
+            emb_distance_min = torch.min(emb_distance, dim=1, keepdim=True)[0]
+            emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            emb_distance = emb_distance - emb_distance_min
+            #log("###############")
+            #log(emb_distance[0][0])
+            #log(role_mask[0])
+            #log(output[0][0])
+            weighted_distance = output * emb_distance
+            weighted_distance = weighted_distance.sum(dim=1)
+
+            """
             output = F.softmax(output, dim=1)
             output = output.transpose(1, 2)
             fr_role2word_emb = torch.bmm(output, fr_pretrain_emb)
             criterion = nn.MSELoss(reduce=False)
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
-            l2_loss = l2_loss.sum(dim=1)
-            float_role_mask = role_mask.float().view(-1)
-            l2_loss = l2_loss * float_role_mask
+            """
+
+            float_role_mask = role_mask.float()
+            l2_loss = weighted_distance * float_role_mask
             l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
             l2_loss = l2_loss.sum()/(self.batch_size*self.target_vocab_size)
             return en_output, l2_loss
