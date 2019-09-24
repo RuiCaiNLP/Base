@@ -414,6 +414,7 @@ class End2EndModel(nn.Module):
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = F.softmax(output.view(self.batch_size,  fr_seq_len, -1), dim=2)
+            output = F.softmax(output, dim=1)
             output = output.transpose(1, 2)
             fr_role2word_emb = torch.bmm(output, fr_pretrain_emb)
             criterion = nn.MSELoss(reduce=False)
