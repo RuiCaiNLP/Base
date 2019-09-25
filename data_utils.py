@@ -738,7 +738,7 @@ def shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_file
 
     pretrained_vocab = [_PAD_,_UNK_,_ROOT_,_NUM_]
     pretrained_embedding = [
-                            [0.0]*pretrained_emb_size,
+                            [-10.0]*pretrained_emb_size,
                             [0.1]*pretrained_emb_size,
                             [0.0]*pretrained_emb_size,
                             [0.0]*pretrained_emb_size
@@ -813,7 +813,7 @@ def fr_shrink_pretrained_embedding(train_file, dev_file, test_file, pretrained_f
 
     pretrained_vocab = [_PAD_, _UNK_, _ROOT_, _NUM_]
     pretrained_embedding = [
-        [0.0] * pretrained_emb_size,
+        [-10.0] * pretrained_emb_size,
         [0.1] * pretrained_emb_size,
         [0.0] * pretrained_emb_size,
         [0.0] * pretrained_emb_size
