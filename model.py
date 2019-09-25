@@ -413,7 +413,7 @@ class End2EndModel(nn.Module):
             pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
-            output = F.softmax(output.view(self.batch_size,  fr_seq_len, -1), dim=2)
+            output = output.view(self.batch_size,  fr_seq_len, -1)
             # B T R
             output = F.softmax(output, dim=1)
             role2word_emb = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
