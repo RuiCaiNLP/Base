@@ -438,13 +438,14 @@ class End2EndModel(nn.Module):
             emb_distance_min = torch.min(emb_distance, dim=1, keepdim=True)[0]
             emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
             emb_distance = emb_distance - emb_distance_min
-            #log("###############")
+            log("######################")
             log(emb_distance[0,:,2])
             log(output[0,:, 2])
             log(role_mask[0])
             #log(role_mask[0])
             #log(output[0][0])
             weighted_distance = output * emb_distance
+            log(weighted_distance[0,:, 2])
             # B R
             weighted_distance = weighted_distance.sum(dim=1)
 
