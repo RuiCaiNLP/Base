@@ -461,7 +461,7 @@ class End2EndModel(nn.Module):
             float_role_mask = role_mask.float()
             l2_loss = weighted_distance * float_role_mask
             l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
-            l#og(l2_loss.sum(1))
+            #log(l2_loss.sum(1))
             l2_loss = l2_loss.sum(1)*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             return en_output, l2_loss
