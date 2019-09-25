@@ -1,7 +1,12 @@
+from __future__ import print_function
 from data_utils import _PAD_,_UNK_,_ROOT_,_NUM_
 import math
 import numpy as np
 import random
+import sys
+
+def log(*args, **kwargs):
+    print(*args,file=sys.stderr, **kwargs)
 
 def pad_batch(batch_data, batch_size, pad_int):
     if len(batch_data) < batch_size:
@@ -111,6 +116,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             #print(fr_data_batch)
             #print(batch_size)
             for i in range(batch_size):
+                log(fr_preidx_batch[i])
                 fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
                 #fr_pad_flag_batch[i][1] = 1
                 #print(fr_pad_flag_batch[i])
