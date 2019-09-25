@@ -354,6 +354,7 @@ class End2EndModel(nn.Module):
             fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
             fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
 
+
         if self.use_flag_embedding:
             flag_emb = self.flag_embedding(flag_batch)
         else:
