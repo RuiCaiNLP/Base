@@ -80,9 +80,11 @@ for sen in file.readlines():
         if words[i].startswith("\"") and words[i].endswith("\""):
             words[i] = words[i][1:-1]
             predicate_idx = i
+            break
         elif words[i].startswith("«") and words[i].endswith("»"):
             words[i] = words[i][1:-1]
             predicate_idx = i
+            break
         i+=1
 
     words = [normalize(w) for w in words]
