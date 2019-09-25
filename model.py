@@ -342,8 +342,12 @@ class End2EndModel(nn.Module):
 
         role_index = get_torch_variable_from_np(batch_input['role_index'])
         role_mask = get_torch_variable_from_np(batch_input['role_mask'])
-        role2word_batch = pretrain_batch.gather(dim=1, index=role_index)*role_mask
+        role_mask_expand = role_mask.unsqueeze(2).expand(self.batch_size, self.target_vocab_size, self.word_emb_size)
+        role2word_batch = pretrain_batch.gather(dim=1, index=role_index)
         role2word_emb = self.pretrained_embedding(role2word_batch).detach()
+        role2word_emb = role2word_emb * role_mask_expand.float()
+        #log(role_mask)
+        #log(role_mask_expand)
         #log("#################")
         #log(role_index)
         #log(role_mask)
@@ -427,9 +431,12 @@ class End2EndModel(nn.Module):
             role2word_emb = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
             role2word_emb = role2word_emb.unsqueeze(dim=1)
             role2word_emb_expand = role2word_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
+            role_mask_expand_forFR = \
+                role_mask_expand.unsqueeze(1).expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
             fr_pretrain_emb = fr_pretrain_emb.view(self.batch_size, fr_seq_len, -1)
             fr_pretrain_emb = fr_pretrain_emb.unsqueeze(dim=2)
             fr_pretrain_emb_expand = fr_pretrain_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
+            fr_pretrain_emb_expand = fr_pretrain_emb_expand * role_mask_expand_forFR.float()
             # B T R W
             emb_distance = fr_pretrain_emb_expand - role2word_emb_expand
             emb_distance = emb_distance*emb_distance
@@ -458,10 +465,10 @@ class End2EndModel(nn.Module):
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
 
-            float_role_mask = role_mask.float()
-            l2_loss = weighted_distance * float_role_mask
-            l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
-            #log(l2_loss.sum(1))
+            l2_loss = weighted_distance
+            #log("+++++++++++++++++++++")
+            #log(role_mask)
+            #log(l2_loss)
             l2_loss = l2_loss.sum(1)*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             return en_output, l2_loss
