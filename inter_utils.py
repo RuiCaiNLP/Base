@@ -25,7 +25,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
 
     role_number = len(argument2idx)
 
-    if shuffle:
+    if shuffle and False:
         random.shuffle(input_data)
     if withParrallel:
         fr_input_data = []

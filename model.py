@@ -342,8 +342,12 @@ class End2EndModel(nn.Module):
 
         role_index = get_torch_variable_from_np(batch_input['role_index'])
         role_mask = get_torch_variable_from_np(batch_input['role_mask'])
-        role2word_batch = pretrain_batch.gather(dim=1, index=role_index)
+        role2word_batch = pretrain_batch.gather(dim=1, index=role_index)*role_mask
         role2word_emb = self.pretrained_embedding(role2word_batch).detach()
+        #log("#################")
+        #log(role_index)
+        #log(role_mask)
+        #log(role2word_batch)
 
         if withParallel:
             fr_word_batch = get_torch_variable_from_np(batch_input['fr_word'])
@@ -409,13 +413,16 @@ class End2EndModel(nn.Module):
             hidden_input = hidden_input.view(self.batch_size, fr_seq_len, -1)
             arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
             predicates_1D = batch_input['fr_predicates_idx']
+            #log(predicates_1D)
             pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
             pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size,  fr_seq_len, -1)
+
             # B T R
             output = F.softmax(output, dim=1)
+
             role2word_emb = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
             role2word_emb = role2word_emb.unsqueeze(dim=1)
             role2word_emb_expand = role2word_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
@@ -432,9 +439,11 @@ class End2EndModel(nn.Module):
             emb_distance = emb_distance - emb_distance_min
             #log("###############")
             #log(emb_distance[0,:,2])
+            #log(output[0,:, 2])
             #log(role_mask[0])
             #log(output[0][0])
             weighted_distance = output * emb_distance
+            # B R
             weighted_distance = weighted_distance.sum(dim=1)
 
             """
