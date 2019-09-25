@@ -427,7 +427,7 @@ if __name__ == '__main__':
                 #loss_link = criterion(out_link, gold_link_batch_variable.view(-1))
 
                 #loss = loss + loss_pos + loss_PI + loss_deprel + loss_link
-                if batch_i%50 == 0:
+                if batch_i%1 == 0:
                     log(batch_i, loss)
                     log(batch_i, l2_loss)
                     #log("POS:")

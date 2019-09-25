@@ -116,7 +116,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             #print(fr_data_batch)
             #print(batch_size)
             for i in range(batch_size):
-                log(fr_preidx_batch[i])
+                #log(fr_preidx_batch[i])
                 fr_pad_flag_batch[i][fr_preidx_batch[i]] = 1
                 #fr_pad_flag_batch[i][1] = 1
                 #print(fr_pad_flag_batch[i])
