@@ -477,7 +477,7 @@ class End2EndModel(nn.Module):
             output_argminD = output.gather(1, emb_distance_argmin)
             #log(output_argminD.shape)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
-            weighted_distance = (output_max - output_argminD) * emb_distance_nomalized.gather(1, output_max_arg)
+            weighted_distance = (output_max/output_argminD) * emb_distance_nomalized.gather(1, output_max_arg)
             #log(weighted_distance[0,:, 2])
             # B R
             weighted_distance = weighted_distance.squeeze() * role_mask.float()
@@ -494,7 +494,7 @@ class End2EndModel(nn.Module):
             l2_loss = weighted_distance
             #log("+++++++++++++++++++++")
             #log(role_mask)
-            log(l2_loss)
+            #log(l2_loss)
             #l2_loss = l2_loss.sum(1)*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             #log("+")
