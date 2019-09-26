@@ -459,7 +459,7 @@ class End2EndModel(nn.Module):
             #log(output[0, :, 2])
             #log("#############################")
             #log(output[0])
-            output = F.log_softmax(output, dim=1)
+
             #log(output[0,:, 2])
             #log(emb_distance[0,:, 2])
             #log(role_mask[0])
@@ -469,7 +469,9 @@ class End2EndModel(nn.Module):
             #log(emb_distance)
             #log(emb_distance.gather(1, emb_distance_argmin))
             output_argminD = output.gather(1, emb_distance_argmin)
-            weighted_distance = (output/output_argminD) * emb_distance
+            output = output - output_argminD
+            output = F.softmax(output, dim=1)
+            weighted_distance = output * emb_distance
             #log(weighted_distance[0,:, 2])
             # B R
             weighted_distance = weighted_distance.sum(dim=1)
