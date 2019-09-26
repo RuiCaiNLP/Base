@@ -474,7 +474,7 @@ class End2EndModel(nn.Module):
             #log(emb_distance)
             #log(emb_distance.gather(1, emb_distance_argmin))
             output_argminD = output.gather(1, emb_distance_argmin)
-            weighted_distance = (output/output_argminD) * emb_distance_nomalized
+            weighted_distance = (output-output_argminD) * emb_distance_nomalized
             #log(weighted_distance[0,:, 2])
             # B R
             weighted_distance = weighted_distance.sum(dim=1)
