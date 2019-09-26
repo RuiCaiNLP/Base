@@ -441,27 +441,32 @@ class End2EndModel(nn.Module):
             fr_pretrain_emb = fr_pretrain_emb.view(self.batch_size, fr_seq_len, -1)
             fr_pretrain_emb = fr_pretrain_emb.unsqueeze(dim=2)
             fr_pretrain_emb_expand = fr_pretrain_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
-            fr_pretrain_emb_expand = fr_pretrain_emb_expand * role_mask_expand_forFR.float()
+            fr_pretrain_emb_expand = fr_pretrain_emb_expand #* role_mask_expand_forFR.float()
             # B T R W
             emb_distance = fr_pretrain_emb_expand - role2word_emb_expand
             emb_distance = emb_distance*emb_distance
             # B T R
             emb_distance = emb_distance.sum(dim=3)
+            emb_distance = torch.sqrt(emb_distance)
 
 
             #emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            emb_distance = F.softmax(emb_distance, dim=1)*role_mask_expand_timestep.float()
+            #emb_distance = F.softmax(emb_distance, dim=1)*role_mask_expand_timestep.float()
             emb_distance_min, emb_distance_argmin = torch.min(emb_distance, dim=1, keepdim=True)
-            emb_distance = emb_distance.detach()
-
+            emb_distance_max, emb_distance_argmax = torch.max(emb_distance, dim=1, keepdim=True)
+            emb_distance_max_expand = emb_distance_max.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            emb_distance_min_expand = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            emb_distance_nomalized = (emb_distance-emb_distance_min_expand)/(emb_distance_max_expand-emb_distance_min_expand)\
+                                     *role_mask_expand_timestep.float()
             #emb_distance_argmin_expand = emb_distance_argmin.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
             #log("######################")
             #log(output[0, :, 2])
             #log("#############################")
             #log(output[0])
-
-            #log(output[0,:, 2])
+            output = F.softmax(output, dim=1)
+            #log(output[0,:, 2].sum())
             #log(emb_distance[0,:, 2])
+            #log(emb_distance_nomalized[0,:, 2])
             #log(role_mask[0])
             #log(role_mask[0])
             #log(output[0][0])
@@ -469,9 +474,7 @@ class End2EndModel(nn.Module):
             #log(emb_distance)
             #log(emb_distance.gather(1, emb_distance_argmin))
             output_argminD = output.gather(1, emb_distance_argmin)
-            output = output - output_argminD
-            output = F.softmax(output, dim=1)
-            weighted_distance = output * emb_distance
+            weighted_distance = (output/output_argminD) * emb_distance_nomalized
             #log(weighted_distance[0,:, 2])
             # B R
             weighted_distance = weighted_distance.sum(dim=1)
