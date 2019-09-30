@@ -409,7 +409,7 @@ class End2EndModel(nn.Module):
 
 
         input_emb = self.word_dropout(input_emb)
-        input_emb = torch.cat((input_emb, torch.zeros((self.batch_size, seq_len, self.target_vocab_size)).float()), 2)
+        input_emb = torch.cat((input_emb, get_torch_variable_from_np(np.zeros((self.batch_size, seq_len, self.target_vocab_size)))), 2)
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
