@@ -462,7 +462,7 @@ class End2EndModel(nn.Module):
             #log(emb_distance_argmax)
 
             emb_distance_argmin = emb_distance_argmin*role_mask
-            log(emb_distance_argmin)
+            #log(emb_distance_argmin)
 
 
             fr_input_emb = self.word_dropout(fr_input_emb).detach()
@@ -479,7 +479,7 @@ class End2EndModel(nn.Module):
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size,  fr_seq_len, -1)
-            log(output[0, :, 2])
+            #log(output[0, :, 2])
 
             # B T R
 
@@ -488,7 +488,7 @@ class End2EndModel(nn.Module):
 
 
 
-            log("#######################################")
+            #log("#######################################")
             #log(output[0])
             output = output*role_mask_expand_timestep.float()
             output = F.softmax(output, dim=1)*role_mask_expand_timestep.float()
@@ -528,12 +528,12 @@ class End2EndModel(nn.Module):
             emb_distance_argmin = emb_distance_argmin.view(-1)
             l2_loss = criterion(output, emb_distance_argmin)
             #log("+++++++++++++++++++++")
-            log(l2_loss)
-            log(batch_input['fr_loss_mask'])
+            #log(l2_loss)
+            #log(batch_input['fr_loss_mask'])
             l2_loss = l2_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             #log("+")
-            log(l2_loss)
+            #log(l2_loss)
             return en_output, l2_loss
         return en_output
 
