@@ -474,26 +474,15 @@ class End2EndModel(nn.Module):
             arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
             predicates_1D = batch_input['fr_predicates_idx']
             #log(predicates_1D)
+            #log(predicates_1D)
             pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
             pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size,  fr_seq_len, -1)
-            #log(output[0, :, 2])
-
-            # B T R
-
-
-
-
-
-
-            #log("#######################################")
-            #log(output[0])
-            output = output*role_mask_expand_timestep.float()
-            output = F.softmax(output, dim=1)*role_mask_expand_timestep.float()
-            # B R T
-            output = output.transpose(1,2)
+            output = output.transpose(1, 2)
+            #output = F.softmax(output, dim=2)
+            #log(output[0, 2])
             #output_max, output_max_arg = torch.max(output, dim=1, keepdim=True)
 
             #log(output[0])
@@ -523,9 +512,10 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-            criterion = nn.criterion = nn.CrossEntropyLoss(ignore_index=0)
+            criterion = nn.CrossEntropyLoss(ignore_index=0)
             output = output.view(self.batch_size*self.target_vocab_size, -1)
             emb_distance_argmin = emb_distance_argmin.view(-1)
+            #log(emb_distance_argmin)
             l2_loss = criterion(output, emb_distance_argmin)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
