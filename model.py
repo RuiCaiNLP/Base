@@ -165,7 +165,7 @@ class End2EndModel(nn.Module):
 
 
 
-        self.bilstm_layer = nn.LSTM(input_size=input_emb_size+ self.target_vocab_size,
+        self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
@@ -409,7 +409,7 @@ class End2EndModel(nn.Module):
 
 
         input_emb = self.word_dropout(input_emb)
-        input_emb = torch.cat((input_emb, get_torch_variable_from_np(np.zeros((self.batch_size, seq_len, self.target_vocab_size))).float()), 2)
+        #input_emb = torch.cat((input_emb, get_torch_variable_from_np(np.zeros((self.batch_size, seq_len, self.target_vocab_size))).float()), 2)
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
@@ -466,7 +466,7 @@ class End2EndModel(nn.Module):
 
 
             fr_input_emb = self.word_dropout(fr_input_emb).detach()
-            fr_input_emb = torch.cat((fr_input_emb, emb_distance_nomalized), 2)
+            #fr_input_emb = torch.cat((fr_input_emb, emb_distance_nomalized), 2)
             fr_bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(fr_input_emb, self.fr_bilstm_hidden_state)
             fr_bilstm_output = fr_bilstm_output.contiguous()
             hidden_input = fr_bilstm_output.view(fr_bilstm_output.shape[0] * fr_bilstm_output.shape[1], -1)
