@@ -519,11 +519,13 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-            criterion = nn.CrossEntropyLoss(ignore_index=0)
+            #criterion = nn.CrossEntropyLoss(ignore_index=0)
+
             output = output.view(self.batch_size*self.target_vocab_size, -1)
             emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin[0][2])
-            l2_loss = criterion(output, emb_distance_argmin)
+            #l2_loss = criterion(output, emb_distance_argmin)
+            l2_loss = F.nll_loss(F.log_softmax(output), emb_distance_argmin)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
             #log(batch_input['fr_loss_mask'])
