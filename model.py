@@ -465,6 +465,14 @@ class End2EndModel(nn.Module):
 
             #emb_distance_argmin = emb_distance_argmin*role_mask
             #log(emb_distance_argmin)
+            #log(emb_distance_nomalized[0][2])
+            weight_4_loss = emb_distance_nomalized
+            #log(emb_distance_argmin[0,2])
+            for i in range(self.batch_size):
+                for j in range(self.target_vocab_size):
+                    weight_4_loss[i,j].index_fill_(0, emb_distance_argmin[i][j], 1)
+
+            #log(weight_4_loss[0][2])
 
 
             fr_input_emb = self.word_dropout(fr_input_emb).detach()
@@ -484,7 +492,13 @@ class End2EndModel(nn.Module):
             output = output.view(self.batch_size,  fr_seq_len, -1)
             output = output.transpose(1, 2)
             #B R T
-            output_p = F.softmax(output, dim=2)
+            #output_p = F.softmax(output, dim=2)
+            output_exp = torch.exp(output)
+            output_exp_weighted = output_exp * weight_4_loss
+            output_expsum = output_exp_weighted.sum(dim=2, keepdim=True).expand(self.batch_size, self.target_vocab_size,
+                                                                                fr_seq_len)
+            output = output_exp/output_expsum
+            #log(output_expsum)
             #log(output_p[0, 2])
             # B R 1
             #output_pmax, output_pmax_arg = torch.max(output_p, dim=2, keepdim=True)
@@ -521,11 +535,13 @@ class End2EndModel(nn.Module):
             """
             #criterion = nn.CrossEntropyLoss(ignore_index=0)
 
+
             output = output.view(self.batch_size*self.target_vocab_size, -1)
             emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin[0][2])
             #l2_loss = criterion(output, emb_distance_argmin)
-            l2_loss = F.nll_loss(F.log_softmax(output), emb_distance_argmin)
+
+            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
             #log(batch_input['fr_loss_mask'])
