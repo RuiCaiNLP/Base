@@ -165,7 +165,7 @@ class End2EndModel(nn.Module):
 
 
 
-        self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
+        self.bilstm_layer = nn.LSTM(input_size=input_emb_size+ self.target_vocab_size,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
                                     dropout=self.dropout, bidirectional=True,
                                     bias=True, batch_first=True)
@@ -339,14 +339,19 @@ class End2EndModel(nn.Module):
         flag_batch = get_torch_variable_from_np(batch_input['flag'])
         pos_batch = get_torch_variable_from_np(batch_input['pos'])
         pos_emb = self.pos_embedding(pos_batch)
+        #log(pretrain_batch)
+        #log(flag_batch)
 
         role_index = get_torch_variable_from_np(batch_input['role_index'])
         role_mask = get_torch_variable_from_np(batch_input['role_mask'])
         role_mask_expand = role_mask.unsqueeze(2).expand(self.batch_size, self.target_vocab_size, self.word_emb_size)
 
         role2word_batch = pretrain_batch.gather(dim=1, index=role_index)
+        #log(role2word_batch)
         role2word_emb = self.pretrained_embedding(role2word_batch).detach()
         role2word_emb = role2word_emb * role_mask_expand.float()
+        #log(role2word_emb[0][1])
+        #log(role2word_emb[0][2])
         #log(role_mask)
         #log(role_mask_expand)
         #log("#################")
@@ -359,7 +364,8 @@ class End2EndModel(nn.Module):
             fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
             fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
 
-
+        #log(fr_pretrain_batch[0])
+        #log(fr_flag_batch)
         if self.use_flag_embedding:
             flag_emb = self.flag_embedding(flag_batch)
         else:
@@ -375,7 +381,7 @@ class End2EndModel(nn.Module):
             pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
 
         if withParallel:
-            fr_word_emb = self.fr_word_embedding(fr_word_batch)
+            #fr_word_emb = self.fr_word_embedding(fr_word_batch)
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
             fr_flag_emb = self.flag_embedding(fr_flag_batch)
             fr_seq_len = fr_flag_batch.shape[1]
@@ -400,7 +406,10 @@ class End2EndModel(nn.Module):
         if withParallel:
             fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
 
+
+
         input_emb = self.word_dropout(input_emb)
+        input_emb = torch.cat((input_emb, torch.zeros((self.batch_size, seq_len, self.target_vocab_size))), 2)
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
@@ -417,7 +426,47 @@ class End2EndModel(nn.Module):
 
 
         if withParallel:
+            role2word_emb_1 = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
+            role2word_emb_2 = role2word_emb_1.unsqueeze(dim=1)
+            role2word_emb_expand = role2word_emb_2.expand(self.batch_size, fr_seq_len, self.target_vocab_size,
+                                                        self.pretrain_emb_size)
+
+            #log(role2word_emb_expand[0, 1, 4])
+            #log(role2word_emb_expand[0, 2, 4])
+
+            fr_pretrain_emb = fr_pretrain_emb.view(self.batch_size, fr_seq_len, -1)
+            fr_pretrain_emb = fr_pretrain_emb.unsqueeze(dim=2)
+            fr_pretrain_emb_expand = fr_pretrain_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size,
+                                                            self.pretrain_emb_size)
+            fr_pretrain_emb_expand = fr_pretrain_emb_expand  # * role_mask_expand_forFR.float()
+            # B T R W
+            emb_distance = fr_pretrain_emb_expand - role2word_emb_expand
+            emb_distance = emb_distance * emb_distance
+            # B T R
+            emb_distance = emb_distance.sum(dim=3)
+            emb_distance = torch.sqrt(emb_distance)
+            # emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            # emb_distance = F.softmax(emb_distance, dim=1)*role_mask_expand_timestep.float()
+            emb_distance_min, emb_distance_argmin = torch.min(emb_distance, dim=1, keepdim=True)
+            emb_distance_max, emb_distance_argmax = torch.max(emb_distance, dim=1, keepdim=True)
+            emb_distance_max_expand = emb_distance_max.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            emb_distance_min_expand = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            emb_distance_nomalized = (emb_distance - emb_distance_min_expand) / (
+            emb_distance_max_expand - emb_distance_min_expand)
+                                     #* role_mask_expand_timestep.float()
+            # emb_distance_argmin_expand = emb_distance_argmin.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            # log("######################")
+
+            emb_distance_nomalized = emb_distance_nomalized.detach()
+            #log(emb_distance_nomalized[0,:,2])
+            #log(emb_distance_argmax)
+
+            emb_distance_argmin = emb_distance_argmin*role_mask
+            log(emb_distance_argmin)
+
+
             fr_input_emb = self.word_dropout(fr_input_emb).detach()
+            fr_input_emb = torch.cat((fr_input_emb, emb_distance_nomalized), 2)
             fr_bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(fr_input_emb, self.fr_bilstm_hidden_state)
             fr_bilstm_output = fr_bilstm_output.contiguous()
             hidden_input = fr_bilstm_output.view(fr_bilstm_output.shape[0] * fr_bilstm_output.shape[1], -1)
@@ -430,42 +479,24 @@ class End2EndModel(nn.Module):
             output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, fr_seq_len, 1, self.batch_size,
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size,  fr_seq_len, -1)
+            log(output[0, :, 2])
 
             # B T R
 
 
-            role2word_emb = role2word_emb.view(self.batch_size, self.target_vocab_size, -1)
-            role2word_emb = role2word_emb.unsqueeze(dim=1)
-            role2word_emb_expand = role2word_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
-
-            fr_pretrain_emb = fr_pretrain_emb.view(self.batch_size, fr_seq_len, -1)
-            fr_pretrain_emb = fr_pretrain_emb.unsqueeze(dim=2)
-            fr_pretrain_emb_expand = fr_pretrain_emb.expand(self.batch_size, fr_seq_len, self.target_vocab_size, self.pretrain_emb_size)
-            fr_pretrain_emb_expand = fr_pretrain_emb_expand #* role_mask_expand_forFR.float()
-            # B T R W
-            emb_distance = fr_pretrain_emb_expand - role2word_emb_expand
-            emb_distance = emb_distance*emb_distance
-            # B T R
-            emb_distance = emb_distance.sum(dim=3)
-            emb_distance = torch.sqrt(emb_distance)
 
 
-            #emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            #emb_distance = F.softmax(emb_distance, dim=1)*role_mask_expand_timestep.float()
-            emb_distance_min, emb_distance_argmin = torch.min(emb_distance, dim=1, keepdim=True)
-            emb_distance_max, emb_distance_argmax = torch.max(emb_distance, dim=1, keepdim=True)
-            emb_distance_max_expand = emb_distance_max.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            emb_distance_min_expand = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            emb_distance_nomalized = (emb_distance-emb_distance_min_expand)/(emb_distance_max_expand-emb_distance_min_expand)\
-                                     *role_mask_expand_timestep.float()
-            #emb_distance_argmin_expand = emb_distance_argmin.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            #log("######################")
-            #log(output[0, :, 2])
-            #log("#############################")
+
+
+            log("#######################################")
             #log(output[0])
-            output = F.softmax(output, dim=1)
-            output_max, output_max_arg = torch.max(output, dim=1, keepdim=True)
-            #log(output[0,:, 2])
+            output = output*role_mask_expand_timestep.float()
+            output = F.softmax(output, dim=1)*role_mask_expand_timestep.float()
+            # B R T
+            output = output.transpose(1,2)
+            #output_max, output_max_arg = torch.max(output, dim=1, keepdim=True)
+
+            #log(output[0])
             #log(emb_distance[0,:, 2])
             #log(emb_distance_nomalized[0,:, 2])
             #log(role_mask[0])
@@ -474,13 +505,15 @@ class End2EndModel(nn.Module):
             #log("++++++++++++++++++++")
             #log(emb_distance)
             #log(emb_distance.gather(1, emb_distance_argmin))
-            output_argminD = output.gather(1, emb_distance_argmin)
-            #log(output_argminD.shape)
+            #output_argminD = output.gather(1, emb_distance_argmin)
+            #log(output_argminD)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
-            weighted_distance = (output_max/output_argminD) * emb_distance_nomalized.gather(1, output_max_arg)
-            #log(weighted_distance[0,:, 2])
+            #weighted_distance = (output_max-output_argminD) #* emb_distance_nomalized.gather(1, output_max_arg)
+            #log("++++++++++++++++++++++")
+            #log(output_max-output_argminD)
+            #log(emb_distance_nomalized.gather(1, output_max_arg))
             # B R
-            weighted_distance = weighted_distance.squeeze() * role_mask.float()
+            #weighted_distance = weighted_distance.squeeze() * role_mask.float()
 
             """
             output = F.softmax(output, dim=1)
@@ -490,15 +523,17 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-
-            l2_loss = weighted_distance
+            criterion = nn.criterion = nn.CrossEntropyLoss(ignore_index=0)
+            output = output.view(self.batch_size*self.target_vocab_size, -1)
+            emb_distance_argmin = emb_distance_argmin.view(-1)
+            l2_loss = criterion(output, emb_distance_argmin)
             #log("+++++++++++++++++++++")
-            #log(role_mask)
-            #log(l2_loss)
-            #l2_loss = l2_loss.sum(1)*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
+            log(l2_loss)
+            log(batch_input['fr_loss_mask'])
+            l2_loss = l2_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             #log("+")
-            #log(l2_loss)
+            log(l2_loss)
             return en_output, l2_loss
         return en_output
 
