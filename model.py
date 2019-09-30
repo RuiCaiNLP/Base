@@ -385,7 +385,7 @@ class End2EndModel(nn.Module):
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
             fr_flag_emb = self.flag_embedding(fr_flag_batch)
             fr_seq_len = fr_flag_batch.shape[1]
-            role_mask_expand_timestep = role_mask.unsqueeze(1).expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            role_mask_expand_timestep = role_mask.unsqueeze(2).expand(self.batch_size, self.target_vocab_size, fr_seq_len)
             role_mask_expand_forFR = \
                 role_mask_expand.unsqueeze(1).expand(self.batch_size, fr_seq_len, self.target_vocab_size,
                                                      self.pretrain_emb_size)
@@ -537,11 +537,13 @@ class End2EndModel(nn.Module):
 
 
             output = output.view(self.batch_size*self.target_vocab_size, -1)
+            emb_distance_argmin = emb_distance_argmin*role_mask.unsqueeze(2)
             emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin[0][2])
             #l2_loss = criterion(output, emb_distance_argmin)
 
-            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin)
+            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin, ignore_index=0)
+            #log(l2_loss)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
             #log(batch_input['fr_loss_mask'])
