@@ -445,12 +445,14 @@ class End2EndModel(nn.Module):
             # B T R
             emb_distance = emb_distance.sum(dim=3)
             emb_distance = torch.sqrt(emb_distance)
+            emb_distance = emb_distance.transpose(1, 2)
             # emb_distance_min = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
             # emb_distance = F.softmax(emb_distance, dim=1)*role_mask_expand_timestep.float()
-            emb_distance_min, emb_distance_argmin = torch.min(emb_distance, dim=1, keepdim=True)
-            emb_distance_max, emb_distance_argmax = torch.max(emb_distance, dim=1, keepdim=True)
-            emb_distance_max_expand = emb_distance_max.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
-            emb_distance_min_expand = emb_distance_min.expand(self.batch_size, fr_seq_len, self.target_vocab_size)
+            # B R
+            emb_distance_min, emb_distance_argmin = torch.min(emb_distance, dim=2, keepdim=True)
+            emb_distance_max, emb_distance_argmax = torch.max(emb_distance, dim=2, keepdim=True)
+            emb_distance_max_expand = emb_distance_max.expand(self.batch_size, self.target_vocab_size, fr_seq_len)
+            emb_distance_min_expand = emb_distance_min.expand(self.batch_size, self.target_vocab_size, fr_seq_len)
             emb_distance_nomalized = (emb_distance - emb_distance_min_expand) / (
             emb_distance_max_expand - emb_distance_min_expand)
                                      #* role_mask_expand_timestep.float()
@@ -481,9 +483,10 @@ class End2EndModel(nn.Module):
                               num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
             output = output.view(self.batch_size,  fr_seq_len, -1)
             output = output.transpose(1, 2)
-            #output = F.softmax(output, dim=2)
+            #B R T
+            output_p = F.softmax(output, dim=2)
             #log(output[0, 2])
-            #output_max, output_max_arg = torch.max(output, dim=1, keepdim=True)
+            output_pmax, output_pmax_arg = torch.max(output_p, dim=2, keepdim=True)
 
             #log(output[0])
             #log(emb_distance[0,:, 2])
@@ -494,10 +497,10 @@ class End2EndModel(nn.Module):
             #log("++++++++++++++++++++")
             #log(emb_distance)
             #log(emb_distance.gather(1, emb_distance_argmin))
-            #output_argminD = output.gather(1, emb_distance_argmin)
+            output_pargminD = output_p.gather(2, emb_distance_argmin)
             #log(output_argminD)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
-            #weighted_distance = (output_max-output_argminD) #* emb_distance_nomalized.gather(1, output_max_arg)
+            weighted_distance = (output_pmax- output_pargminD) * emb_distance_nomalized.gather(2, output_pmax_arg)
             #log("++++++++++++++++++++++")
             #log(output_max-output_argminD)
             #log(emb_distance_nomalized.gather(1, output_max_arg))
@@ -512,14 +515,15 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-            criterion = nn.CrossEntropyLoss(ignore_index=0)
-            output = output.view(self.batch_size*self.target_vocab_size, -1)
-            emb_distance_argmin = emb_distance_argmin.view(-1)
+            #criterion = nn.CrossEntropyLoss(ignore_index=0)
+            #output = output.view(self.batch_size*self.target_vocab_size, -1)
+            #emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin)
-            l2_loss = criterion(output, emb_distance_argmin)
+            #l2_loss = criterion(output, emb_distance_argmin)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
             #log(batch_input['fr_loss_mask'])
+            l2_loss = weighted_distance
             l2_loss = l2_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             #log("+")
