@@ -501,9 +501,10 @@ class End2EndModel(nn.Module):
             output_pargminD = output_p.gather(2, emb_distance_argmin)
             #log(output_argminD)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
-            weighted_distance = (output_pmax- output_pargminD) * emb_distance_nomalized.gather(2, output_pmax_arg)
-            weighted_distance = weighted_distance.view(self.batch_size, self.target_vocab_size)
-            weighted_distance  = weighted_distance * role_mask.float()
+            bias = torch.FloatTensor(output_pmax.size()).fill_(1)
+            rank_loss = (output_pmax- output_pargminD+bias) * emb_distance_nomalized.gather(2, output_pmax_arg)
+            rank_loss = rank_loss.view(self.batch_size, self.target_vocab_size)
+            rank_loss = rank_loss * role_mask.float()
             #log("++++++++++++++++++++++")
             #log(output_max-output_argminD)
             #log(emb_distance_nomalized.gather(1, output_max_arg))
@@ -526,8 +527,7 @@ class End2EndModel(nn.Module):
             #log("+++++++++++++++++++++")
             #log(l2_loss)
             #log(batch_input['fr_loss_mask'])
-            l2_loss = weighted_distance
-            l2_loss = l2_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
+            l2_loss = rank_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
             l2_loss = l2_loss.sum()#/float_role_mask.sum()
             #log("+")
             #log(l2_loss)
