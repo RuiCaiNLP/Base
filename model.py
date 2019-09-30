@@ -463,7 +463,7 @@ class End2EndModel(nn.Module):
             #log(emb_distance_nomalized[0,:,2])
             #log(emb_distance_argmax)
 
-            emb_distance_argmin = emb_distance_argmin*role_mask
+            #emb_distance_argmin = emb_distance_argmin*role_mask
             #log(emb_distance_argmin)
 
 
@@ -485,7 +485,8 @@ class End2EndModel(nn.Module):
             output = output.transpose(1, 2)
             #B R T
             output_p = F.softmax(output, dim=2)
-            #log(output[0, 2])
+            #log(output_p[0, 2])
+            # B R 1
             output_pmax, output_pmax_arg = torch.max(output_p, dim=2, keepdim=True)
 
             #log(output[0])
@@ -501,6 +502,8 @@ class End2EndModel(nn.Module):
             #log(output_argminD)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
             weighted_distance = (output_pmax- output_pargminD) * emb_distance_nomalized.gather(2, output_pmax_arg)
+            weighted_distance = weighted_distance.view(self.batch_size, self.target_vocab_size)
+            weighted_distance  = weighted_distance * role_mask.float()
             #log("++++++++++++++++++++++")
             #log(output_max-output_argminD)
             #log(emb_distance_nomalized.gather(1, output_max_arg))
@@ -518,7 +521,7 @@ class End2EndModel(nn.Module):
             #criterion = nn.CrossEntropyLoss(ignore_index=0)
             #output = output.view(self.batch_size*self.target_vocab_size, -1)
             #emb_distance_argmin = emb_distance_argmin.view(-1)
-            #log(emb_distance_argmin)
+            #log(emb_distance_argmin[0][2])
             #l2_loss = criterion(output, emb_distance_argmin)
             #log("+++++++++++++++++++++")
             #log(l2_loss)
