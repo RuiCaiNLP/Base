@@ -502,7 +502,7 @@ class End2EndModel(nn.Module):
             #log(output_argminD)
             #weighted_distance = (output/output_argminD) * emb_distance_nomalized
             bias = torch.FloatTensor(output_pmax.size()).fill_(1).cuda()
-            rank_loss = (output_pmax- output_pargminD+bias) * emb_distance_nomalized.gather(2, output_pmax_arg)
+            rank_loss = (output_pmax- output_pargminD+bias)# * emb_distance_nomalized.gather(2, output_pmax_arg)
             rank_loss = rank_loss.view(self.batch_size, self.target_vocab_size)
             rank_loss = rank_loss * role_mask.float()
             #log("++++++++++++++++++++++")
