@@ -496,7 +496,7 @@ class End2EndModel(nn.Module):
             #output = output * role_mask_expand_timestep.float()
             #log(role_mask_expand_timestep)
             output_exp = torch.exp(output)
-            output_exp_weighted = output_exp * weight_4_loss
+            output_exp_weighted = output_exp #* weight_4_loss
             output_expsum = output_exp_weighted.sum(dim=2, keepdim=True).expand(self.batch_size, self.target_vocab_size,
                                                                                 fr_seq_len)
             output = output_exp/output_expsum
