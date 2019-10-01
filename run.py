@@ -436,7 +436,7 @@ if __name__ == '__main__':
                     #print_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
 
                 optimizer.zero_grad()
-                l2_loss.backward()
+                (l2_loss+loss).backward()
                 optimizer.step()
 
                 if batch_i > 0 and batch_i % show_steps == 0:
