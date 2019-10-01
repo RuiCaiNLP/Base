@@ -495,11 +495,13 @@ class End2EndModel(nn.Module):
             #output_p = F.softmax(output, dim=2)
             #output = output * role_mask_expand_timestep.float()
             #log(role_mask_expand_timestep)
+            """
             output_exp = torch.exp(output)
             output_exp_weighted = output_exp #* weight_4_loss
             output_expsum = output_exp_weighted.sum(dim=2, keepdim=True).expand(self.batch_size, self.target_vocab_size,
                                                                                 fr_seq_len)
             output = output_exp/output_expsum
+            """
             #log(output_expsum)
             #log(output_p[0, 2])
             # B R 1
@@ -535,16 +537,17 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-            #criterion = nn.CrossEntropyLoss(ignore_index=0)
+            criterion = nn.CrossEntropyLoss(ignore_index=0)
 
 
             output = output.view(self.batch_size*self.target_vocab_size, -1)
             emb_distance_argmin = emb_distance_argmin*role_mask.unsqueeze(2)
             emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin[0][2])
-            #l2_loss = criterion(output, emb_distance_argmin)
+            l2_loss = criterion(output, emb_distance_argmin)
 
-            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin, ignore_index=0)
+            #l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin, ignore_index=0)
+
             #log(emb_distance_argmin)
             #log(l2_loss)
             #log("+++++++++++++++++++++")
