@@ -544,7 +544,7 @@ class End2EndModel(nn.Module):
             #log(emb_distance_argmin[0][2])
             #l2_loss = criterion(output, emb_distance_argmin)
 
-            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin)
+            l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin, ignore_index=0)
             #log(emb_distance_argmin)
             #log(l2_loss)
             #log("+++++++++++++++++++++")
