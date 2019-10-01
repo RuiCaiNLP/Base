@@ -493,7 +493,8 @@ class End2EndModel(nn.Module):
             output = output.transpose(1, 2)
             #B R T
             #output_p = F.softmax(output, dim=2)
-            output = output * role_mask_expand_timestep.float()
+            #output = output * role_mask_expand_timestep.float()
+            log(role_mask_expand_timestep)
             output_exp = torch.exp(output)
             output_exp_weighted = output_exp * weight_4_loss
             output_expsum = output_exp_weighted.sum(dim=2, keepdim=True).expand(self.batch_size, self.target_vocab_size,
