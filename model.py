@@ -460,18 +460,26 @@ class End2EndModel(nn.Module):
             # log("######################")
 
             emb_distance_nomalized = emb_distance_nomalized.detach()
+
+
+            top2 = emb_distance_nomalized.topk(2, dim=2, largest=False, sorted=True)[0]
+
+            top2_gap = top2[:,:, 1] - top2[:,:,0]
+            #log(top2_gap)
+            #log(role_mask)
             #log(emb_distance_nomalized[0,:,2])
             #log(emb_distance_argmax)
 
             #emb_distance_argmin = emb_distance_argmin*role_mask
             #log(emb_distance_argmin)
             #log(emb_distance_nomalized[0][2])
+            """
             weight_4_loss = emb_distance_nomalized
             #log(emb_distance_argmin[0,2])
             for i in range(self.batch_size):
                 for j in range(self.target_vocab_size):
                     weight_4_loss[i,j].index_fill_(0, emb_distance_argmin[i][j], 1)
-
+            """
             #log(weight_4_loss[0][2])
 
 
@@ -537,7 +545,7 @@ class End2EndModel(nn.Module):
             l2_loss = criterion(fr_role2word_emb.view(self.batch_size*self.target_vocab_size, -1),
                                   role2word_emb.view(self.batch_size*self.target_vocab_size, -1))
             """
-            criterion = nn.CrossEntropyLoss(ignore_index=0)
+            criterion = nn.CrossEntropyLoss(ignore_index=0, reduce=False)
 
 
             output = output.view(self.batch_size*self.target_vocab_size, -1)
@@ -545,7 +553,10 @@ class End2EndModel(nn.Module):
             emb_distance_argmin = emb_distance_argmin.view(-1)
             #log(emb_distance_argmin[0][2])
             l2_loss = criterion(output, emb_distance_argmin)
-
+            l2_loss = l2_loss.view(self.batch_size, self.target_vocab_size)
+            top2_gap = top2_gap.view(self.batch_size, self.target_vocab_size)
+            l2_loss = l2_loss * top2_gap
+            l2_loss = l2_loss.sum()
             #l2_loss = F.nll_loss(torch.log(output), emb_distance_argmin, ignore_index=0)
 
             #log(emb_distance_argmin)
