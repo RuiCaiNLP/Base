@@ -36,7 +36,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         fr_input_data = []
         fr_input_preidx = []
         fr_loss_mask = []
-        fr_file = open("flat_train_fr_cleaned", 'r')
+        fr_file = open("flat_train_fr_cleaned_2", 'r')
         idx = 0
         for line in fr_file.readlines():
             part = line.strip().split()
