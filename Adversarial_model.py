@@ -28,6 +28,9 @@ class EN_Labeler(nn.Module):
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
 
+        self.bilstm_num_layers = model_params['bilstm_num_layers']
+        self.bilstm_hidden_size = model_params['bilstm_hidden_size']
+
         input_emb_size = 0
         if self.use_flag_embedding:
             input_emb_size += self.flag_emb_size
@@ -82,8 +85,11 @@ class EN_Labeler(nn.Module):
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         en_output = output.view(self.batch_size * seq_len, -1)
 
+        cat_output = en_output.view(self.batch_size, seq_len, -1)
+        pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_state)
+        all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
 
-        return en_output
+        return en_output, all_cat
 
 
 class FR_Labeler(nn.Module):
@@ -97,6 +103,9 @@ class FR_Labeler(nn.Module):
         self.target_vocab_size = model_params['target_vocab_size']
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
+
+        self.bilstm_num_layers = model_params['bilstm_num_layers']
+        self.bilstm_hidden_size = model_params['bilstm_hidden_size']
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -151,9 +160,110 @@ class FR_Labeler(nn.Module):
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         fr_output = output.view(self.batch_size * seq_len, -1)
 
-        return fr_output
+        cat_output = fr_output.view(self.batch_size, seq_len, -1)
+        pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_state)
+        all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
+
+        return fr_output, all_cat
+
+class Discriminator(nn.Module):
+    def __init__(self, model_params):
+        super(Discriminator, self).__init__()
+        self.bilstm_num_layers = model_params['bilstm_num_layers']
+        self.bilstm_hidden_size = model_params['bilstm_hidden_size']
+
+        self.MLP = nn.Sequential(
+            nn.Linear(2*self.bilstm_hidden_size, 128),
+            nn.ReLU()
+        )
+        self.scorer = nn.Sequential(
+            nn.Linear(2*128, 1),
+            nn.Sigmoid(),
+        )
+    def forward(self, hidden_states):
+
+        hidden_states = self.MLP(hidden_states)
+        hidden_states_max = torch.max(hidden_states, dim=1)[0]
+        score = self.scorer(hidden_states_max)
+        return score
 
 class Adversarial_Model(nn.Module):
     def __init__(self, model_params):
         super(Adversarial_Model, self).__init__()
+        self.word_vocab_size = model_params['word_vocab_size']
+        self.fr_word_vocab_size = model_params['fr_word_vocab_size']
+        self.pretrain_vocab_size = model_params['pretrain_vocab_size']
+        self.fr_pretrain_vocab_size = model_params['fr_pretrain_vocab_size']
+        self.word_emb_size = model_params['word_emb_size']
+        self.pretrain_emb_size = model_params['pretrain_emb_size']
+        self.pretrain_emb_weight = model_params['pretrain_emb_weight']
+        self.fr_pretrain_emb_weight = model_params['fr_pretrain_emb_weight']
+
+        self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
+        self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
+        self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
+        self.fr_pretrained_embedding.weight.data.copy_(torch.from_numpy(self.fr_pretrain_emb_weight))
+
+        self.FR_Labeler = FR_Labeler(model_params)
+        self.EN_Labeler = EN_Labeler(model_params)
+        self.Discriminator = Discriminator(model_params)
+
+    def foward(self, batch_input, elmo, withParallel=True, lang='En'):
+        if lang=='En':
+            word_batch = get_torch_variable_from_np(batch_input['word'])
+            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
+        else:
+            word_batch = get_torch_variable_from_np(batch_input['word'])
+            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
+        flag_batch = get_torch_variable_from_np(batch_input['flag'])
+
+        if withParallel:
+            fr_word_batch = get_torch_variable_from_np(batch_input['fr_word'])
+            fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
+            fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
+
+        if self.use_flag_embedding:
+            flag_emb = self.flag_embedding(flag_batch)
+        else:
+            flag_emb = flag_batch.view(flag_batch.shape[0], flag_batch.shape[1], 1).float()
+
+        seq_len = flag_batch.shape[1]
+        if lang == "En":
+            word_emb = self.word_embedding(word_batch)
+            pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
+
+        else:
+            word_emb = self.fr_word_embedding(word_batch)
+            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
+
+        if withParallel:
+            #fr_word_emb = self.fr_word_embedding(fr_word_batch)
+            fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
+            fr_flag_emb = self.flag_embedding(fr_flag_batch)
+            fr_seq_len = fr_flag_batch.shape[1]
+
+
+        input_emb = torch.cat([flag_emb, pretrain_emb], 2)  #
+        if withParallel:
+            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
+
+        if lang == 'En':
+            output, real_states = self.EN_Labeler(input_emb)
+        else:
+            output, real_states = self.FR_Labeler(input_emb)
+
+        if not withParallel:
+            return output
+
+        _, fake_states = self.FR_Labeler(fr_input_emb)
+        prob_real_decision = self.Discriminator(real_states)
+        prob_fake_decision = self.Discriminator(fake_states.detach())
+        D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
+
+        prob_fake_decision = self.Discriminator(fake_states)  # G try to increase this prob
+        # 原始公式是 min_{G} log(1-D(G(z)))
+        G_loss = torch.mean(torch.log(1. - prob_fake_decision))
+        return G_loss, D_loss
+
+
 
