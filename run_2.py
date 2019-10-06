@@ -438,9 +438,10 @@ if __name__ == '__main__':
         log("start adversarial training!")
         opt_D = torch.optim.Adam(srl_model.Discriminator.parameters(), lr=0.001)
         opt_G = torch.optim.Adam(srl_model.FR_Labeler.parameters(), lr=0.001)
+        srl_model.FR_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
+        log("pretrained loaded")
         for epoch in range(max_epoch):
-            srl_model.FR_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
-            log("pretrained loaded")
+
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                              deprel2idx, argument2idx, idx2word, shuffle=False,
@@ -452,17 +453,19 @@ if __name__ == '__main__':
 
                 #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
                 G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
-                if batch_i%50 == 0:
-                    log(batch_i, G_loss, D_loss)
-
 
                 opt_D.zero_grad()
                 D_loss.backward()
                 opt_D.step()
 
+                G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+
                 opt_G.zero_grad()
                 G_loss.backward()
                 opt_G.step()
+
+                if batch_i%50 == 0:
+                    log(batch_i, G_loss, D_loss)
 
                 if batch_i > 0 and batch_i % show_steps == 0:
                     log('\n')
@@ -478,7 +481,7 @@ if __name__ == '__main__':
                         output_predict(
                             os.path.join(result_path, 'dev_argument_{:.2f}.pred'.format(dev_best_score[2] * 100)),
                             dev_output)
-                        torch.save(srl_model.EN_Labeler, 'Best_Pretrained_EN_Labeler.pkl')
+                        #torch.save(srl_model.EN_Labeler, 'Best_Pretrained_EN_Labeler.pkl')
                     log('\tdev best P:{:.2f} R:{:.2f} F1:{:.2f} NP:{:.2f} NR:{:.2f} NF1:{:.2f}'.format(
                         dev_best_score[0] * 100, dev_best_score[1] * 100,
                         dev_best_score[2] * 100, dev_best_score[3] * 100,
