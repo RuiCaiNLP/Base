@@ -271,8 +271,9 @@ class Adversarial_TModel(nn.Module):
         #prob_fake_decision = self.Discriminator(fake_states.detach())
         #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
-        prob_fake_decision_G = self.Discriminator(fake_states)
-        G_loss = -torch.mean(torch.log(prob_fake_decision_G))
+        #prob_fake_decision_G = self.Discriminator(fake_states)
+        #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
+        G_loss = fake_states.sum()
         return G_loss, G_loss
 
 
