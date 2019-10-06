@@ -175,7 +175,7 @@ class Discriminator(nn.Module):
         self.target_vocab_size = model_params['target_vocab_size']
 
         self.MLP = nn.Sequential(
-            nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 128),
+            nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 2*128),
             nn.ReLU()
         )
         self.scorer = nn.Sequential(
