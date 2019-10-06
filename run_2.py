@@ -453,10 +453,10 @@ if __name__ == '__main__':
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
 
                 #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
-                G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
-                opt_D.zero_grad()
-                D_loss.backward()
-                opt_D.step()
+                #G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+                #opt_D.zero_grad()
+                #D_loss.backward()
+                #opt_D.step()
 
                 G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 opt_G.zero_grad()
