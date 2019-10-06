@@ -400,7 +400,7 @@ if __name__ == '__main__':
                 flat_argument = train_input_data['flat_argument']
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
 
-                out = srl_model(train_input_data, elmo, withParallel=False, lang='En')
+                out = srl_model(train_input_data, elmo, withParallel=False, lang='En', isPretrain=True)
                 loss = criterion(out, target_batch_variable)
 
                 if batch_i%50 == 0:

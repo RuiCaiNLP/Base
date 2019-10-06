@@ -224,7 +224,7 @@ class Adversarial_TModel(nn.Module):
         self.Discriminator = Discriminator(model_params)
 
 
-    def forward(self, batch_input, elmo, withParallel=True, lang='En'):
+    def forward(self, batch_input, elmo, withParallel=True, lang='En', isPretrain=False):
         if lang=='En':
             word_batch = get_torch_variable_from_np(batch_input['word'])
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
@@ -265,12 +265,15 @@ class Adversarial_TModel(nn.Module):
             fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
 
         if lang == 'En':
-            output, real_states = self.EN_Labeler(input_emb, predicates_1D )
+            output_en, real_states = self.EN_Labeler(input_emb, predicates_1D )
         else:
-            output, real_states = self.FR_Labeler(input_emb, predicates_1D )
+            output_fr, real_states = self.FR_Labeler(input_emb, predicates_1D )
 
         if not withParallel:
-            return output
+            if isPretrain:
+                return output_en
+            else:
+                return output_fr
         predicates_1D = batch_input['fr_predicates_idx']
         _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
         prob_real_decision = self.Discriminator(real_states)
