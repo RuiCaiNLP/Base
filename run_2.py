@@ -439,7 +439,8 @@ if __name__ == '__main__':
         opt_D = torch.optim.Adam(srl_model.Discriminator.parameters(), lr=0.001)
         opt_G = torch.optim.Adam(srl_model.FR_Labeler.parameters(), lr=0.001)
         for epoch in range(max_epoch):
-            srl_model.FR_Labeler.load('Best_Pretrained_EN_Labeler.pkl')
+            srl_model.FR_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
+            log("pretrained loaded")
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                              deprel2idx, argument2idx, idx2word, shuffle=False,
