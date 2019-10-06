@@ -428,6 +428,7 @@ if __name__ == '__main__':
                             os.path.join(result_path, 'dev_argument_{:.2f}.pred'.format(dev_best_score[2] * 100)),
                             dev_output)
                         torch.save(srl_model.EN_Labeler, 'Best_Pretrained_EN_Labeler.pkl')
+                        log('Pretrained Model Saved!')
                     log('\tdev best P:{:.2f} R:{:.2f} F1:{:.2f} NP:{:.2f} NR:{:.2f} NF1:{:.2f}'.format(
                         dev_best_score[0] * 100, dev_best_score[1] * 100,
                         dev_best_score[2] * 100, dev_best_score[3] * 100,
