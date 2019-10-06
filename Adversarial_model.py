@@ -259,10 +259,10 @@ class Adversarial_TModel(nn.Module):
             fr_seq_len = fr_flag_batch.shape[1]
 
 
-        input_emb = torch.cat([flag_emb, pretrain_emb], 2)  #
+        input_emb = torch.cat([flag_emb, pretrain_emb], 2).detach()  #
         predicates_1D = batch_input['predicates_idx']
         if withParallel:
-            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
+            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2).detach()
 
         output_en, real_states = self.EN_Labeler(input_emb, predicates_1D)
         output_fr, real_states_fr = self.FR_Labeler(input_emb, predicates_1D)
@@ -277,11 +277,11 @@ class Adversarial_TModel(nn.Module):
         _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
         prob_real_decision = self.Discriminator(real_states.detach())
         prob_fake_decision = self.Discriminator(fake_states.detach())
-        #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
+        D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
         prob_fake_decision_G = self.Discriminator(fake_states)
         G_loss = -torch.mean(torch.log(prob_fake_decision_G))
-        return G_loss, G_loss
+        return G_loss, D_loss
 
 
 
