@@ -439,6 +439,7 @@ if __name__ == '__main__':
         opt_D = torch.optim.Adam(srl_model.Discriminator.parameters(), lr=0.001)
         opt_G = torch.optim.Adam(srl_model.FR_Labeler.parameters(), lr=0.001)
         srl_model.FR_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
+        srl_model.EN_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
         log("pretrained loaded")
         for epoch in range(max_epoch):
 
@@ -451,11 +452,11 @@ if __name__ == '__main__':
                 flat_argument = train_input_data['flat_argument']
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
 
-                #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
-                #G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
-                #opt_D.zero_grad()
-                #D_loss.backward()
-                #opt_D.step()
+                out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
+                G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+                opt_D.zero_grad()
+                D_loss.backward()
+                opt_D.step()
 
                 G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 opt_G.zero_grad()
