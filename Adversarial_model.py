@@ -277,10 +277,10 @@ class Adversarial_TModel(nn.Module):
         _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
         prob_real_decision = self.Discriminator(real_states)
         prob_fake_decision = self.Discriminator(fake_states.detach())
-        D_loss= - torch.mean(torch.log(prob_real_decision) - torch.log(1. - prob_fake_decision))
+        D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
         prob_fake_decision = self.Discriminator(fake_states)
-        G_loss = torch.mean(torch.log(1. - prob_fake_decision))
+        G_loss = -torch.mean(torch.log(prob_fake_decision))
         return G_loss, D_loss
 
 
