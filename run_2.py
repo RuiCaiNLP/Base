@@ -452,6 +452,9 @@ if __name__ == '__main__':
 
                 #out, out_pos, out_PI, out_deprel, out_link = srl_model(train_input_data, elmo)
                 G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+                if batch_i%50 == 0:
+                    log(batch_i, G_loss, D_loss)
+
 
                 opt_D.zero_grad()
                 D_loss.backward()
@@ -462,11 +465,9 @@ if __name__ == '__main__':
                 opt_G.step()
 
                 if batch_i > 0 and batch_i % show_steps == 0:
-                    _, pred = torch.max(out, 1)
-                    pred = get_data(pred)
                     log('\n')
                     log('*' * 80)
-                    eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
+                    #eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
 
                     log('dev:')
                     score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, fr_word2idx, lemma2idx,
