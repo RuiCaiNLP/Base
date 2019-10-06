@@ -27,9 +27,11 @@ class EN_Labeler(nn.Module):
         self.target_vocab_size = model_params['target_vocab_size']
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
+        self.pretrain_emb_size = model_params['pretrain_emb_size']
 
         self.bilstm_num_layers = model_params['bilstm_num_layers']
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
+        self.use_biaffine = model_params['use_biaffine']
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -37,10 +39,9 @@ class EN_Labeler(nn.Module):
         else:
             input_emb_size += 1
 
-        if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size# + self.word_emb_size
-        else:
-            input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size #+ self.word_emb_size
+
+        input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size# + self.word_emb_size
+
 
         if USE_CUDA:
             self.bilstm_hidden_state = (
@@ -78,15 +79,15 @@ class EN_Labeler(nn.Module):
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
 
-        arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
+        arg_hidden = self.mlp_arg(hidden_input)
         pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
+        pred_hidden = self.mlp_pred(pred_recur)
         output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         en_output = output.view(self.batch_size * seq_len, -1)
 
         cat_output = en_output.view(self.batch_size, seq_len, -1)
-        pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_state)
+        pred_recur = pred_recur.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
 
         return en_output, all_cat
@@ -103,9 +104,11 @@ class FR_Labeler(nn.Module):
         self.target_vocab_size = model_params['target_vocab_size']
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
+        self.pretrain_emb_size = model_params['pretrain_emb_size']
 
         self.bilstm_num_layers = model_params['bilstm_num_layers']
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
+        self.use_biaffine = model_params['use_biaffine']
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -113,10 +116,8 @@ class FR_Labeler(nn.Module):
         else:
             input_emb_size += 1
 
-        if self.use_deprel:
-            input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size# + self.word_emb_size
-        else:
-            input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size #+ self.word_emb_size
+
+        input_emb_size += self.pretrain_emb_size  # + self.pos_emb_size# + self.word_emb_size
 
         if USE_CUDA:
             self.bilstm_hidden_state = (
@@ -153,15 +154,15 @@ class FR_Labeler(nn.Module):
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
 
-        arg_hidden = self.mlp_dropout(self.mlp_arg(hidden_input))
+        arg_hidden = self.mlp_arg(hidden_input)
         pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        pred_hidden = self.pred_dropout(self.mlp_pred(pred_recur))
+        pred_hidden =self.mlp_pred(pred_recur)
         output = bilinear(arg_hidden, self.rel_W, pred_hidden, self.mlp_size, seq_len, 1, self.batch_size,
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         fr_output = output.view(self.batch_size * seq_len, -1)
 
         cat_output = fr_output.view(self.batch_size, seq_len, -1)
-        pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_state)
+        pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
 
         return fr_output, all_cat
@@ -171,9 +172,10 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.bilstm_num_layers = model_params['bilstm_num_layers']
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
+        self.target_vocab_size = model_params['target_vocab_size']
 
         self.MLP = nn.Sequential(
-            nn.Linear(2*self.bilstm_hidden_size, 128),
+            nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 128),
             nn.ReLU()
         )
         self.scorer = nn.Sequential(
@@ -187,9 +189,9 @@ class Discriminator(nn.Module):
         score = self.scorer(hidden_states_max)
         return score
 
-class Adversarial_Model(nn.Module):
+class Adversarial_TModel(nn.Module):
     def __init__(self, model_params):
-        super(Adversarial_Model, self).__init__()
+        super(Adversarial_TModel, self).__init__()
         self.word_vocab_size = model_params['word_vocab_size']
         self.fr_word_vocab_size = model_params['fr_word_vocab_size']
         self.pretrain_vocab_size = model_params['pretrain_vocab_size']
@@ -199,16 +201,30 @@ class Adversarial_Model(nn.Module):
         self.pretrain_emb_weight = model_params['pretrain_emb_weight']
         self.fr_pretrain_emb_weight = model_params['fr_pretrain_emb_weight']
 
+        self.use_flag_embedding = model_params['use_flag_embedding']
+        self.flag_emb_size = model_params['flag_embedding_size']
+
         self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
         self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
         self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
         self.fr_pretrained_embedding.weight.data.copy_(torch.from_numpy(self.fr_pretrain_emb_weight))
 
+        if self.use_flag_embedding:
+            self.flag_embedding = nn.Embedding(2, self.flag_emb_size)
+            self.flag_embedding.weight.data.uniform_(-1.0, 1.0)
+
+        self.word_embedding = nn.Embedding(self.word_vocab_size, self.word_emb_size)
+        self.word_embedding.weight.data.uniform_(-1.0, 1.0)
+
+        self.fr_word_embedding = nn.Embedding(self.fr_word_vocab_size, self.word_emb_size)
+        self.fr_word_embedding.weight.data.uniform_(-1.0, 1.0)
+
         self.FR_Labeler = FR_Labeler(model_params)
         self.EN_Labeler = EN_Labeler(model_params)
         self.Discriminator = Discriminator(model_params)
 
-    def foward(self, batch_input, elmo, withParallel=True, lang='En'):
+
+    def forward(self, batch_input, elmo, withParallel=True, lang='En'):
         if lang=='En':
             word_batch = get_torch_variable_from_np(batch_input['word'])
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
@@ -244,24 +260,24 @@ class Adversarial_Model(nn.Module):
 
 
         input_emb = torch.cat([flag_emb, pretrain_emb], 2)  #
+        predicates_1D = batch_input['predicates_idx']
         if withParallel:
             fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
 
         if lang == 'En':
-            output, real_states = self.EN_Labeler(input_emb)
+            output, real_states = self.EN_Labeler(input_emb, predicates_1D )
         else:
-            output, real_states = self.FR_Labeler(input_emb)
+            output, real_states = self.FR_Labeler(input_emb, predicates_1D )
 
         if not withParallel:
             return output
-
-        _, fake_states = self.FR_Labeler(fr_input_emb)
+        predicates_1D = batch_input['fr_predicates_idx']
+        _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
         prob_real_decision = self.Discriminator(real_states)
         prob_fake_decision = self.Discriminator(fake_states.detach())
         D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
-        prob_fake_decision = self.Discriminator(fake_states)  # G try to increase this prob
-        # 原始公式是 min_{G} log(1-D(G(z)))
+        prob_fake_decision = self.Discriminator(fake_states)
         G_loss = torch.mean(torch.log(1. - prob_fake_decision))
         return G_loss, D_loss
 
