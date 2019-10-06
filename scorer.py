@@ -113,7 +113,7 @@ def eval_train_batch(epoch,batch_i,loss,golden_batch,predict_batch,argument2idx)
     log('epoch {} batch {} loss:{:4f} accurate:{:.2f} predict:{} golden:{} correct:{}'.format(epoch, batch_i, loss, num_correct/batch_total*100, predict_args, golden_args, correct_args))
 
 
-def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word, unify_pred = False, predicate_correct=0, predicate_sum=0):
+def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word, unify_pred = False, predicate_correct=0, predicate_sum=0, isPretrain=False):
 
     model.eval()
     golden = []
@@ -123,34 +123,13 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
     cur_sentence = None
     cur_sentence_data = None
 
-    correct_pos, NonullPredict_pos, NonullTruth_pos = 0.1, 0.1, 0.
-    correct_PI, NonullPredict_PI, NonullTruth_PI = 0., 0., 0.
-    correct_deprel, NonullPredict_deprel, NonullTruth_deprel = 0., 0., 0.
-    correct_link, NonullPredict_link, NonullTruth_link = 0., 0., 0.
-
-
     for batch_i, input_data in enumerate(inter_utils.get_batch(dataset, batch_size, word2idx, fr_word2idx,
                                                              lemma2idx, pos2idx, pretrain2idx,
                                                              fr_pretrain2idx, deprel2idx, argument2idx, idx2word,
-                                                               withParrallel=False, lang="Fr")):
-        
+                                                             withParrallel=False, lang="Fr")):
         target_argument = input_data['argument']
-        
         flat_argument = input_data['flat_argument']
-
-        gold_pos = input_data['gold_pos']
-
-        gold_PI = input_data['predicates_flag']
-
-        gold_deprel = input_data['sep_dep_rel']
-
-        gold_link = input_data['sep_dep_link']
-
         target_batch_variable = get_torch_variable_from_np(flat_argument)
-        #gold_pos_batch_variable = get_torch_variable_from_np(gold_pos)
-        #gold_PI_batch_variable = get_torch_variable_from_np(gold_PI)
-        #gold_deprel_batch_variable = get_torch_variable_from_np(gold_deprel)
-        #gold_link_batch_variable = get_torch_variable_from_np(gold_link)
 
         sentence_id = input_data['sentence_id']
         predicate_id = input_data['predicate_id']
@@ -159,37 +138,10 @@ def eval_data(model, elmo, dataset, batch_size ,word2idx, fr_word2idx, lemma2idx
         seq_len = input_data['seq_len']
         bs = input_data['batch_size']
         psl = input_data['pad_seq_len']
-
-        out = model(input_data, elmo,  withParallel=False, lang='Fr')
-        #out, out_pos, out_PI, out_deprel, out_link = model(input_data, elmo)
-
-        """
-        a, b, c = get_PRF(out_pos, gold_pos_batch_variable.view(-1))
-        correct_pos += a
-        NonullPredict_pos += b
-        NonullTruth_pos += c
-
-        a, b, c = get_PRF(out_PI, gold_PI_batch_variable.view(-1))
-        correct_PI += a
-        NonullPredict_PI += b
-        NonullTruth_PI += c
-
-        a, b, c = get_PRF(out_deprel, gold_deprel_batch_variable.view(-1))
-        correct_deprel += a
-        NonullPredict_deprel += b
-        NonullTruth_deprel += c
-
-        a, b, c = get_PRF(out_link, gold_link_batch_variable.view(-1))
-        correct_link += a
-        NonullPredict_link += b
-        NonullTruth_link += c
-        """
-
+        out = model(input_data, elmo,  withParallel=False, lang='Fr', isPretrain=isPretrain)
 
         _, pred = torch.max(out, 1)
-
         pred = get_data(pred)
-
         pred = np.reshape(pred, target_argument.shape)
 
         for idx in range(pred.shape[0]):

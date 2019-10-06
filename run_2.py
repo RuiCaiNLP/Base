@@ -421,7 +421,7 @@ if __name__ == '__main__':
                     score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, fr_word2idx, lemma2idx,
                                                   pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
                                                   False,
-                                                  dev_predicate_correct, dev_predicate_sum)
+                                                  dev_predicate_correct, dev_predicate_sum, isPretrain=True)
                     if dev_best_score is None or score[5] > dev_best_score[5]:
                         dev_best_score = score
                         output_predict(
@@ -458,6 +458,28 @@ if __name__ == '__main__':
                 opt_G.zero_grad()
                 G_loss.backward()
                 opt_G.step()
+
+                if batch_i > 0 and batch_i % show_steps == 0:
+                    _, pred = torch.max(out, 1)
+                    pred = get_data(pred)
+                    log('\n')
+                    log('*' * 80)
+                    eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
+
+                    log('dev:')
+                    score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, fr_word2idx, lemma2idx,
+                                                  pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
+                                                  False, dev_predicate_correct, dev_predicate_sum, isPretrian=False)
+                    if dev_best_score is None or score[5] > dev_best_score[5]:
+                        dev_best_score = score
+                        output_predict(
+                            os.path.join(result_path, 'dev_argument_{:.2f}.pred'.format(dev_best_score[2] * 100)),
+                            dev_output)
+                        torch.save(srl_model.EN_Labeler, 'Best_Pretrained_EN_Labeler.pkl')
+                    log('\tdev best P:{:.2f} R:{:.2f} F1:{:.2f} NP:{:.2f} NR:{:.2f} NF1:{:.2f}'.format(
+                        dev_best_score[0] * 100, dev_best_score[1] * 100,
+                        dev_best_score[2] * 100, dev_best_score[3] * 100,
+                        dev_best_score[4] * 100, dev_best_score[5] * 100))
 
 
 
