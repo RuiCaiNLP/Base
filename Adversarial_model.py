@@ -226,15 +226,12 @@ class Adversarial_TModel(nn.Module):
 
     def forward(self, batch_input, elmo, withParallel=True, lang='En', isPretrain=False):
         if lang=='En':
-            word_batch = get_torch_variable_from_np(batch_input['word'])
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         else:
-            word_batch = get_torch_variable_from_np(batch_input['word'])
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         flag_batch = get_torch_variable_from_np(batch_input['flag'])
 
         if withParallel:
-            fr_word_batch = get_torch_variable_from_np(batch_input['fr_word'])
             fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
             fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
 
@@ -243,26 +240,21 @@ class Adversarial_TModel(nn.Module):
         else:
             flag_emb = flag_batch.view(flag_batch.shape[0], flag_batch.shape[1], 1).float()
 
-        seq_len = flag_batch.shape[1]
         if lang == "En":
-            word_emb = self.word_embedding(word_batch)
             pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
-
         else:
-            word_emb = self.fr_word_embedding(word_batch)
             pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
 
         if withParallel:
-            #fr_word_emb = self.fr_word_embedding(fr_word_batch)
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
             fr_flag_emb = self.flag_embedding(fr_flag_batch)
-            fr_seq_len = fr_flag_batch.shape[1]
 
 
-        input_emb = torch.cat([flag_emb, pretrain_emb], 2).detach()  #
+
+        input_emb = torch.cat([flag_emb, pretrain_emb], 2)
         predicates_1D = batch_input['predicates_idx']
         if withParallel:
-            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2).detach()
+            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
 
         output_en, real_states = self.EN_Labeler(input_emb, predicates_1D)
         output_fr, real_states_fr = self.FR_Labeler(input_emb, predicates_1D)
@@ -275,8 +267,8 @@ class Adversarial_TModel(nn.Module):
 
         predicates_1D = batch_input['fr_predicates_idx']
         _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
-        prob_real_decision = self.Discriminator(real_states.detach())
-        prob_fake_decision = self.Discriminator(fake_states.detach())
+        #prob_real_decision = self.Discriminator(real_states.detach())
+        #prob_fake_decision = self.Discriminator(fake_states.detach())
         #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
         prob_fake_decision_G = self.Discriminator(fake_states)
