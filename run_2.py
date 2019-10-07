@@ -439,7 +439,7 @@ if __name__ == '__main__':
         opt_D = optim.Adam(srl_model.Discriminator.parameters(), lr=learning_rate)
         opt_G = optim.Adam(srl_model.FR_Labeler.parameters(), lr=learning_rate)
         srl_model.FR_Labeler.load_state_dict(torch.load('Best_Pretrained_EN_Labeler.pkl'))
-        srl_model.EN_Labeler = torch.load('Best_Pretrained_EN_Labeler.pkl')
+        srl_model.EN_Labeler.load_state_dict(torch.load('Best_Pretrained_EN_Labeler.pkl'))
 
 
         log("pretrained loaded")
