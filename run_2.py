@@ -459,10 +459,10 @@ if __name__ == '__main__':
                 D_loss.backward()
                 opt_D.step()
 
-                G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
-                opt_G.zero_grad()
-                G_loss.backward()
-                opt_G.step()
+                #G_loss, D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
+                #opt_G.zero_grad()
+                #G_loss.backward()
+                #opt_G.step()
 
                 if batch_i%50 == 0:
                     log(batch_i, G_loss, D_loss)
