@@ -243,7 +243,7 @@ class Adversarial_TModel(nn.Module):
 
         if withParallel:
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
-            fr_flag_emb = self.flag_embedding(fr_flag_batch)
+            fr_flag_emb = self.flag_embedding(fr_flag_batch).detach()
 
 
 
