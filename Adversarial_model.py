@@ -58,7 +58,7 @@ class EN_Labeler(nn.Module):
 
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
-                                    dropout=self.dropout, bidirectional=True,
+                                    bidirectional=True,
                                     bias=True, batch_first=True)
 
 
@@ -90,17 +90,13 @@ class EN_Labeler(nn.Module):
         pred_recur = pred_recur.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
 
-        return en_output, all_cat
+        return en_output, hidden_input
 
 
 class FR_Labeler(nn.Module):
     def __init__(self, model_params):
         super(FR_Labeler, self).__init__()
-        self.dropout = model_params['dropout']
-        self.dropout_word = model_params['dropout_word']
-        self.dropout_mlp = model_params['dropout_mlp']
         self.batch_size = model_params['batch_size']
-
         self.target_vocab_size = model_params['target_vocab_size']
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
@@ -134,7 +130,7 @@ class FR_Labeler(nn.Module):
 
         self.bilstm_layer = nn.LSTM(input_size=input_emb_size,
                                     hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
-                                    dropout=self.dropout, bidirectional=True,
+                                    bidirectional=True,
                                     bias=True, batch_first=True)
 
         if self.use_biaffine:
@@ -165,7 +161,7 @@ class FR_Labeler(nn.Module):
         pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
 
-        return fr_output, all_cat
+        return fr_output, hidden_input
 
 class Discriminator(nn.Module):
     def __init__(self, model_params):
@@ -175,7 +171,7 @@ class Discriminator(nn.Module):
         self.target_vocab_size = model_params['target_vocab_size']
 
         self.MLP = nn.Sequential(
-            nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 2*128),
+            nn.Linear(2*self.bilstm_hidden_size, 2*128),
             nn.ReLU()
         )
         self.scorer = nn.Sequential(
@@ -271,9 +267,10 @@ class Adversarial_TModel(nn.Module):
         #prob_fake_decision = self.Discriminator(fake_states.detach())
         #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
-        #prob_fake_decision_G = self.Discriminator(fake_states)
-        #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
-        G_loss = fake_states.sum()
+        prob_fake_decision_G = self.Discriminator(fake_states)
+        G_loss = -torch.mean(torch.log(prob_fake_decision_G))
+        #G_loss = fake_states.sum()
+        log(G_loss)
         return G_loss, G_loss
 
 
