@@ -160,6 +160,9 @@ class FR_Labeler(nn.Module):
         cat_output = fr_output.view(self.batch_size, seq_len, -1)
         pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
+        shuffled_timestep = np.arange(0, seq_len)
+        np.random.shuffle(shuffled_timestep)
+        all_cat = all_cat.index_select( dim=1, index=get_torch_variable_from_np(shuffled_timestep))
 
         return fr_output, all_cat
 
@@ -287,12 +290,12 @@ class Adversarial_TModel(nn.Module):
             prob_real_decision = self.Discriminator(real_states.detach())
             prob_fake_decision = self.Discriminator(fake_states.detach())
             D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
-            log("D loss:", D_loss)
+            #log("D loss:", D_loss)
             return D_loss
         else:
             prob_fake_decision_G = self.Discriminator(fake_states)
             G_loss = -torch.mean(torch.log(prob_fake_decision_G))
-            log("G loss:", G_loss)
+            #log("G loss:", G_loss)
             return G_loss
 
 
