@@ -33,6 +33,8 @@ class EN_Labeler(nn.Module):
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.use_biaffine = model_params['use_biaffine']
 
+        self.out_dropout = nn.Dropout(p=0.5)
+
         input_emb_size = 0
         if self.use_flag_embedding:
             input_emb_size += self.flag_emb_size
@@ -92,7 +94,7 @@ class EN_Labeler(nn.Module):
         shuffled_timestep = np.arange(0, seq_len)
         np.random.shuffle(shuffled_timestep)
         all_cat = all_cat.index_select(dim=1, index=get_torch_variable_from_np(shuffled_timestep))
-
+        all_cat = self.out_dropout(all_cat)
         return en_output, all_cat
 
 
@@ -108,6 +110,8 @@ class FR_Labeler(nn.Module):
         self.bilstm_num_layers = model_params['bilstm_num_layers']
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.use_biaffine = model_params['use_biaffine']
+
+        self.out_dropout = nn.Dropout(p=0.5)
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -166,7 +170,7 @@ class FR_Labeler(nn.Module):
         shuffled_timestep = np.arange(0, seq_len)
         np.random.shuffle(shuffled_timestep)
         all_cat = all_cat.index_select( dim=1, index=get_torch_variable_from_np(shuffled_timestep))
-
+        all_cat = self.out_dropout(all_cat)
         return fr_output, all_cat
 
 class Discriminator(nn.Module):
@@ -224,6 +228,8 @@ class Adversarial_TModel(nn.Module):
 
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
+
+
 
         self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
         self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
