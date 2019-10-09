@@ -225,8 +225,6 @@ class Adversarial_TModel(nn.Module):
         self.use_flag_embedding = model_params['use_flag_embedding']
         self.flag_emb_size = model_params['flag_embedding_size']
 
-        role_mask = get_torch_variable_from_np(batch_input['role_mask'])
-
         self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
         self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
         self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
