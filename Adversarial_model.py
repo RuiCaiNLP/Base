@@ -166,23 +166,42 @@ class FR_Labeler(nn.Module):
 class Discriminator(nn.Module):
     def __init__(self, model_params):
         super(Discriminator, self).__init__()
-        self.bilstm_num_layers = model_params['bilstm_num_layers']
+        self.batch_size = model_params['batch_size']
+        self.bilstm_num_layers = 1
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.target_vocab_size = model_params['target_vocab_size']
 
-        self.MLP = nn.Sequential(
-            nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 2*128),
-            nn.ReLU()
-        )
+        if USE_CUDA:
+            self.bilstm_hidden_state = (
+                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                         requires_grad=True).cuda(),
+                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                         requires_grad=True).cuda())
+        else:
+            self.bilstm_hidden_state = (
+                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                         requires_grad=True),
+                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                         requires_grad=True))
+
+        self.bilstm_layer = nn.LSTM(input_size=4*self.bilstm_hidden_size+self.target_vocab_size,
+                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
+                                    bidirectional=True,
+                                    bias=True, batch_first=True)
+
+        #self.MLP = nn.Sequential(
+        #    nn.Linear(4*self.bilstm_hidden_size+self.target_vocab_size, 2*128),
+        #    nn.ReLU()
+        #)
         self.scorer = nn.Sequential(
-            nn.Linear(2*128, 1),
+            nn.Linear(2*self.bilstm_hidden_size, 1),
             nn.Sigmoid(),
         )
     def forward(self, hidden_states):
 
-        hidden_states = self.MLP(hidden_states)
-        hidden_states_max = torch.max(hidden_states, dim=1)[0]
-        score = self.scorer(hidden_states_max)
+        bilstm_output, (H_n, C_n) = self.bilstm_layer(hidden_states, self.bilstm_hidden_state)
+
+        score = self.scorer(H_n.view(-1))
         return score
 
 class Adversarial_TModel(nn.Module):
@@ -268,12 +287,12 @@ class Adversarial_TModel(nn.Module):
             prob_real_decision = self.Discriminator(real_states.detach())
             prob_fake_decision = self.Discriminator(fake_states.detach())
             D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
-            #log("D loss:", D_loss)
+            log("D loss:", D_loss)
             return D_loss
         else:
             prob_fake_decision_G = self.Discriminator(fake_states)
             G_loss = -torch.mean(torch.log(prob_fake_decision_G))
-            #log("G loss:", G_loss)
+            log("G loss:", G_loss)
             return G_loss
 
 
