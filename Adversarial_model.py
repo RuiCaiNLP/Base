@@ -303,7 +303,7 @@ class Adversarial_TModel(nn.Module):
             return D_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
         else:
             prob_fake_decision_G = self.Discriminator(fake_states)
-            G_loss = torch.mean(torch.log(1-prob_fake_decision_G))
+            G_loss = -torch.mean(torch.log(1-prob_fake_decision_G))
             #log("G loss:", G_loss)
             return G_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
 
