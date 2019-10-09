@@ -297,7 +297,7 @@ class Adversarial_TModel(nn.Module):
 
         if not TrainGenerator:
             prob_real_decision = self.Discriminator(real_states.detach())
-            prob_fake_decision = self.Discriminator(fake_states.detach())
+            prob_fake_decision = self.Discriminator(real_states.detach())
             D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
             #log("D loss:", D_loss)
             return D_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
