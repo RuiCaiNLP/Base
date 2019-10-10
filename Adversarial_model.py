@@ -88,6 +88,7 @@ class EN_Labeler(nn.Module):
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         en_output = output.view(self.batch_size * seq_len, -1)
 
+        """
         cat_output = en_output.view(self.batch_size, seq_len, -1)
         pred_recur = pred_recur.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
@@ -95,7 +96,8 @@ class EN_Labeler(nn.Module):
         np.random.shuffle(shuffled_timestep)
         all_cat = all_cat.index_select(dim=1, index=get_torch_variable_from_np(shuffled_timestep))
         all_cat = self.out_dropout(all_cat)
-        return en_output, all_cat
+        """
+        return en_output, pred_hidden.view(self.batch_size, -1)
 
 
 class FR_Labeler(nn.Module):
@@ -164,6 +166,7 @@ class FR_Labeler(nn.Module):
                           num_outputs=self.target_vocab_size, bias_x=True, bias_y=True)
         fr_output = output.view(self.batch_size * seq_len, -1)
 
+        """
         cat_output = fr_output.view(self.batch_size, seq_len, -1)
         pred_recur = pred_recur.unsqueeze(dim=1).expand(self.batch_size, seq_len, 2 * self.bilstm_hidden_size)
         all_cat = torch.cat((hidden_input, pred_recur, cat_output), 2)
@@ -172,6 +175,8 @@ class FR_Labeler(nn.Module):
         all_cat = all_cat.index_select( dim=1, index=get_torch_variable_from_np(shuffled_timestep))
         all_cat = self.out_dropout(all_cat)
         return fr_output, all_cat
+        """
+        return fr_output, pred_hidden.view(self.batch_size, -1)
 
 class Discriminator(nn.Module):
     def __init__(self, model_params):
@@ -207,16 +212,33 @@ class Discriminator(nn.Module):
             nn.Linear(2*self.bilstm_hidden_size, 1),
             nn.Sigmoid(),
         )
-    def forward(self, hidden_states):
 
-        bilstm_output, (H_n, C_n) = self.bilstm_layer(hidden_states, self.bilstm_hidden_state)
+        self.emb_dim = 300
+        self.dis_hid_dim = 200
+        self.dis_layers = 2
+        self.dis_input_dropout = 0.2
+        self.dis_dropout = 0.2
+        layers = [nn.Dropout(self.dis_input_dropout)]
+        for i in range(self.dis_layers + 1):
+            input_dim = self.emb_dim if i == 0 else self.dis_hid_dim
+            output_dim = 1 if i == self.dis_layers else self.dis_hid_dim
+            layers.append(nn.Linear(input_dim, output_dim))
+            if i < self.dis_layers:
+                layers.append(nn.LeakyReLU(0.2))
+                layers.append(nn.Dropout(self.dis_dropout))
+        layers.append(nn.Sigmoid())
+        self.layers = nn.Sequential(*layers)
 
-        score = self.scorer(H_n.view(-1))
-        return score
+    def forward(self, x):
+        #bilstm_output, (H_n, C_n) = self.bilstm_layer(hidden_states, self.bilstm_hidden_state)
+        #score = self.scorer(H_n.view(-1))
+        assert x.dim() == 2 and x.size(1) == self.emb_dim
+        return self.layers(x).view(-1)
 
 class Adversarial_TModel(nn.Module):
     def __init__(self, model_params):
         super(Adversarial_TModel, self).__init__()
+        self.batch_size = model_params['batch_size']
         self.word_vocab_size = model_params['word_vocab_size']
         self.fr_word_vocab_size = model_params['fr_word_vocab_size']
         self.pretrain_vocab_size = model_params['pretrain_vocab_size']
@@ -249,6 +271,7 @@ class Adversarial_TModel(nn.Module):
         self.FR_Labeler = FR_Labeler(model_params)
         self.EN_Labeler = EN_Labeler(model_params)
         self.Discriminator = Discriminator(model_params)
+        self.dis_smooth = 0.1
 
 
     def forward(self, batch_input, elmo, withParallel=True, lang='En', isPretrain=False, TrainGenerator=False):
@@ -295,16 +318,26 @@ class Adversarial_TModel(nn.Module):
         predicates_1D = batch_input['fr_predicates_idx']
         _, fake_states = self.FR_Labeler(fr_input_emb, predicates_1D)
 
+        x = torch.cat([real_states.detach(), fake_states.detach()], 0)
+        y = torch.FloatTensor(2 * self.batch_size).zero_().to(device)
+        y[:self.batch_size] = 1 - self.dis_smooth
+        y[self.batch_size:] = self.dis_smooth
+
+
         if not TrainGenerator:
-            prob_real_decision = self.Discriminator(real_states.detach())
-            prob_fake_decision = self.Discriminator(real_states.detach())
-            D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
-            #log("D loss:", D_loss)
+            #prob_real_decision = self.Discriminator(real_states.detach())
+            #prob_fake_decision = self.Discriminator(fake_states.detach())
+            #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
+
+            preds = self.Discriminator(Variable(x.data))
+            D_loss = F.binary_cross_entropy(preds, 1-y)
             return D_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
         else:
-            prob_fake_decision_G = self.Discriminator(real_states.detach())
-            G_loss = -torch.mean(torch.log(prob_fake_decision_G))
+            #prob_fake_decision_G = self.Discriminator(real_states.detach())
+            #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
             #log("G loss:", G_loss)
+            preds = self.Discriminator(x)
+            G_loss = F.binary_cross_entropy(preds, y)
             return G_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
 
 
