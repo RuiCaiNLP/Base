@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-python run_2.py  --train --train_data data/En_train.dataset --valid_data data/Fr_dev.dataset  \
+python run_GAN.py  --train --train_data data/En_train.dataset --valid_data data/Fr_dev.dataset  \
  --seed 100 --tmp_path temp --model_path model --result_path result --pretrain_embedding data/en.vec.txt\
   --pretrain_emb_size 300  --epochs 300 --dropout 0.1 --lr 0.001 --batch_size 1 \
   --word_emb_size 300 --pos_emb_size 32 --lemma_emb_size 100 --use_deprel --deprel_emb_size 64 \
