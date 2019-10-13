@@ -227,13 +227,16 @@ if __name__ == '__main__':
 
     train_input_file = os.path.join(os.path.dirname(__file__), 'temp/train.pickle.input')
     dev_input_file = os.path.join(os.path.dirname(__file__), 'temp/dev.pickle.input')
+    unlabeled_input_file = os.path.join(os.path.dirname(__file__), 'temp/unlabeled.pickle.input')
 
     train_data = data_utils.load_dump_data(train_input_file)
     dev_data = data_utils.load_dump_data(dev_input_file)
+    unlabeled_data = data_utils.load_dump_data(unlabeled_input_file)
 
 
     train_dataset = train_data['input_data']
     dev_dataset = dev_data['input_data']
+    unlabeled_dataset = unlabeled_data['input_data']
 
 
     word2idx = data_utils.load_dump_data(os.path.join(os.path.dirname(__file__), 'temp/word2idx.bin'))
@@ -441,15 +444,27 @@ if __name__ == '__main__':
 
 
         for epoch in range(max_epoch):
+            unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
+                                                                             lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
+                                                                             deprel2idx, argument2idx, idx2word, shuffle=False,
+                                                                             withParrallel=False)
 
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                              deprel2idx, argument2idx, idx2word, shuffle=False,
-                                                                             withParrallel=True)):
+                                                                             withParrallel=False)):
 
                 target_argument = train_input_data['argument']
                 flat_argument = train_input_data['flat_argument']
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
+                try:
+                    unlabeled_input_data = unlabeled_Generator.next()
+                except StopIteration:
+                    unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
+                                                                lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
+                                                                deprel2idx, argument2idx, idx2word, shuffle=False,
+                                                                withParrallel=False)
+                    unlabeled_input_data = unlabeled_Generator.next()
 
                 D_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En')
                 opt_D.zero_grad()
@@ -457,7 +472,7 @@ if __name__ == '__main__':
                 opt_D.step()
 
                 if (batch_i+1)%1 == 0:
-                    en_output, G_loss = srl_model(train_input_data, elmo, withParallel=True, lang='En', TrainGenerator=True)
+                    en_output, G_loss = srl_model(train_input_data, unlabeled_input_data, elmo, withParallel=True, lang='En', TrainGenerator=True)
                     loss = criterion(en_output, target_batch_variable)
                     opt_G.zero_grad()
                     (loss+G_loss).backward()

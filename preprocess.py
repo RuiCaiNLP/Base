@@ -10,32 +10,15 @@ def make_dataset():
 
     # because the train and dev file is with full format, wo just copy them
     #raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-development.map')
-    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-development.txt')
+    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-train.txt')
+    unlabeled_train_file = os.path.join(base_path, 'fr-train')
     raw_dev_file = os.path.join(base_path,
                                 'fr-test')
 
-    """
-    # because the eval file is lack of 9, 11, 14, 15 so we need to merge them
-    raw_eval_file = os.path.join(base_path,
-                                 'CoNLL2009-ST-test-only-LDC2009E50/CoNLL2009-ST-eval-Eng-SRL/CoNLL2009-ST-evaluation-English-SRLonly.txt')
-    raw_eval_file_head = os.path.join(base_path,
-                                      'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English.9.HEAD.txt')
-    raw_eval_file_deprel = os.path.join(base_path,
-                                        'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English.11.DEPREL.txt')
-    raw_eval_file_pred_apreds = os.path.join(base_path,
-                                             'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English.14-.PRED_APREDs.txt')
 
-    raw_eval_ood_file = os.path.join(base_path,
-                                     'CoNLL2009-ST-test-only-LDC2009E50/CoNLL2009-ST-eval-Eng-SRL/CoNLL2009-ST-evaluation-English-SRLonly-ood.txt')
-    raw_eval_ood_file_head = os.path.join(base_path,
-                                          'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English-ood.9.HEAD.txt')
-    raw_eval_ood_file_deprel = os.path.join(base_path,
-                                            'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English-ood.11.DEPREL.txt')
-    raw_eval_ood_file_pred_apreds = os.path.join(base_path,
-                                                 'CoNLL2009-ST-Gold-Both_tasks/CoNLL2009-ST-evaluation-English-ood.14-.PRED_APREDs.txt')
-    """
     train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
     dev_file = os.path.join(os.path.dirname(__file__), 'data/Fr_dev.dataset')
+    unlabeled_file = os.path.join(os.path.dirname(__file__), 'data/Unlabeled.dataset')
     #test_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test.dataset')
     #test_ood_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test_ood.dataset')
 
@@ -51,6 +34,15 @@ def make_dataset():
     # for dev
     with open(raw_dev_file, 'r') as fin:
         with open(dev_file, 'w') as fout:
+            while True:
+                line = fin.readline()
+                if len(line) == 0:
+                    break
+                fout.write(line)
+
+    # for dev
+    with open(unlabeled_train_file, 'r') as fin:
+        with open(unlabeled_file, 'w') as fout:
             while True:
                 line = fin.readline()
                 if len(line) == 0:
@@ -182,6 +174,7 @@ if __name__ == '__main__':
 
     train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
     dev_file = os.path.join(os.path.dirname(__file__), 'data/Fr_dev.dataset')
+    unlabeled_file = os.path.join(os.path.dirname(__file__), 'data/Unlabeled.dataset')
     #test_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test.dataset')
     #test_ood_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test_ood.dataset')
 
@@ -207,22 +200,8 @@ if __name__ == '__main__':
 
     make_dataset_input(train_file, os.path.join(os.path.dirname(__file__), 'temp/train.input'), unify_pred=False)
     make_dataset_input(dev_file, os.path.join(os.path.dirname(__file__), 'temp/dev.input'), unify_pred=False)
-    #make_dataset_input(test_file, os.path.join(os.path.dirname(__file__), 'temp/test.input'), unify_pred=False)
-    #make_dataset_input(test_ood_file, os.path.join(os.path.dirname(__file__), 'temp/test_ood.input'), unify_pred=False)
+    make_dataset_input(unlabeled_file, os.path.join(os.path.dirname(__file__), 'temp/unlabeled.input'), unify_pred=False)
 
-    # make_k_order_pruning_dataset_input(train_file, os.path.join(os.path.dirname(__file__),'temp/train.1.order.pruning.input'), 1, unify_pred=False)
-    # make_k_order_pruning_dataset_input(dev_file, os.path.join(os.path.dirname(__file__),'temp/dev.1.order.pruning.input'), 1, unify_pred=False)
-    # make_k_order_pruning_dataset_input(test_file, os.path.join(os.path.dirname(__file__),'temp/test.1.order.pruning.input'), 1, unify_pred=False)
-    # make_k_order_pruning_dataset_input(test_ood_file, os.path.join(os.path.dirname(__file__),'temp/test_ood.10.order.pruning.input'), 10, unify_pred=False)
-
-    # statistic train/dev/test predicate information
-    # print('-- statistic dataset information --')
-    # print('train:')
-    # stat_dataset(train_file)
-    # print('dev:')
-    # stat_dataset(dev_file)
-    # print('test:')
-    # stat_dataset(test_file)
 
     # make word/pos/lemma/deprel/argument vocab
     print('\n-- making (word/lemma/pos/argument) vocab --')
@@ -230,7 +209,7 @@ if __name__ == '__main__':
     print('word:')
     make_word_vocab(train_file, vocab_path, unify_pred=False)
     print('fr word:')
-    fr_make_word_vocab(dev_file, vocab_path, unify_pred=False)
+    fr_make_word_vocab(unlabeled_file, vocab_path, unify_pred=False)
     print('pos:')
     make_pos_vocab(train_file, vocab_path, unify_pred=False)
     print('lemma:')
@@ -255,12 +234,14 @@ if __name__ == '__main__':
     pretrain_file_fr = os.path.join(os.path.dirname(__file__), 'data/fr.vec.txt')  # words.vector
     pretrained_emb_size_fr = 300
     pretrain_path_fr = os.path.join(os.path.dirname(__file__), 'temp')
-    fr_shrink_pretrained_embedding(dev_file, dev_file, dev_file, pretrain_file_fr, pretrained_emb_size_fr, pretrain_path_fr)
+    fr_shrink_pretrained_embedding(unlabeled_file, dev_file, dev_file, pretrain_file_fr, pretrained_emb_size_fr, pretrain_path_fr)
 
     make_dataset_input(train_file, os.path.join(pretrain_path, 'train.input'), unify_pred=False,
                        deprel_vocab=deprel_vocab, pickle_dump_path=os.path.join(pretrain_path, 'train.pickle.input'))
     make_dataset_input(dev_file, os.path.join(pretrain_path, 'dev.input'), unify_pred=False, deprel_vocab=deprel_vocab,
                        pickle_dump_path=os.path.join(pretrain_path, 'dev.pickle.input'))
+    make_dataset_input(unlabeled_file, os.path.join(pretrain_path, 'unlabeled.input'), unify_pred=False, deprel_vocab=deprel_vocab,
+                       pickle_dump_path=os.path.join(pretrain_path, 'unlabeled.pickle.input'))
 
     log(' data preprocessing finished!')
     #
