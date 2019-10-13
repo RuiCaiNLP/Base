@@ -466,13 +466,13 @@ if __name__ == '__main__':
                                                                 withParrallel=False)
                     unlabeled_input_data = unlabeled_Generator.next()
 
-                D_loss = srl_model(train_input_data, unlabeled_input_data, elmo, unlabeled=True, lang='En')
+                D_loss = srl_model(train_input_data, elmo, unlabeled_input_data, unlabeled=True, lang='En')
                 opt_D.zero_grad()
                 D_loss.backward()
                 opt_D.step()
 
                 if (batch_i+1)%1 == 0:
-                    en_output, G_loss = srl_model(train_input_data, unlabeled_input_data, elmo, unlabeled=True, lang='En', TrainGenerator=True)
+                    en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
                     loss = criterion(en_output, target_batch_variable)
                     opt_G.zero_grad()
                     (loss+G_loss).backward()

@@ -197,16 +197,16 @@ class Adversarial_TModel(nn.Module):
         self.dis_smooth = 0.1
 
 
-    def forward(self, batch_input, elmo, withParallel=True, lang='En', isPretrain=False, TrainGenerator=False):
+    def forward(self, batch_input, elmo, unlabeled_batch_input=None, unlabeled=False, withParallel=False, lang='En', isPretrain=False, TrainGenerator=False):
         if lang=='En':
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         else:
             pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
         flag_batch = get_torch_variable_from_np(batch_input['flag'])
 
-        if withParallel:
-            fr_pretrain_batch = get_torch_variable_from_np(batch_input['fr_pretrain'])
-            fr_flag_batch = get_torch_variable_from_np(batch_input['fr_flag'])
+        if unlabeled:
+            fr_pretrain_batch = get_torch_variable_from_np(unlabeled_batch_input['pretrain'])
+            fr_flag_batch = get_torch_variable_from_np(unlabeled_batch_input['flag'])
 
         if self.use_flag_embedding:
             flag_emb = self.flag_embedding(flag_batch)
@@ -218,7 +218,7 @@ class Adversarial_TModel(nn.Module):
         else:
             pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
 
-        if withParallel:
+        if unlabeled:
             fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
             fr_flag_emb = self.flag_embedding(fr_flag_batch).detach()
 
@@ -226,15 +226,15 @@ class Adversarial_TModel(nn.Module):
 
         input_emb = torch.cat([flag_emb, pretrain_emb], 2)
         predicates_1D = batch_input['predicates_idx']
-        if withParallel:
+        if unlabeled:
             fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
 
         output_en, enc_real = self.EN_Labeler(input_emb, predicates_1D)
 
-        if not withParallel:
+        if not unlabeled:
             return output_en
 
-        predicates_1D = batch_input['fr_predicates_idx']
+        predicates_1D = unlabeled_batch_input['predicates_idx']
         _, enc_fake = self.EN_Labeler(fr_input_emb, predicates_1D)
 
         x_D = torch.cat([enc_real.detach(), enc_fake.detach()], 0)
