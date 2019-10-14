@@ -391,7 +391,7 @@ if __name__ == '__main__':
         test_best_score = None
         test_ood_best_score = None
 
-        for epoch in range(1):
+        for epoch in range(0):
 
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
@@ -447,7 +447,7 @@ if __name__ == '__main__':
             unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                              deprel2idx, argument2idx, idx2word, shuffle=False,
-                                                                             withParrallel=False)
+                                                                             withParrallel=False,lang="Fr")
 
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
@@ -463,7 +463,7 @@ if __name__ == '__main__':
                     unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
                                                                 lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                 deprel2idx, argument2idx, idx2word, shuffle=False,
-                                                                withParrallel=False)
+                                                                withParrallel=False,lang="Fr")
                     unlabeled_input_data = unlabeled_Generator.next()
 
                 D_loss = srl_model(train_input_data, elmo, unlabeled_input_data, unlabeled=True, lang='En')

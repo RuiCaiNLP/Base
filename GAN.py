@@ -251,14 +251,14 @@ class Adversarial_TModel(nn.Module):
 
             preds = self.Discriminator(Variable(x_D.data))
             D_loss = F.binary_cross_entropy(preds, 1-y)
-            return D_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
+            return D_loss
         else:
             #prob_fake_decision_G = self.Discriminator(real_states.detach())
             #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
             #log("G loss:", G_loss)
             preds = self.Discriminator(x_G)
             G_loss = F.binary_cross_entropy(preds, y)
-            return output_en, G_loss*get_torch_variable_from_np(batch_input['fr_loss_mask']).float()
+            return output_en, G_loss
 
 
 
