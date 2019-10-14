@@ -108,7 +108,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
             pad_word_batch = np.array(pad_batch(word_batch, batch_size, fr_word2idx[_PAD_]))
 
 
-        if withParrallel:
+        if withParrallel and False:
             fr_word_batch = [[fr_word2idx.get(item, fr_word2idx[_UNK_]) for item in sentence] for sentence in fr_data_batch]
             fr_pad_word_batch = np.array(pad_batch(fr_word_batch, batch_size, fr_word2idx[_PAD_]))
             fr_loss_mask_batch = np.array(fr_loss_mask[start_i:end_i])
