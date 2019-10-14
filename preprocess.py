@@ -175,27 +175,7 @@ if __name__ == '__main__':
     train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
     dev_file = os.path.join(os.path.dirname(__file__), 'data/Fr_dev.dataset')
     unlabeled_file = os.path.join(os.path.dirname(__file__), 'data/Unlabeled.dataset')
-    #test_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test.dataset')
-    #test_ood_file = os.path.join(os.path.dirname(__file__), 'data/conll09-english/conll09_test_ood.dataset')
 
-    # replace_syn_dataset(train_file, os.path.join(os.path.dirname(__file__),'data/biaffine/conll2009_deep_biaffine_train_92.96_98.33.txt'),
-    #     os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_train_92.96.dataset'))
-    # replace_syn_dataset(dev_file, os.path.join(os.path.dirname(__file__),'data/biaffine/conll2009_deep_biaffine_dev_88.89_95.02.txt'),
-    #     os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_dev_88.89.dataset'))
-    # replace_syn_dataset(test_file, os.path.join(os.path.dirname(__file__),'data/biaffine/conll2009_deep_biaffine_test_90.22_95.56.txt'),
-    #     os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_test_90.22.dataset'))
-
-    # train_file = os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_train_92.96.dataset')
-    # dev_file = os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_dev_88.89.dataset')
-    # test_file = os.path.join(os.path.dirname(__file__),'data/conll09-english/conll09_test_90.22.dataset')
-
-    # stat_max_order(train_file)
-    # stat_max_order(dev_file)
-    # stat_max_order(test_file)
-
-    # word_filter = load_word_filter(os.path.join(os.path.dirname(__file__),'data/word_filter.vocab'))
-
-    # without pruning
     # make_dataset_input
 
     make_dataset_input(train_file, os.path.join(os.path.dirname(__file__), 'temp/train.input'), unify_pred=False)
