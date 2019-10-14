@@ -191,8 +191,8 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
                 role_idx = argument2idx.get(role, argument2idx["_"])
                 if role_idx == 1:
                     continue
-                if withParrallel and fr_loss_mask_batch[i]== 0:
-                    continue
+                #if withParrallel and fr_loss_mask_batch[i]== 0:
+                #    continue
 
                 role_index_batch[i][role_idx] = j
                 role_mask_batch[i][role_idx] = 1
