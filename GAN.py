@@ -152,6 +152,9 @@ class Discriminator(nn.Module):
                 layers.append(nn.Dropout(self.dis_dropout))
         layers.append(nn.Sigmoid())
         self.layers = nn.Sequential(*layers)
+        self.real = np.random.uniform(0.7, 1.0)  # 1
+        self.fake = np.random.uniform(0.0, 0.3)  # 0
+
 
     def forward(self, x):
         #bilstm_output, (H_n, C_n) = self.bilstm_layer(hidden_states, self.bilstm_hidden_state)
@@ -237,11 +240,13 @@ class Adversarial_TModel(nn.Module):
         predicates_1D = unlabeled_batch_input['predicates_idx']
         _, enc_fake = self.EN_Labeler(fr_input_emb, predicates_1D)
 
-        x_D = torch.cat([enc_real.detach(), enc_fake.detach()], 0)
-        x_G = torch.cat([enc_real.detach(), enc_fake], 0)
-        y = torch.FloatTensor(2 * self.batch_size).zero_().to(device)
-        y[:self.batch_size] = 1 - self.dis_smooth
-        y[self.batch_size:] = self.dis_smooth
+        #x_D_real = torch.cat([enc_real.detach(), enc_fake.detach()], 0)
+        x_D_real = enc_real.detach()
+        x_D_fake = enc_fake.detach()
+        x_G = enc_fake
+        #y = torch.FloatTensor(2 * self.batch_size).zero_().to(device)
+        #y[:self.batch_size] = 1 - self.dis_smooth
+        #y[self.batch_size:] = self.dis_smooth
 
 
         if not TrainGenerator:
@@ -249,15 +254,21 @@ class Adversarial_TModel(nn.Module):
             #prob_fake_decision = self.Discriminator(fake_states.detach())
             #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
 
-            preds = self.Discriminator(Variable(x_D.data))
-            D_loss = F.binary_cross_entropy(preds, 1-y)
+            preds = self.Discriminator(Variable(x_D_real.data))
+            real_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
+            D_loss_real = F.binary_cross_entropy(preds, real_labels)
+            preds = self.Discriminator(Variable(x_D_fake.data))
+            fake_labels = torch.empty(*preds.size()).fill_(self.fake).type_as(preds)
+            D_loss_fake = F.binary_cross_entropy(preds, fake_labels)
+            D_loss = 0.5*(D_loss_real + D_loss_fake)
             return D_loss
         else:
             #prob_fake_decision_G = self.Discriminator(real_states.detach())
             #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
             #log("G loss:", G_loss)
-            preds = self.Discriminator(x_G)
-            G_loss = F.binary_cross_entropy(preds, y)
+            preds = self.Discriminator(Variable(x_G))
+            fake_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
+            G_loss = F.binary_cross_entropy(preds, fake_labels)
             return output_en, G_loss
 
 
