@@ -199,6 +199,9 @@ class Adversarial_TModel(nn.Module):
         self.Discriminator = Discriminator(model_params)
         self.dis_smooth = 0.1
 
+        self.real = np.random.uniform(0.7, 1.0)  # 1
+        self.fake = np.random.uniform(0.0, 0.3)  # 0
+
 
     def forward(self, batch_input, elmo, unlabeled_batch_input=None, unlabeled=False, withParallel=False, lang='En', isPretrain=False, TrainGenerator=False):
         if lang=='En':
