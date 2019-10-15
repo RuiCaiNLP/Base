@@ -244,12 +244,13 @@ class Adversarial_TModel(nn.Module):
         _, enc_fake = self.EN_Labeler(fr_input_emb, predicates_1D)
 
         #x_D_real = torch.cat([enc_real.detach(), enc_fake.detach()], 0)
-        x_D_real = enc_real.detach()
-        x_D_fake = enc_fake.detach()
-        x_G = enc_fake
+
+
 
 
         if not TrainGenerator:
+            x_D_real = enc_real.detach()
+            x_D_fake = enc_fake.detach()
             preds = self.Discriminator(Variable(x_D_real.data))
             real_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             D_loss_real = F.binary_cross_entropy(preds, real_labels)
@@ -259,6 +260,7 @@ class Adversarial_TModel(nn.Module):
             D_loss = 0.5*(D_loss_real + D_loss_fake)
             return D_loss
         else:
+            x_G = enc_fake
             preds = self.Discriminator(Variable(x_G))
             fake_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             G_loss = F.binary_cross_entropy(preds, fake_labels)

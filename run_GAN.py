@@ -379,7 +379,7 @@ if __name__ == '__main__':
             srl_model.cuda()
 
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(srl_model.EN_Labeler.parameters(), lr=learning_rate)
+        optimizer = optim.Adam(srl_model.parameters(), lr=learning_rate)
 
         log(srl_model)
 
@@ -476,7 +476,7 @@ if __name__ == '__main__':
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
                 if True or (batch_i + 1) % 1 == 0:
-                    (loss+G_loss).backward()
+                    loss.backward()
                     log("5:", loss, G_loss)
                 else:
                     loss.backward()
