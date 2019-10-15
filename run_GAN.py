@@ -391,7 +391,7 @@ if __name__ == '__main__':
         test_best_score = None
         test_ood_best_score = None
 
-        for epoch in range(1):
+        for epoch in range(0):
 
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
@@ -439,8 +439,8 @@ if __name__ == '__main__':
 
 
         log("start adversarial training!")
-        opt_D = optim.Adam(srl_model.Discriminator.parameters(), lr=0.0002)
-        opt_G = optim.Adam(srl_model.EN_Labeler.parameters(), lr=0.0002)
+        opt_D = optim.Adam(srl_model.Discriminator.parameters(), lr=0.001)
+        opt_G = optim.Adam(srl_model.EN_Labeler.parameters(), lr=0.001)
 
 
         for epoch in range(max_epoch):
@@ -471,12 +471,15 @@ if __name__ == '__main__':
                 D_loss.backward()
                 opt_D.step()
 
-                if (batch_i+1)%1 == 0:
-                    en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
-                    loss = criterion(en_output, target_batch_variable)
-                    opt_G.zero_grad()
-                    (loss+G_loss).backward()
-                    opt_G.step()
+
+                en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
+                loss = criterion(en_output, target_batch_variable)
+                opt_G.zero_grad()
+                if (batch_i + 1) % 5 == 0:
+                    (loss+0.001*G_loss).backward()
+                else:
+                    loss.backward()
+                opt_G.step()
 
                 if batch_i%50 == 0:
                     log(batch_i, G_loss, D_loss)

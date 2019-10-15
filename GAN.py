@@ -244,16 +244,9 @@ class Adversarial_TModel(nn.Module):
         x_D_real = enc_real.detach()
         x_D_fake = enc_fake.detach()
         x_G = enc_fake
-        #y = torch.FloatTensor(2 * self.batch_size).zero_().to(device)
-        #y[:self.batch_size] = 1 - self.dis_smooth
-        #y[self.batch_size:] = self.dis_smooth
 
 
         if not TrainGenerator:
-            #prob_real_decision = self.Discriminator(real_states.detach())
-            #prob_fake_decision = self.Discriminator(fake_states.detach())
-            #D_loss= - torch.mean(torch.log(prob_real_decision) + torch.log(1. - prob_fake_decision))
-
             preds = self.Discriminator(Variable(x_D_real.data))
             real_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             D_loss_real = F.binary_cross_entropy(preds, real_labels)
@@ -263,9 +256,6 @@ class Adversarial_TModel(nn.Module):
             D_loss = 0.5*(D_loss_real + D_loss_fake)
             return D_loss
         else:
-            #prob_fake_decision_G = self.Discriminator(real_states.detach())
-            #G_loss = -torch.mean(torch.log(prob_fake_decision_G))
-            #log("G loss:", G_loss)
             preds = self.Discriminator(Variable(x_G))
             fake_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             G_loss = F.binary_cross_entropy(preds, fake_labels)
