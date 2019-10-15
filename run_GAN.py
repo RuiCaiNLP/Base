@@ -476,10 +476,10 @@ if __name__ == '__main__':
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
                 if True or (batch_i + 1) % 1 == 0:
-                    loss.backward()
+                    (G_loss+loss).backward()
                     #log("5:", loss, G_loss)
                 else:
-                    (loss+G_loss).backward()
+                    loss.backward()
                 opt_G.step()
 
                 if batch_i%50 == 0:
