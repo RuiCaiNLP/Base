@@ -477,9 +477,9 @@ if __name__ == '__main__':
                 opt_G.zero_grad()
                 if True or (batch_i + 1) % 1 == 0:
                     loss.backward()
-                    log("5:", loss, G_loss)
+                    #log("5:", loss, G_loss)
                 else:
-                    loss.backward()
+                    (loss+G_loss).backward()
                 opt_G.step()
 
                 if batch_i%50 == 0:
