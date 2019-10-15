@@ -475,7 +475,7 @@ if __name__ == '__main__':
                 en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
-                if (batch_i + 1) % 5 == 0:
+                if (batch_i + 1) % 1 == 0:
                     (loss+0.1*G_loss).backward()
                 else:
                     loss.backward()
