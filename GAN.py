@@ -261,7 +261,7 @@ class Adversarial_TModel(nn.Module):
             return D_loss
         else:
             x_G = enc_fake
-            preds = self.Discriminator(Variable(x_G))
+            preds = self.Discriminator(x_G)
             fake_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             G_loss = F.binary_cross_entropy(preds, fake_labels)
             return output_en, G_loss
