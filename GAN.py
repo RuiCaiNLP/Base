@@ -79,7 +79,7 @@ class EN_Labeler(nn.Module):
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
-        hidden_input = hidden_input.view(self.batch_size, seq_len, -1)
+        hidden_input = hidden_input.view(self.batch_size,seq_len, -1)
 
         arg_hidden = self.mlp_arg(hidden_input)
         pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
@@ -97,8 +97,8 @@ class EN_Labeler(nn.Module):
         all_cat = all_cat.index_select(dim=1, index=get_torch_variable_from_np(shuffled_timestep))
         all_cat = self.out_dropout(all_cat)
         """
-        enc = torch.mean(hidden_input, dim=1)
-        return output, enc
+        #enc = torch.mean(hidden_input, dim=1)
+        return output, hidden_input.view(self.batch_size*seq_len, -1)
 
 
 
