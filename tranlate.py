@@ -7,4 +7,3 @@ for line in file.readlines():
     line =translator.translate(line, dest='fr')
     out_file.write(line.text.encode('utf-8'))
     out_file.write('\n')
-

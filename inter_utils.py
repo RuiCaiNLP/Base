@@ -139,7 +139,7 @@ def get_batch(input_data, batch_size, word2idx, fr_word2idx, lemma2idx, pos2idx,
         gold_pos_batch = [[pos2idx.get(item[13], pos2idx[_UNK_]) for item in sentence] for sentence in data_batch]
         pad_gold_pos_batch = np.array(pad_batch(gold_pos_batch, batch_size, pos2idx[_PAD_]))
 
-        if lang=='En':
+        if lang=='En' and False:
             head_batch = [[int(item[9]) for item in sentence] for sentence in data_batch]
             pad_head_batch = np.array(pad_batch(head_batch, batch_size, -1))
 

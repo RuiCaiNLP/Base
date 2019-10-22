@@ -391,7 +391,7 @@ if __name__ == '__main__':
         test_best_score = None
         test_ood_best_score = None
 
-        for epoch in range(0):
+        for epoch in range(10):
 
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
@@ -475,7 +475,7 @@ if __name__ == '__main__':
                 en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
-                if (batch_i + 1) % 5 == 0:
+                if (batch_i + 1) % 5 == 0 and False:
                     (loss+0.001*G_loss).backward()
                     #log("5:", loss, G_loss)
                 else:

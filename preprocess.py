@@ -10,7 +10,7 @@ def make_dataset():
 
     # because the train and dev file is with full format, wo just copy them
     #raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-development.map')
-    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-train.txt')
+    raw_train_file = os.path.join(base_path, 'PropsitionBank')
     unlabeled_train_file = os.path.join(base_path, 'fr-train')
     raw_dev_file = os.path.join(base_path,
                                 'fr-test')
