@@ -391,7 +391,7 @@ if __name__ == '__main__':
         test_best_score = None
         test_ood_best_score = None
 
-        for epoch in range(20):
+        for epoch in range(0):
 
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
@@ -444,17 +444,17 @@ if __name__ == '__main__':
         opt_G = optim.Adam(srl_model.EN_Labeler.parameters(), lr=0.001)
 
 
-        for epoch in range(max_epoch):
+        for epoch in range(30):
             unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
-                                                                             deprel2idx, argument2idx, idx2word, shuffle=False,
+                                                                             deprel2idx, argument2idx, idx2word, shuffle=True,
                                                                              withParrallel=False,lang="Fr")
 
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
-                                                                             deprel2idx, argument2idx, idx2word, shuffle=False,
+                                                                             deprel2idx, argument2idx, idx2word, shuffle=True,
                                                                              withParrallel=False)):
-
+                srl_model.train()
                 target_argument = train_input_data['argument']
                 flat_argument = train_input_data['flat_argument']
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
@@ -463,7 +463,7 @@ if __name__ == '__main__':
                 except StopIteration:
                     unlabeled_Generator = inter_utils.get_batch(unlabeled_dataset, batch_size, word2idx, fr_word2idx,
                                                                 lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
-                                                                deprel2idx, argument2idx, idx2word, shuffle=False,
+                                                                deprel2idx, argument2idx, idx2word, shuffle=True,
                                                                 withParrallel=False,lang="Fr")
                     unlabeled_input_data = unlabeled_Generator.next()
 
@@ -489,6 +489,7 @@ if __name__ == '__main__':
                 if batch_i > 0 and batch_i % show_steps == 0:
                     log('\n')
                     log('*' * 80)
+                    srl_model.eval()
                     #eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
 
                     log('dev:')
