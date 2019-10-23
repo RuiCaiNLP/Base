@@ -391,7 +391,7 @@ if __name__ == '__main__':
         test_best_score = None
         test_ood_best_score = None
 
-        for epoch in range(10):
+        for epoch in range(20):
 
             epoch_start = time.time()
             for batch_i, train_input_data in enumerate(inter_utils.get_batch(train_dataset, batch_size, word2idx, fr_word2idx,
