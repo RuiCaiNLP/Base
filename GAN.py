@@ -141,7 +141,7 @@ class Discriminator(nn.Module):
             nn.Sigmoid(),
         )
 
-        self.emb_dim = 4*self.bilstm_hidden_size
+        self.emb_dim = 2*self.bilstm_hidden_size
         self.dis_hid_dim = 300
         self.dis_layers = 2
         self.dis_input_dropout = 0.2
