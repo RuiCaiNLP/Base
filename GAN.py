@@ -33,7 +33,8 @@ class EN_Labeler(nn.Module):
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.use_biaffine = model_params['use_biaffine']
 
-        self.out_dropout = nn.Dropout(p=0.5)
+        self.word_dropout = nn.Dropout(p=0.3)
+        self.out_dropout = nn.Dropout(p=0.3)
 
         input_emb_size = 0
         if self.use_flag_embedding:
@@ -74,13 +75,13 @@ class EN_Labeler(nn.Module):
             self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
 
     def forward(self, batch_input_emb, predicates_1D):
-        input_emb = batch_input_emb
+        input_emb = self.word_dropout(batch_input_emb)
         seq_len = batch_input_emb.shape[1]
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size,seq_len, -1)
-
+        hidden_input = self.out_dropout(hidden_input)
         predicate_hidden = hidden_input[np.arange(0, self.batch_size), predicates_1D]
         predicates_hidden = predicate_hidden.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         arg_hidden = self.mlp_arg(hidden_input)

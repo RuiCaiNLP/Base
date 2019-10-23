@@ -398,7 +398,7 @@ if __name__ == '__main__':
                                                                              lemma2idx, pos2idx, pretrain2idx, fr_pretrain2idx,
                                                                              deprel2idx, argument2idx, idx2word, shuffle=True,
                                                                              withParrallel=True)):
-
+                srl_model.train()
                 target_argument = train_input_data['argument']
                 flat_argument = train_input_data['flat_argument']
                 target_batch_variable = get_torch_variable_from_np(flat_argument)
@@ -421,6 +421,7 @@ if __name__ == '__main__':
                     eval_train_batch(epoch, batch_i, loss.data[0], flat_argument, pred, argument2idx)
 
                     log('dev:')
+                    srl_model.eval()
                     score, dev_output = eval_data(srl_model, elmo, dev_dataset, batch_size, word2idx, fr_word2idx, lemma2idx,
                                                   pos2idx, pretrain2idx, fr_pretrain2idx, deprel2idx, argument2idx, idx2argument, idx2word,
                                                   False,
