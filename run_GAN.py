@@ -477,13 +477,13 @@ if __name__ == '__main__':
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
                 optimizer.zero_grad()
-                if (batch_i + 1) % 5 == 0 and False:
+                if (batch_i + 1) % 5 == 0:
                     (loss+0.001*G_loss).backward()
                     opt_G.step()
                     #log("5:", loss, G_loss)
                 else:
                     loss.backward()
-                    optimizer.step()
+                    opt_G.step()
 
 
                 if batch_i%50 == 0:

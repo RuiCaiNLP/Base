@@ -33,6 +33,34 @@ class EN_Labeler(nn.Module):
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.use_biaffine = model_params['use_biaffine']
 
+        self.word_vocab_size = model_params['word_vocab_size']
+        self.fr_word_vocab_size = model_params['fr_word_vocab_size']
+        self.pretrain_vocab_size = model_params['pretrain_vocab_size']
+        self.fr_pretrain_vocab_size = model_params['fr_pretrain_vocab_size']
+        self.word_emb_size = model_params['word_emb_size']
+        self.pretrain_emb_size = model_params['pretrain_emb_size']
+        self.pretrain_emb_weight = model_params['pretrain_emb_weight']
+        self.fr_pretrain_emb_weight = model_params['fr_pretrain_emb_weight']
+
+        self.use_flag_embedding = model_params['use_flag_embedding']
+        self.flag_emb_size = model_params['flag_embedding_size']
+
+        self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
+        self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
+        self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
+        self.fr_pretrained_embedding.weight.data.copy_(torch.from_numpy(self.fr_pretrain_emb_weight))
+
+        if self.use_flag_embedding:
+            self.flag_embedding = nn.Embedding(2, self.flag_emb_size)
+            self.flag_embedding.weight.data.uniform_(-1.0, 1.0)
+
+        self.word_embedding = nn.Embedding(self.word_vocab_size, self.word_emb_size)
+        self.word_embedding.weight.data.uniform_(-1.0, 1.0)
+
+        self.fr_word_embedding = nn.Embedding(self.fr_word_vocab_size, self.word_emb_size)
+        self.fr_word_embedding.weight.data.uniform_(-1.0, 1.0)
+
+
         self.word_dropout = nn.Dropout(p=0.5)
         self.out_dropout = nn.Dropout(p=0.3)
 
@@ -74,9 +102,33 @@ class EN_Labeler(nn.Module):
             self.mlp_arg = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
             self.mlp_pred = nn.Sequential(nn.Linear(2 * self.bilstm_hidden_size, self.mlp_size), nn.ReLU())
 
-    def forward(self, batch_input_emb, predicates_1D):
-        input_emb = self.word_dropout(batch_input_emb)
-        seq_len = batch_input_emb.shape[1]
+    def forward(self, batch_input, unlabeled_batch_input, lang, unlabeled):
+
+        pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
+        flag_batch = get_torch_variable_from_np(batch_input['flag'])
+        flag_emb = self.flag_embedding(flag_batch)
+
+        if unlabeled:
+            fr_pretrain_batch = get_torch_variable_from_np(unlabeled_batch_input['pretrain'])
+            fr_flag_batch = get_torch_variable_from_np(unlabeled_batch_input['flag'])
+            fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
+            fr_flag_emb = self.flag_embedding(fr_flag_batch).detach()
+            predicates_1D = unlabeled_batch_input['predicates_idx']
+        else:
+            predicates_1D = batch_input['predicates_idx']
+
+        if lang == "En":
+            pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
+        else:
+            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
+
+        if not unlabeled:
+            input_emb = torch.cat([flag_emb, pretrain_emb], 2)
+        else:
+            input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
+
+        input_emb = self.word_dropout(input_emb)
+        seq_len = input_emb.shape[1]
         bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(input_emb, self.bilstm_hidden_state)
         bilstm_output = bilstm_output.contiguous()
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
@@ -170,35 +222,6 @@ class Adversarial_TModel(nn.Module):
     def __init__(self, model_params):
         super(Adversarial_TModel, self).__init__()
         self.batch_size = model_params['batch_size']
-        self.word_vocab_size = model_params['word_vocab_size']
-        self.fr_word_vocab_size = model_params['fr_word_vocab_size']
-        self.pretrain_vocab_size = model_params['pretrain_vocab_size']
-        self.fr_pretrain_vocab_size = model_params['fr_pretrain_vocab_size']
-        self.word_emb_size = model_params['word_emb_size']
-        self.pretrain_emb_size = model_params['pretrain_emb_size']
-        self.pretrain_emb_weight = model_params['pretrain_emb_weight']
-        self.fr_pretrain_emb_weight = model_params['fr_pretrain_emb_weight']
-
-        self.use_flag_embedding = model_params['use_flag_embedding']
-        self.flag_emb_size = model_params['flag_embedding_size']
-
-
-
-        self.pretrained_embedding = nn.Embedding(self.pretrain_vocab_size, self.pretrain_emb_size)
-        self.pretrained_embedding.weight.data.copy_(torch.from_numpy(self.pretrain_emb_weight))
-        self.fr_pretrained_embedding = nn.Embedding(self.fr_pretrain_vocab_size, self.pretrain_emb_size)
-        self.fr_pretrained_embedding.weight.data.copy_(torch.from_numpy(self.fr_pretrain_emb_weight))
-
-        if self.use_flag_embedding:
-            self.flag_embedding = nn.Embedding(2, self.flag_emb_size)
-            self.flag_embedding.weight.data.uniform_(-1.0, 1.0)
-
-        self.word_embedding = nn.Embedding(self.word_vocab_size, self.word_emb_size)
-        self.word_embedding.weight.data.uniform_(-1.0, 1.0)
-
-        self.fr_word_embedding = nn.Embedding(self.fr_word_vocab_size, self.word_emb_size)
-        self.fr_word_embedding.weight.data.uniform_(-1.0, 1.0)
-
         self.EN_Labeler = EN_Labeler(model_params)
         self.Discriminator = Discriminator(model_params)
         self.dis_smooth = 0.1
@@ -208,49 +231,11 @@ class Adversarial_TModel(nn.Module):
 
 
     def forward(self, batch_input, elmo, unlabeled_batch_input=None, unlabeled=False, withParallel=False, lang='En', isPretrain=False, TrainGenerator=False):
-        if lang=='En':
-            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
-        else:
-            pretrain_batch = get_torch_variable_from_np(batch_input['pretrain'])
-        flag_batch = get_torch_variable_from_np(batch_input['flag'])
 
-        if unlabeled:
-            fr_pretrain_batch = get_torch_variable_from_np(unlabeled_batch_input['pretrain'])
-            fr_flag_batch = get_torch_variable_from_np(unlabeled_batch_input['flag'])
-
-        if self.use_flag_embedding:
-            flag_emb = self.flag_embedding(flag_batch)
-        else:
-            flag_emb = flag_batch.view(flag_batch.shape[0], flag_batch.shape[1], 1).float()
-
-        if lang == "En":
-            pretrain_emb = self.pretrained_embedding(pretrain_batch).detach()
-        else:
-            pretrain_emb = self.fr_pretrained_embedding(pretrain_batch).detach()
-
-        if unlabeled:
-            fr_pretrain_emb = self.fr_pretrained_embedding(fr_pretrain_batch).detach()
-            fr_flag_emb = self.flag_embedding(fr_flag_batch).detach()
-
-
-
-        input_emb = torch.cat([flag_emb, pretrain_emb], 2)
-        predicates_1D = batch_input['predicates_idx']
-        if unlabeled:
-            fr_input_emb = torch.cat([fr_flag_emb, fr_pretrain_emb], 2)
-
-        output_en, enc_real = self.EN_Labeler(input_emb, predicates_1D)
-
+        output_en, enc_real = self.EN_Labeler(batch_input, unlabeled_batch_input, lang, unlabeled=False)
         if not unlabeled:
             return output_en
-
-        predicates_1D = unlabeled_batch_input['predicates_idx']
-        _, enc_fake = self.EN_Labeler(fr_input_emb, predicates_1D)
-
-        #x_D_real = torch.cat([enc_real.detach(), enc_fake.detach()], 0)
-
-
-
+        _, enc_fake = self.EN_Labeler(batch_input, unlabeled_batch_input, lang, unlabeled=True)
 
         if not TrainGenerator:
             x_D_real = enc_real.detach()
