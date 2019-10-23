@@ -476,12 +476,15 @@ if __name__ == '__main__':
                 en_output, G_loss = srl_model(train_input_data,  elmo, unlabeled_input_data, unlabeled=True, lang='En', TrainGenerator=True)
                 loss = criterion(en_output, target_batch_variable)
                 opt_G.zero_grad()
+                optimizer.zero_grad()
                 if (batch_i + 1) % 5 == 0 and False:
                     (loss+0.001*G_loss).backward()
+                    opt_G.step()
                     #log("5:", loss, G_loss)
                 else:
                     loss.backward()
-                opt_G.step()
+                    optimizer.step()
+
 
                 if batch_i%50 == 0:
                     log(batch_i, G_loss, D_loss)

@@ -82,8 +82,8 @@ class EN_Labeler(nn.Module):
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size,seq_len, -1)
         hidden_input = self.out_dropout(hidden_input)
-        predicate_hidden = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        predicates_hidden = predicate_hidden.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
+        #predicate_hidden = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+        #predicates_hidden = predicate_hidden.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         arg_hidden = self.mlp_arg(hidden_input)
         pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
         pred_hidden = self.mlp_pred(pred_recur)
@@ -101,7 +101,7 @@ class EN_Labeler(nn.Module):
         all_cat = self.out_dropout(all_cat)
         """
         #enc = torch.mean(hidden_input, dim=1)
-        enc = torch.cat((predicates_hidden, hidden_input), 2)
+        enc = hidden_input
         return output, enc.view(self.batch_size*seq_len, -1)
 
 
@@ -137,7 +137,7 @@ class Discriminator(nn.Module):
         #    nn.ReLU()
         #)
         self.scorer = nn.Sequential(
-            nn.Linear(2*self.bilstm_hidden_size, 1),
+            nn.Linear(self.bilstm_hidden_size, 1),
             nn.Sigmoid(),
         )
 
