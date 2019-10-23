@@ -10,10 +10,10 @@ def make_dataset():
 
     # because the train and dev file is with full format, wo just copy them
     #raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-development.map')
-    raw_train_file = os.path.join(base_path, 'PropsitionBank')
+    raw_train_file = os.path.join(base_path, 'CoNLL2009-ST-English-train.txt')
     unlabeled_train_file = os.path.join(base_path, 'fr-train')
     raw_dev_file = os.path.join(base_path,
-                                'fr-test')
+                                'FR.Datasets')
 
 
     train_file = os.path.join(os.path.dirname(__file__), 'data/En_train.dataset')
@@ -198,8 +198,8 @@ if __name__ == '__main__':
     make_deprel_vocab(train_file, vocab_path, unify_pred=False)
     print('argument:')
     make_argument_vocab(dev_file, dev_file, None, vocab_path, unify_pred=False)
-    print('predicate:')
-    make_pred_vocab(train_file, dev_file, None, vocab_path)
+    #print('predicate:')
+    #make_pred_vocab(train_file, dev_file, None, vocab_path)
 
     pretrain_path = os.path.join(os.path.dirname(__file__), 'temp')
     deprel_vocab = load_deprel_vocab(os.path.join(pretrain_path, 'deprel.vocab'))
