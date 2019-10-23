@@ -33,7 +33,7 @@ class EN_Labeler(nn.Module):
         self.bilstm_hidden_size = model_params['bilstm_hidden_size']
         self.use_biaffine = model_params['use_biaffine']
 
-        self.word_dropout = nn.Dropout(p=0.3)
+        self.word_dropout = nn.Dropout(p=0.5)
         self.out_dropout = nn.Dropout(p=0.3)
 
         input_emb_size = 0
