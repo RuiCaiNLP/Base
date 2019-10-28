@@ -184,19 +184,19 @@ class Discriminator(nn.Module):
 
         if USE_CUDA:
             self.bilstm_hidden_state = (
-                Variable(torch.randn(2 * 2, self.batch_size, 10),
+                Variable(torch.randn(2 * 1, self.batch_size, 10),
                          requires_grad=True).cuda(),
-                Variable(torch.randn(2 * 2, self.batch_size, 10),
+                Variable(torch.randn(2 * 1, self.batch_size, 10),
                          requires_grad=True).cuda())
         else:
             self.bilstm_hidden_state = (
-                Variable(torch.randn(2 * 2, self.batch_size, 10),
+                Variable(torch.randn(2 * 1, self.batch_size, 10),
                          requires_grad=True),
-                Variable(torch.randn(2 * 2, self.batch_size, 10),
+                Variable(torch.randn(2 * 1, self.batch_size, 10),
                          requires_grad=True))
 
         self.bilstm_layer = nn.LSTM(input_size=self.target_vocab_size,
-                                    hidden_size=10, num_layers=2,
+                                    hidden_size=10, num_layers=1,
                                     bidirectional=True,
                                     bias=True, batch_first=True)
 
@@ -211,7 +211,7 @@ class Discriminator(nn.Module):
 
         self.emb_dim = 2*10
         self.dis_hid_dim = 30
-        self.dis_layers = 2
+        self.dis_layers = 1
         self.dis_input_dropout = 0.2
         self.dis_dropout = 0.2
         layers = [nn.Dropout(self.dis_input_dropout)]
