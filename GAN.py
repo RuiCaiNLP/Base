@@ -15,6 +15,21 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def log(*args, **kwargs):
     print(*args,file=sys.stderr, **kwargs)
 
+## word-level
+def Input4Gan_0(hidden_input, predicates_1D):
+    return hidden_input
+
+
+## sentence level
+def Input4Gan_1(output, predicates_1D):
+    output = F.softmax(output, dim=2)
+    seq_len = output.shape[1]
+    shuffled_timestep = np.arange(0, seq_len)
+    np.random.shuffle(shuffled_timestep)
+    #Returns a new tensor which indexes the input tensor along dimension dim using the entries in index which is a LongTensor.
+    shuffled_output = output.index_select(dim=1, index=get_torch_variable_from_np(shuffled_timestep))
+    return shuffled_output
+
 
 class EN_Labeler(nn.Module):
     def __init__(self, model_params):
@@ -134,8 +149,8 @@ class EN_Labeler(nn.Module):
         hidden_input = bilstm_output.view(bilstm_output.shape[0] * bilstm_output.shape[1], -1)
         hidden_input = hidden_input.view(self.batch_size,seq_len, -1)
         hidden_input = self.out_dropout(hidden_input)
-        predicate_hidden = hidden_input[np.arange(0, self.batch_size), predicates_1D]
-        predicates_hidden = predicate_hidden.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
+        #predicate_hidden = hidden_input[np.arange(0, self.batch_size), predicates_1D]
+        #predicates_hidden = predicate_hidden.unsqueeze(1).expand(self.batch_size, seq_len, 2*self.bilstm_hidden_size)
         arg_hidden = self.mlp_arg(hidden_input)
         pred_recur = hidden_input[np.arange(0, self.batch_size), predicates_1D]
         pred_hidden = self.mlp_pred(pred_recur)
@@ -153,8 +168,9 @@ class EN_Labeler(nn.Module):
         all_cat = self.out_dropout(all_cat)
         """
         #enc = torch.mean(hidden_input, dim=1)
-        enc = torch.cat((hidden_input, predicates_hidden),2)
-        return output, enc.view(self.batch_size*seq_len, -1)
+        #enc = Input4Gan_0(hidden_input, predicates_1D)
+        enc = Input4Gan_1(output.view(self.batch_size, seq_len, -1), predicates_1D)
+        return output, enc.view(self.batch_size, seq_len, -1)
 
 
 
@@ -168,19 +184,19 @@ class Discriminator(nn.Module):
 
         if USE_CUDA:
             self.bilstm_hidden_state = (
-                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                Variable(torch.randn(2 * 2, self.batch_size, 10),
                          requires_grad=True).cuda(),
-                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                Variable(torch.randn(2 * 2, self.batch_size, 10),
                          requires_grad=True).cuda())
         else:
             self.bilstm_hidden_state = (
-                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                Variable(torch.randn(2 * 2, self.batch_size, 10),
                          requires_grad=True),
-                Variable(torch.randn(2 * self.bilstm_num_layers, self.batch_size, self.bilstm_hidden_size),
+                Variable(torch.randn(2 * 2, self.batch_size, 10),
                          requires_grad=True))
 
-        self.bilstm_layer = nn.LSTM(input_size=4*self.bilstm_hidden_size+self.target_vocab_size,
-                                    hidden_size=self.bilstm_hidden_size, num_layers=self.bilstm_num_layers,
+        self.bilstm_layer = nn.LSTM(input_size=self.target_vocab_size,
+                                    hidden_size=10, num_layers=2,
                                     bidirectional=True,
                                     bias=True, batch_first=True)
 
@@ -193,8 +209,8 @@ class Discriminator(nn.Module):
             nn.Sigmoid(),
         )
 
-        self.emb_dim = 4*self.bilstm_hidden_size
-        self.dis_hid_dim = 300
+        self.emb_dim = 2*10
+        self.dis_hid_dim = 30
         self.dis_layers = 2
         self.dis_input_dropout = 0.2
         self.dis_dropout = 0.2
@@ -212,9 +228,14 @@ class Discriminator(nn.Module):
         self.fake = np.random.uniform(0.0, 0.3)  # 0
 
 
-    def forward(self, x):
+    def forward(self, x, sentence_level=False):
         #bilstm_output, (H_n, C_n) = self.bilstm_layer(hidden_states, self.bilstm_hidden_state)
         #score = self.scorer(H_n.view(-1))
+        seq_len = x.shape[1]
+        if sentence_level:
+            bilstm_output, (_, bilstm_final_state) = self.bilstm_layer(x, self.bilstm_hidden_state)
+            bilstm_output = bilstm_output.contiguous()
+            x = bilstm_output.view(self.batch_size*seq_len, -1)
         assert x.dim() == 2 and x.size(1) == self.emb_dim
         return self.layers(x).view(-1)
 
@@ -240,17 +261,17 @@ class Adversarial_TModel(nn.Module):
         if not TrainGenerator:
             x_D_real = enc_real.detach()
             x_D_fake = enc_fake.detach()
-            preds = self.Discriminator(Variable(x_D_real.data))
+            preds = self.Discriminator(Variable(x_D_real.data), sentence_level=True)
             real_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             D_loss_real = F.binary_cross_entropy(preds, real_labels)
-            preds = self.Discriminator(Variable(x_D_fake.data))
+            preds = self.Discriminator(Variable(x_D_fake.data), sentence_level=True)
             fake_labels = torch.empty(*preds.size()).fill_(self.fake).type_as(preds)
             D_loss_fake = F.binary_cross_entropy(preds, fake_labels)
             D_loss = 0.5*(D_loss_real + D_loss_fake)
             return D_loss
         else:
             x_G = enc_fake
-            preds = self.Discriminator(x_G)
+            preds = self.Discriminator(x_G, sentence_level=True)
             fake_labels = torch.empty(*preds.size()).fill_(self.real).type_as(preds)
             G_loss = F.binary_cross_entropy(preds, fake_labels)
             return output_en, G_loss
